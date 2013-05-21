@@ -1,31 +1,67 @@
 # -*- coding: utf-8 -*-
 
+
 def pretty_print(node, indent=0, shiftwidth=4):
-    out = ''
-    i = (' ' * shiftwidth) * indent
-    i2 = (' ' * shiftwidth) * (indent + 1)
-    if isinstance(node, dict):
+    def print_dict(dict, indent=0, shiftwidth=4):
+        out = ''
         out += '{\n'
-        for key in node.keys():
-            value = node[key]
+        for key in dict.keys():
+            value = dict[key]
             out += i2 + key + ': ' + pretty_print(
                     value, indent + 1, shiftwidth) + '\n'
         out += i + '}'
-    elif isinstance(node, list):
-        if len(node) > 0:
+        return out
+
+    def print_list(list, indent=0, shiftwidth=4):
+        out = ''
+        if len(list) > 0:
             out += '[\n'
-            for value in node:
+            for value in list:
                 pp = pretty_print(value, indent + 1, shiftwidth)
                 out += i2 + pp + ',' + '\n'
             out += i + ']'
         else:
             out += '[]'
-    elif isinstance(node, tuple):
+        return out
+
+    def print_tuple(tuple, indent=0, shiftwidth=4):
+        out = ''
         out += '<TUPLE>(\n'
-        for value in node:
+        for value in tuple:
             pp = pretty_print(value, indent + 1, shiftwidth)
             out += i2 + pp + ',' + '\n'
         out += i + ')'
+        return out
+
+    def print_object(object, indent=0, shiftwidth=4):
+        out = ''
+        out += str(object.__class__.__name__) + '('
+        if len(object.__dict__) == 0:
+            out += ')'
+        elif len(object.__dict__) > 1:
+            out += '\n'
+            for key in object.__dict__.keys():
+                value = object.__dict__[key]
+                out += i2 + key + '='
+                out += pretty_print(value, indent + 1, shiftwidth)
+                out += ',' + '\n'
+            out += i + ')'
+        else:
+            for key in object.__dict__.keys():
+                value = object.__dict__[key]
+                out += key + '='
+                out += pretty_print(value, indent + 1, shiftwidth) + ')'
+        return out
+
+    out = ''
+    i = (' ' * shiftwidth) * indent
+    i2 = (' ' * shiftwidth) * (indent + 1)
+    if isinstance(node, dict):
+        out += print_dict(node, indent, shiftwidth)
+    elif isinstance(node, list):
+        out += print_list(node, indent, shiftwidth)
+    elif isinstance(node, tuple):
+        out += print_tuple(node, indent, shiftwidth)
     elif isinstance(node, str):
         out += '"' + node + '"'
     elif isinstance(node, int):
@@ -35,22 +71,7 @@ def pretty_print(node, indent=0, shiftwidth=4):
     elif node is None:
         out = '<None>'
     else:
-        out += str(node.__class__.__name__) + '('
-        if len(node.__dict__) == 0:
-            out += ')'
-        elif len(node.__dict__) > 1:
-            out += '\n'
-            for key in node.__dict__.keys():
-                value = node.__dict__[key]
-                out += i2 + key + '='
-                out += pretty_print(value, indent + 1, shiftwidth)
-                out += ',' + '\n'
-            out += i + ')'
-        else:
-            for key in node.__dict__.keys():
-                value = node.__dict__[key]
-                out += key + '='
-                out += pretty_print(value, indent + 1, shiftwidth) + ')'
+        out += print_object(node, indent, shiftwidth)
     return out
 
 
