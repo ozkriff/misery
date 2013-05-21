@@ -5,59 +5,69 @@ import copy
 import ast
 
 
+class Variable:
+    def __init__(self, name, type):
+        self.name = name
+        self.type = type
+
+
+class Constant:
+    def __init__(self, value, type):
+        self.value = value
+        self.type = type
+
+
+class Function:
+    def __init__(self, name, interface):
+        self.name = name
+        self.interface = interface
+        self.statement_list = []
+        self.constant_list = []
+        self.variable_list = []
+        self.expression_list = []
+
+
+# TODO: ...
+class IfStatement:
+    def __init__(self, expression_id, if_branch_id):
+        self.expression_id = expression_id
+        self.if_branch_id = if_branch_id
+
+
+class VariableDeclarationStatement:
+    def __init__(self, variable_id, expression_id):
+        self.variable_id = variable_id
+        self.expression_id = expression_id
+
+
+class FunctionCallStatement:
+    def __init__(self, expression_id):
+        self.expression_id = expression_id
+
+
+class FunctionCallExpression:
+    def __init__(self, name, argument_id_list, result_id):
+        self.name = name
+        self.argument_id_list = argument_id_list
+        self.result_id = result_id
+
+
+class LinkToNumberConstant:
+    def __init__(self, id):
+        self.id = id
+
+
+class LinkToVariable:
+    def __init__(self, id):
+        self.id = id
+
+
+class LinkToFunctionCall:
+    def __init__(self, id):
+        self.id = id
+
+
 class Table:
-
-    class Variable:
-        def __init__(self, name, type):
-            self.name = name
-            self.type = type
-
-    class Constant:
-        def __init__(self, value, type):
-            self.value = value
-            self.type = type
-
-    class Function:
-        def __init__(self, name, interface):
-            self.name = name
-            self.interface = interface
-            self.statement_list = []
-            self.constant_list = []
-            self.variable_list = []
-            self.expression_list = []
-
-    # TODO: ...
-    class IfStatement:
-        def __init__(self, expression_id, if_branch_id):
-            self.expression_id = expression_id
-            self.if_branch_id = if_branch_id
-
-    class VariableDeclarationStatement:
-        def __init__(self, variable_id, expression_id):
-            self.variable_id = variable_id
-            self.expression_id = expression_id
-
-    class FunctionCallStatement:
-        def __init__(self, expression_id):
-            self.expression_id = expression_id
-
-    class FunctionCallExpression:
-        def __init__(self, name, argument_id_list, result_id):
-            self.name = name
-            self.argument_id_list = argument_id_list
-            self.result_id = result_id
-
-    class LinkToNumberConstant:
-        def __init__(self, id):
-            self.id = id
-
-    class LinkToVariable:
-        def __init__(self, id):
-            self.id = id
-
-    class LinkToFunctionCall:
-        def __init__(self, id):
-            self.id = id
 
     def __init__(self):
         self.declaration_list = []
@@ -67,8 +77,8 @@ class Table:
     def parse_number(self, number):
         assert isinstance(number, ast.NodeNumber)
         self.declaration_list[-1].constant_list.append(
-                Table.Constant(type='int', value=number.value))
-        return Table.LinkToNumberConstant(
+                Constant(type='int', value=number.value))
+        return LinkToNumberConstant(
                 id=len(self.declaration_list[-1].constant_list) - 1)
 
     def parse_function_call(self, function_call_node):
@@ -78,8 +88,8 @@ class Table:
         # TODO: get type from some global symtable
         return_type = 'int'
         last_declaration.variable_list.append(
-            Table.Variable(name=varname, type=return_type))
-        result_id = Table.LinkToVariable(
+            Variable(name=varname, type=return_type))
+        result_id = LinkToVariable(
                 id=len(last_declaration.variable_list) - 1)
         argument_id_list = []
         for argument in function_call_node.argument_list:
@@ -89,13 +99,13 @@ class Table:
         assert isinstance(function_call_node.expression, ast.NodeIdentifier)
         function_name = function_call_node.expression.value
         last_declaration.expression_list.append(
-            Table.FunctionCallExpression(
+            FunctionCallExpression(
                 name=function_name,
                 argument_id_list=argument_id_list,
                 result_id=result_id,
             )
         )
-        return Table.LinkToFunctionCall(
+        return LinkToFunctionCall(
                 id=len(last_declaration.expression_list) - 1)
 
     def parse_expression(self, expression):
@@ -107,13 +117,13 @@ class Table:
     def parse_variable_declaration_statement(self, function, statement):
         expression_id = self.parse_expression(statement.expression)
         function.variable_list.append(
-            Table.Variable(
+            Variable(
                 name=statement.name,
                 type=statement.type.value,
             )
         )
         function.statement_list.append(
-            Table.VariableDeclarationStatement(
+            VariableDeclarationStatement(
                 variable_id=len(function.variable_list) - 1,
                 expression_id=expression_id,
             )
@@ -122,18 +132,18 @@ class Table:
     def parse_function_call_statement(self, function, statement):
         expression_id = self.parse_expression(statement)
         function.statement_list.append(
-            Table.FunctionCallStatement(expression_id=expression_id))
+            FunctionCallStatement(expression_id=expression_id))
 
     def parse_if_statement(self, function, statement):
         # expression_id = self.parse_expression(statement.expression)
         # function.variable_list.append(
-        #     Table.Variable(
+        #     Variable(
         #         name=statement.name,
         #         type=statement.type.value,
         #     )
         # )
         function.statement_list.append(
-            Table.IfStatement(
+            IfStatement(
                 expression_id=None,
                 if_branch_id=None,
             )
@@ -155,7 +165,7 @@ class Table:
             assert False  # TODO: ...
 
     def parse_function_declaration(self, declaration):
-        function = Table.Function(
+        function = Function(
             name=declaration.name,
             interface=declaration.interface,
         )

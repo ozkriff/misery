@@ -31,9 +31,9 @@ class Generator:
 
     def generate_expression(self, function, expression):
         out = ''
-        assert isinstance(expression, table.Table.FunctionCallExpression)
+        assert isinstance(expression, table.FunctionCallExpression)
         for argument in expression.argument_id_list:
-            if isinstance(argument, table.Table.LinkToFunctionCall):
+            if isinstance(argument, table.LinkToFunctionCall):
                 last_declaration = self.table.declaration_list[-1]
                 out += self.generate_expression(
                         last_declaration.expression_list[argument.id])
@@ -42,9 +42,9 @@ class Generator:
         out += '&' + function.variable_list[expression.result_id.id].name
         for argument in expression.argument_id_list:
             out += ', '
-            if isinstance(argument, table.Table.LinkToNumberConstant):
+            if isinstance(argument, table.LinkToNumberConstant):
                 out += str(function.constant_list[argument.id].value)
-            elif isinstance(argument, table.Table.LinkToFunctionCall):
+            elif isinstance(argument, table.LinkToFunctionCall):
                 result_id = function.expression_list[argument.id].result_id.id
                 out += str(function.variable_list[result_id].name)
             else:
@@ -71,10 +71,10 @@ class Generator:
 
     def generate_statement(self, function, statement):
         out = ''
-        if isinstance(statement, table.Table.VariableDeclarationStatement):
+        if isinstance(statement, table.VariableDeclarationStatement):
             out += self.generate_variable_declaration_statement(
                     function, statement)
-        elif isinstance(statement, table.Table.FunctionCallStatement):
+        elif isinstance(statement, table.FunctionCallStatement):
             out += self.generate_function_call_statement(function, statement)
         else:
             assert False
@@ -101,13 +101,13 @@ class Generator:
                 out += '// import: ' + import_node + '\n'
         out += '\n'
         for declaration in self.table.declaration_list:
-            if isinstance(declaration, table.Table.Function):
+            if isinstance(declaration, table.Function):
                 out += self.generate_function_header(
                         declaration.name, declaration.interface)
                 out += ';\n'
         out += '\n'
         for declaration in self.table.declaration_list:
-            assert isinstance(declaration, table.Table.Function)
+            assert isinstance(declaration, table.Function)
             out += self.generate_function(declaration)
             out += '\n'
         return out
