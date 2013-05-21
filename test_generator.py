@@ -85,6 +85,6 @@ class TestGenerator(unittest.TestCase):
             '}\n'
             '\n'
         )
-        misc.my_assert_equal(self, expected_output, real_output)
+        misc.assert_equal(self, expected_output, real_output)
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:

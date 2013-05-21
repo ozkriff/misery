@@ -25,7 +25,7 @@ class TestParser(unittest.TestCase):
         expected_ast = ast.NodeModule(
             declaration_sequence=[],
         )
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_empty_import(self):
         input_string = 'import{}'
@@ -34,7 +34,7 @@ class TestParser(unittest.TestCase):
             import_list=[],
             declaration_sequence=[],
         )
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_import(self):
         input_string = 'import{module1}'
@@ -43,7 +43,7 @@ class TestParser(unittest.TestCase):
             import_list=['module1'],
             declaration_sequence=[],
         )
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_import_2(self):
         input_string = 'import{module1 module2}'
@@ -52,7 +52,7 @@ class TestParser(unittest.TestCase):
             import_list=['module1', 'module2'],
             declaration_sequence=[],
         )
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_type_declaration(self):
         input_string = 'type MyInteger Integer'
@@ -65,7 +65,7 @@ class TestParser(unittest.TestCase):
                 )
             ]
         )
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_struct_type_declaration(self):
         input_string = '''
@@ -94,7 +94,7 @@ class TestParser(unittest.TestCase):
                 )
             ]
         )
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_type_alias(self):
         input_string = 'type MyInteger Integer'
@@ -107,7 +107,7 @@ class TestParser(unittest.TestCase):
                 )
             ]
         )
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_const_declaration(self):
         input_string = 'const importantIdentifier Integer = 10'
@@ -121,7 +121,7 @@ class TestParser(unittest.TestCase):
                 )
             ]
         )
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_func(self):
         input_string = 'func testfunc2() {}'
@@ -135,7 +135,7 @@ class TestParser(unittest.TestCase):
                 )
             ]
         )
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_func_with_return_value(self):
         input_string = 'func testfunc2() -> Integer {}'
@@ -151,7 +151,7 @@ class TestParser(unittest.TestCase):
                 )
             ]
         )
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_func_with_parameter(self):
         input_string = 'func testfunc(par ParType) {}'
@@ -173,7 +173,7 @@ class TestParser(unittest.TestCase):
                 )
             ]
         )
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_func_with_2_parameters(self):
         input_string = 'func testfunc(par1 ParType, par2 ParType) {}'
@@ -199,14 +199,14 @@ class TestParser(unittest.TestCase):
                 )
             ]
         )
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_func_body_2_empty_blocks(self):
         input_string = 'func fname() { {} {} }'
         real_ast = my_parser.make_parser().parse(input_string, lexer=my_parser.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body = [[], []]
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_func_call(self):
         input_string = 'func fname() { fname2() }'
@@ -217,7 +217,7 @@ class TestParser(unittest.TestCase):
             argument_list=[],
         )
         expected_ast.declaration_sequence[0].body.append(funccall)
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_declaration_without_initialization(self):
         input_string = 'func fname() { var testVar Integer }'
@@ -228,7 +228,7 @@ class TestParser(unittest.TestCase):
             type=ast.NodeIdentifier('Integer'),
         )
         expected_ast.declaration_sequence[0].body.append(var)
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_declaration_with_type_and_initialization(self):
         input_string = 'func fname() { var testVar Integer = 666 }'
@@ -240,7 +240,7 @@ class TestParser(unittest.TestCase):
             expression=ast.NodeNumber(666),
         )
         expected_ast.declaration_sequence[0].body.append(var)
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_declaration_with_initialization(self):
         input_string = 'func fname() { var testVar = 666 }'
@@ -251,7 +251,7 @@ class TestParser(unittest.TestCase):
             expression=ast.NodeNumber(666),
         )
         expected_ast.declaration_sequence[0].body.append(var)
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_declaration_with_ctor(self):
         input_string = 'func fname() { var p Parser() }'
@@ -263,7 +263,7 @@ class TestParser(unittest.TestCase):
             constructor_argument_list=[],
         )
         expected_ast.declaration_sequence[0].body.append(var)
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_declaration_with_init_2(self):
         input_string = 'func fname() { var v2 Int = plus(1, 2) }'
@@ -278,7 +278,7 @@ class TestParser(unittest.TestCase):
             type=ast.NodeIdentifier('Int'),
         )
         expected_ast.declaration_sequence[0].body.append(var)
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_declaration_with_ctor_and_arguments(self):
         input_string = 'func fname() { var p Parser(lexer, 1) }'
@@ -294,7 +294,7 @@ class TestParser(unittest.TestCase):
                 ],
             )
         )
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_if(self):
         input_string = 'func fname() { if 1 {} }'
@@ -306,7 +306,7 @@ class TestParser(unittest.TestCase):
                 branch_if=[],
             )
         )
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_if_else(self):
         input_string = 'func fname() { if 1 {} else {} }'
@@ -319,7 +319,7 @@ class TestParser(unittest.TestCase):
                 branch_else=[],
             )
         )
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_nested_func_call_1(self):
         input_string = 'func fname() { a()() }'
@@ -334,7 +334,7 @@ class TestParser(unittest.TestCase):
                 argument_list=[],
             )
         )
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_return_1(self):
         input_string = 'func fname() { return 1 }'
@@ -343,7 +343,7 @@ class TestParser(unittest.TestCase):
         expected_ast.declaration_sequence[0].body.append(
             ast.NodeReturn(expression=ast.NodeNumber(1)),
         )
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_return_2(self):
         input_string = 'func fname() { return }'
@@ -352,7 +352,7 @@ class TestParser(unittest.TestCase):
         expected_ast.declaration_sequence[0].body.append(
             ast.NodeReturn(expression=None),
         )
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_return_3(self):
         input_string = 'func fname() { return x() }'
@@ -365,6 +365,6 @@ class TestParser(unittest.TestCase):
                 ),
             ),
         )
-        misc.my_assert_equal(self, expected_ast, real_ast)
+        misc.assert_equal(self, expected_ast, real_ast)
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:

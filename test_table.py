@@ -29,7 +29,7 @@ class TestTable(unittest.TestCase):
         t = table.Table()
         t.generate_tables(ast_)
         # expected_tables = []
-        # misc.my_assert_equal(self, expected_tables, real_tables)
+        # misc.assert_equal(self, expected_tables, real_tables)
         # print('\n' + my_pretty_print(t))
 
     def test_2(self):
@@ -63,7 +63,7 @@ class TestTable(unittest.TestCase):
             '}\n'
             '\n'
         )
-        misc.my_assert_equal(self, expected_output, real_output)
+        misc.assert_equal(self, expected_output, real_output)
 
     def test_if(self):
         ast_ = ast.NodeModule(
@@ -98,6 +98,6 @@ class TestTable(unittest.TestCase):
         #     '}\n'
         #     '\n'
         # )
-        # misc.my_assert_equal(self, expected_output, real_output)
+        # misc.assert_equal(self, expected_output, real_output)
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
