@@ -66,7 +66,6 @@ def diff(expected, real):
     return out
 
 
-# TODO: rename
 def assert_equal(test_case, expected_ast, real_ast):
     # print('\n' + pretty_print(expected_ast))
     d = diff(expected_ast, real_ast)
