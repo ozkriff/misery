@@ -15,9 +15,12 @@ TODO:
 - var myClosure = func() { killAllHumans() }
 - nested funcs
 - pep8, pylint, pyflakes
-- def test_that_a_player_cannot_move_into_an_already_occupied_board_cell(self):
-  def test_corectness_of_verify_win_combinations_3(self):
-  def test_that_parsed_response_contains_status_key(self):
+
+- try to use verbose test names::
+
+    def test_that_a_player_cannot_move_into_an_already_occupied_board_cell(self): pass
+    def test_corectness_of_verify_win_combinations_3(self): pass
+    def test_that_parsed_response_contains_status_key(self): pass
 
 Notes:
 
