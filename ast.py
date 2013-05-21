@@ -16,6 +16,8 @@ class BaseNode(object):
     def __ne__(self, other):
         return not self == other
 
+    __hash__ = object.__hash__  # py3 warning
+
 
 class NodeModule(BaseNode):
     def __init__(self, import_list=None, declaration_sequence=None):
