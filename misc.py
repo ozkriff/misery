@@ -76,12 +76,9 @@ def pretty_print(node, indent=0, shiftwidth=4):
 
 
 def diff(expected, real):
-    import difflib
+    '''TODO: diff strings'''
     expected_s = pretty_print(expected).split('\n')
     real_s = pretty_print(real).split('\n')
-    # d = difflib.Differ()
-    # result = list(d.compare(expected_s, real_s))
-    # for out in result: print(out)
     diff = difflib.unified_diff(expected_s, real_s, lineterm='')
     out = '\n'.join(diff)
     return out
