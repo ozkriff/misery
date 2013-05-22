@@ -2,6 +2,9 @@
 
 
 def pretty_print(node, indent=0, shiftwidth=4):
+    i = (' ' * shiftwidth) * indent
+    i2 = (' ' * shiftwidth) * (indent + 1)
+
     def print_dict(dict, indent=0, shiftwidth=4):
         out = ''
         out += '{\n'
@@ -54,8 +57,6 @@ def pretty_print(node, indent=0, shiftwidth=4):
         return out
 
     out = ''
-    i = (' ' * shiftwidth) * indent
-    i2 = (' ' * shiftwidth) * (indent + 1)
     if isinstance(node, dict):
         out += print_dict(node, indent, shiftwidth)
     elif isinstance(node, list):
@@ -77,6 +78,7 @@ def pretty_print(node, indent=0, shiftwidth=4):
 
 def diff(expected, real):
     '''TODO: diff strings'''
+    import difflib
     expected_s = pretty_print(expected).split('\n')
     real_s = pretty_print(real).split('\n')
     diff = difflib.unified_diff(expected_s, real_s, lineterm='')
