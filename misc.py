@@ -23,8 +23,9 @@ class PrettyPrinter:
             out += '{\n'
             for key in node.keys():
                 value = node[key]
-                out += next_indent + key + ': ' + pretty_print(
-                    value, indent_level + 1) + '\n'
+                out += next_indent + key + ': '
+                out += pretty_print(value, indent_level + 1)
+                out += '\n'
             out += indent + '}'
             return out
 
