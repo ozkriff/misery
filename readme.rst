@@ -2,6 +2,12 @@ Run all unit tests::
 
     python -m unittest discover -v
 
+Test coverage::
+
+    generate info: python -m coverage run -m unittest discover
+    simple report: python -m coverage report -m
+    html report: python -m coverage html -d coverage_html
+
 
 TODO:
 
