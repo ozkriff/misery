@@ -25,7 +25,7 @@ class Generator:
         if interface.return_type:
             return_type = interface.return_type.value
         function_parameters = self.generate_function_parameters(
-                interface.parameter_list)
+            interface.parameter_list)
         out += return_type + ' ' + name + '(' + function_parameters + ')'
         return out
 
@@ -36,7 +36,7 @@ class Generator:
             if isinstance(argument, table.LinkToFunctionCall):
                 last_declaration = self.table.declaration_list[-1]
                 out += self.generate_expression(
-                        last_declaration.expression_list[argument.id])
+                    last_declaration.expression_list[argument.id])
         out += self.indent + expression.name + '('
         # out var. passed by pointer
         out += '&' + function.variable_list[expression.result_id.id].name
@@ -73,7 +73,7 @@ class Generator:
         out = ''
         if isinstance(statement, table.VariableDeclarationStatement):
             out += self.generate_variable_declaration_statement(
-                    function, statement)
+                function, statement)
         elif isinstance(statement, table.FunctionCallStatement):
             out += self.generate_function_call_statement(function, statement)
         else:
@@ -103,7 +103,7 @@ class Generator:
         for declaration in self.table.declaration_list:
             if isinstance(declaration, table.Function):
                 out += self.generate_function_header(
-                        declaration.name, declaration.interface)
+                    declaration.name, declaration.interface)
                 out += ';\n'
         out += '\n'
         for declaration in self.table.declaration_list:

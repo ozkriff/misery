@@ -15,6 +15,7 @@ class TestDiff(unittest.TestCase):
         ''' Diff two lines. '''
         pass
 
+
 class TestPrettyPrinter(unittest.TestCase):
     ''' Test misc.pretty_print function. '''
 
@@ -41,7 +42,7 @@ class TestPrettyPrinter(unittest.TestCase):
 
     def test_map_1(self):
         ''' Print map with one field. '''
-        input_data = { 'field':1 }
+        input_data = {'field': 1}
         expected_output = (
             '{\n'
             '    field: 1\n'
@@ -52,7 +53,7 @@ class TestPrettyPrinter(unittest.TestCase):
 
     def test_map_2(self):
         ''' Print map with two fields. '''
-        input_data = { '1':1, '2':2 }
+        input_data = {'1': 1, '2': 2}
         expected_output = (
             '{\n'
             '    1: 1\n'

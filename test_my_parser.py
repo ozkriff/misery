@@ -10,6 +10,7 @@ import misc
 import copy
 import my_parser
 
+
 class TestParser(unittest.TestCase):
     ''' Test my_parser.make_parser() function. '''
 
@@ -28,7 +29,7 @@ class TestParser(unittest.TestCase):
         ''' Parse empty string. '''
         input_string = ''
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         expected_ast = ast.NodeModule(
             declaration_sequence=[],
         )
@@ -38,7 +39,7 @@ class TestParser(unittest.TestCase):
         ''' Parse empty import statement. '''
         input_string = 'import{}'
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         expected_ast = ast.NodeModule(
             import_list=[],
             declaration_sequence=[],
@@ -49,7 +50,7 @@ class TestParser(unittest.TestCase):
         ''' Parse import statement. '''
         input_string = 'import{module1}'
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         expected_ast = ast.NodeModule(
             import_list=['module1'],
             declaration_sequence=[],
@@ -60,7 +61,7 @@ class TestParser(unittest.TestCase):
         ''' Parse import statement with two modules. '''
         input_string = 'import{module1 module2}'
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         expected_ast = ast.NodeModule(
             import_list=['module1', 'module2'],
             declaration_sequence=[],
@@ -71,7 +72,7 @@ class TestParser(unittest.TestCase):
         ''' Parse type simple declaration. '''
         input_string = 'type MyInteger Integer'
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         expected_ast = ast.NodeModule(
             declaration_sequence=[
                 ast.NodeTypeDeclaration(
@@ -91,7 +92,7 @@ class TestParser(unittest.TestCase):
             }
         '''
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         expected_ast = ast.NodeModule(
             declaration_sequence=[
                 ast.NodeTypeDeclaration(
@@ -117,7 +118,7 @@ class TestParser(unittest.TestCase):
         ''' Some test :) '''
         input_string = 'type MyInteger Integer'
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         expected_ast = ast.NodeModule(
             declaration_sequence=[
                 ast.NodeTypeDeclaration(
@@ -132,7 +133,7 @@ class TestParser(unittest.TestCase):
         ''' Some test :) '''
         input_string = 'const importantIdentifier Integer = 10'
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         expected_ast = ast.NodeModule(
             declaration_sequence=[
                 ast.NodeConstDeclaration(
@@ -148,7 +149,7 @@ class TestParser(unittest.TestCase):
         ''' Some test :) '''
         input_string = 'func testfunc2() {}'
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         expected_ast = ast.NodeModule(
             declaration_sequence=[
                 ast.NodeFunctionDeclaration(
@@ -164,7 +165,7 @@ class TestParser(unittest.TestCase):
         ''' Some test :) '''
         input_string = 'func testfunc2() -> Integer {}'
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         expected_ast = ast.NodeModule(
             declaration_sequence=[
                 ast.NodeFunctionDeclaration(
@@ -183,7 +184,7 @@ class TestParser(unittest.TestCase):
         ''' Some test :) '''
         input_string = 'func testfunc(par ParType) {}'
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         interface = ast.NodeFunctionInterface(
             parameter_list=[
                 ast.NodeFormalParameter(
@@ -207,7 +208,7 @@ class TestParser(unittest.TestCase):
         ''' Some test :) '''
         input_string = 'func testfunc(par1 ParType, par2 ParType) {}'
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         interface = ast.NodeFunctionInterface(
             parameter_list=[
                 ast.NodeFormalParameter(
@@ -235,7 +236,7 @@ class TestParser(unittest.TestCase):
         ''' Some test :) '''
         input_string = 'func fname() { {} {} }'
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body = [[], []]
         misc.assert_equal(self, expected_ast, real_ast)
@@ -244,7 +245,7 @@ class TestParser(unittest.TestCase):
         ''' Some test :) '''
         input_string = 'func fname() { fname2() }'
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
         funccall = ast.NodeFunctionCall(
             expression=ast.NodeIdentifier('fname2'),
@@ -257,7 +258,7 @@ class TestParser(unittest.TestCase):
         ''' Some test :) '''
         input_string = 'func fname() { var testVar Integer }'
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
         var = ast.NodeVariableDeclaration(
             name='testVar',
@@ -270,7 +271,7 @@ class TestParser(unittest.TestCase):
         ''' Some test :) '''
         input_string = 'func fname() { var testVar Integer = 666 }'
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
         var = ast.NodeVariableDeclaration(
             name='testVar',
@@ -284,7 +285,7 @@ class TestParser(unittest.TestCase):
         ''' Some test :) '''
         input_string = 'func fname() { var testVar = 666 }'
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
         var = ast.NodeVariableDeclaration(
             name='testVar',
@@ -297,7 +298,7 @@ class TestParser(unittest.TestCase):
         ''' Some test :) '''
         input_string = 'func fname() { var p Parser() }'
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
         var = ast.NodeVariableDeclaration(
             name='p',
@@ -311,7 +312,7 @@ class TestParser(unittest.TestCase):
         ''' Some test :) '''
         input_string = 'func fname() { var v2 Int = plus(1, 2) }'
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
         var = ast.NodeVariableDeclaration(
             name='v2',
@@ -328,7 +329,7 @@ class TestParser(unittest.TestCase):
         ''' Some test :) '''
         input_string = 'func fname() { var p Parser(lexer, 1) }'
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
             ast.NodeVariableDeclaration(
@@ -346,7 +347,7 @@ class TestParser(unittest.TestCase):
         ''' Some test :) '''
         input_string = 'func fname() { if 1 {} }'
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
             ast.NodeIf(
@@ -360,7 +361,7 @@ class TestParser(unittest.TestCase):
         ''' Some test :) '''
         input_string = 'func fname() { if 1 {} else {} }'
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
             ast.NodeIf(
@@ -375,7 +376,7 @@ class TestParser(unittest.TestCase):
         ''' Some test :) '''
         input_string = 'func fname() { a()() }'
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
             ast.NodeFunctionCall(
@@ -392,7 +393,7 @@ class TestParser(unittest.TestCase):
         ''' Some test :) '''
         input_string = 'func fname() { return 1 }'
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
             ast.NodeReturn(expression=ast.NodeNumber(1)),
@@ -403,7 +404,7 @@ class TestParser(unittest.TestCase):
         ''' Some test :) '''
         input_string = 'func fname() { return }'
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
             ast.NodeReturn(expression=None),
@@ -414,7 +415,7 @@ class TestParser(unittest.TestCase):
         ''' Some test :) '''
         input_string = 'func fname() { return x() }'
         real_ast = my_parser.make_parser().parse(
-                input_string, lexer=my_parser.make_lexer())
+            input_string, lexer=my_parser.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
             ast.NodeReturn(

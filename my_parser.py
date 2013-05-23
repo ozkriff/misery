@@ -94,10 +94,12 @@ def make_lexer():
         print(
             (
                 'Lexer error: Illegal character at '
-                '[%(lineno)d,%(column)d]. Skimy_pretty_printing...') % {
-            'lineno': t.lineno - 1,
-            'column': column - 1,
-        })
+                '[%(lineno)d,%(column)d]. Skimy_pretty_printing...'
+            ) % {
+                'lineno': t.lineno - 1,
+                'column': column - 1,
+            }
+        )
         print('  ' + t.lexer.lexdata.split('\n')[t.lineno - 1])
         print('  ' + (' ' * (column - 1)) + '^')
         t.lexer.skip(1)
@@ -173,7 +175,7 @@ def make_parser():
     def p_function_declaration(p):
         'declaration : FUNC IDENTIFIER function_interface block'
         p[0] = ast.NodeFunctionDeclaration(
-                name=p[2], interface=p[3], body=p[4])
+            name=p[2], interface=p[3], body=p[4])
 
     def p_type_declaration(p):
         'declaration : TYPE IDENTIFIER type'
@@ -183,7 +185,7 @@ def make_parser():
     def p_const_declaration(p):
         'declaration : CONST IDENTIFIER type ASSIGN expression'
         p[0] = ast.NodeConstDeclaration(
-                name=p[2], type=p[3], expression=p[5])
+            name=p[2], type=p[3], expression=p[5])
 
     # TODO: ?
     def p_type_identifier(p):
@@ -257,12 +259,12 @@ def make_parser():
     def p_statement_variable_declaration_with_type_and_init(p):
         'statement : VAR IDENTIFIER type ASSIGN expression'
         p[0] = ast.NodeVariableDeclaration(
-                name=p[2], type=p[3], expression=p[5])
+            name=p[2], type=p[3], expression=p[5])
 
     def p_statement_variable_declaration_constructor(p):
         'statement : VAR IDENTIFIER type LPAREN expression_list RPAREN'
         p[0] = ast.NodeVariableDeclaration(
-                name=p[2], type=p[3], constructor_argument_list=p[5])
+            name=p[2], type=p[3], constructor_argument_list=p[5])
 
     def p_statement_variable_declaration(p):
         'statement : VAR IDENTIFIER type'

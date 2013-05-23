@@ -19,7 +19,7 @@ def pretty_print(node, indent_level=0, shiftwidth=4):
         for key in node.keys():
             value = node[key]
             out += next_indent + key + ': ' + pretty_print(
-                    value, indent_level + 1, shiftwidth) + '\n'
+                value, indent_level + 1, shiftwidth) + '\n'
         out += indent + '}'
         return out
 

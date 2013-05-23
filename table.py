@@ -77,9 +77,9 @@ class Table:
     def parse_number(self, number):
         assert isinstance(number, ast.NodeNumber)
         self.declaration_list[-1].constant_list.append(
-                Constant(type='int', value=number.value))
+            Constant(type='int', value=number.value))
         return LinkToNumberConstant(
-                id=len(self.declaration_list[-1].constant_list) - 1)
+            id=len(self.declaration_list[-1].constant_list) - 1)
 
     def parse_function_call(self, function_call_node):
         assert isinstance(function_call_node, ast.NodeFunctionCall)
@@ -90,7 +90,7 @@ class Table:
         last_declaration.variable_list.append(
             Variable(name=varname, type=return_type))
         result_id = LinkToVariable(
-                id=len(last_declaration.variable_list) - 1)
+            id=len(last_declaration.variable_list) - 1)
         argument_id_list = []
         for argument in function_call_node.argument_list:
             id = self.parse_expression(argument)
@@ -106,7 +106,7 @@ class Table:
             )
         )
         return LinkToFunctionCall(
-                id=len(last_declaration.expression_list) - 1)
+            id=len(last_declaration.expression_list) - 1)
 
     def parse_expression(self, expression):
         if isinstance(expression, ast.NodeFunctionCall):

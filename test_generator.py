@@ -100,7 +100,7 @@ class TestGenerator(unittest.TestCase):
                 ast.NodeFunctionDeclaration(
                     name='f1',
                     interface=ast.NodeFunctionInterface(
-                        parameter_list =[
+                        parameter_list=[
                             ast.NodeFormalParameter(
                                 name='a',
                                 type=ast.NodeIdentifier('int')
