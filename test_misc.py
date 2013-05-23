@@ -13,21 +13,21 @@ class TestDiff(unittest.TestCase):
 class TestPrettyPrinter(unittest.TestCase):
 
     def test_none(self):
-        input = None
+        input_data = None
         expected_output = '<None>'
-        real_output = misc.pretty_print(input)
+        real_output = misc.pretty_print(input_data)
         self.assertEqual(expected_output, real_output)
 
     def test_empty_list(self):
-        input = []
+        input_data = []
         expected_output = '[]'
-        real_output = misc.pretty_print(input)
+        real_output = misc.pretty_print(input_data)
         self.assertEqual(expected_output, real_output)
         
     def test_empty_map(self):
-        input = {}
+        input_data = {}
         expected_output = '{\n}'
-        real_output = misc.pretty_print(input)
+        real_output = misc.pretty_print(input_data)
         self.assertEqual(expected_output, real_output)
 
 

@@ -1,68 +1,78 @@
 # -*- coding: utf-8 -*-
 
 
-def pretty_print(node, indent=0, shiftwidth=4):
-    i = (' ' * shiftwidth) * indent
-    i2 = (' ' * shiftwidth) * (indent + 1)
+'''
+Miscellaneous classes and functions.
+'''
 
-    def print_dict(dict, indent=0, shiftwidth=4):
+
+def pretty_print(node, indent_level=0, shiftwidth=4):
+    '''
+    Pretty print some variable
+    '''
+    indent = (' ' * shiftwidth) * indent_level
+    next_indent = (' ' * shiftwidth) * (indent_level + 1)
+
+    def print_dict(node, indent_level=0, shiftwidth=4):
         out = ''
         out += '{\n'
-        for key in dict.keys():
-            value = dict[key]
-            out += i2 + key + ': ' + pretty_print(
-                    value, indent + 1, shiftwidth) + '\n'
-        out += i + '}'
+        for key in node.keys():
+            value = node[key]
+            out += next_indent + key + ': ' + pretty_print(
+                    value, indent_level + 1, shiftwidth) + '\n'
+        out += indent + '}'
         return out
 
-    def print_list(list, indent=0, shiftwidth=4):
+    def print_list(node, indent_level=0, shiftwidth=4):
         out = ''
-        if len(list) > 0:
+        if len(node) > 0:
             out += '[\n'
-            for value in list:
-                pp = pretty_print(value, indent + 1, shiftwidth)
-                out += i2 + pp + ',' + '\n'
-            out += i + ']'
+            for value in node:
+                out += next_indent
+                out += pretty_print(value, indent_level + 1, shiftwidth)
+                out += ',' + '\n'
+            out += indent + ']'
         else:
             out += '[]'
         return out
 
-    def print_tuple(tuple, indent=0, shiftwidth=4):
+    def print_tuple(node, indent_level=0, shiftwidth=4):
         out = ''
         out += '<TUPLE>(\n'
-        for value in tuple:
-            pp = pretty_print(value, indent + 1, shiftwidth)
-            out += i2 + pp + ',' + '\n'
-        out += i + ')'
+        for value in node:
+            out += next_indent
+            out += pretty_print(value, indent_level + 1, shiftwidth)
+            out += ',' + '\n'
+        out += indent + ')'
         return out
 
-    def print_object(object, indent=0, shiftwidth=4):
+    def print_object(obj, indent_level=0, shiftwidth=4):
         out = ''
-        out += str(object.__class__.__name__) + '('
-        if len(object.__dict__) == 0:
+        out += str(obj.__class__.__name__) + '('
+        if len(obj.__dict__) == 0:
             out += ')'
-        elif len(object.__dict__) > 1:
+        elif len(obj.__dict__) > 1:
             out += '\n'
-            for key in object.__dict__.keys():
-                value = object.__dict__[key]
-                out += i2 + key + '='
-                out += pretty_print(value, indent + 1, shiftwidth)
+            for key in obj.__dict__.keys():
+                value = obj.__dict__[key]
+                out += next_indent + key + '='
+                out += pretty_print(value, indent_level + 1, shiftwidth)
                 out += ',' + '\n'
-            out += i + ')'
+            out += indent + ')'
         else:
-            for key in object.__dict__.keys():
-                value = object.__dict__[key]
+            for key in obj.__dict__.keys():
+                value = obj.__dict__[key]
                 out += key + '='
-                out += pretty_print(value, indent + 1, shiftwidth) + ')'
+                out += pretty_print(value, indent_level + 1, shiftwidth) + ')'
         return out
 
     out = ''
     if isinstance(node, dict):
-        out += print_dict(node, indent, shiftwidth)
+        out += print_dict(node, indent_level, shiftwidth)
     elif isinstance(node, list):
-        out += print_list(node, indent, shiftwidth)
+        out += print_list(node, indent_level, shiftwidth)
     elif isinstance(node, tuple):
-        out += print_tuple(node, indent, shiftwidth)
+        out += print_tuple(node, indent_level, shiftwidth)
     elif isinstance(node, str):
         out += '"' + node + '"'
     elif isinstance(node, int):
@@ -72,25 +82,24 @@ def pretty_print(node, indent=0, shiftwidth=4):
     elif node is None:
         out = '<None>'
     else:
-        out += print_object(node, indent, shiftwidth)
+        out += print_object(node, indent_level, shiftwidth)
     return out
 
 
 def diff(expected, real):
-    '''TODO: diff strings'''
+    '''Returns string difference'''
     import difflib
     expected_s = pretty_print(expected).split('\n')
     real_s = pretty_print(real).split('\n')
-    diff = difflib.unified_diff(expected_s, real_s, lineterm='')
-    out = '\n'.join(diff)
-    return out
+    unified_diff = difflib.unified_diff(expected_s, real_s, lineterm='')
+    return '\n'.join(unified_diff)
 
 
 def assert_equal(test_case, expected_ast, real_ast):
     # print('\n' + pretty_print(expected_ast))
-    d = diff(expected_ast, real_ast)
-    if d:
-        test_case.fail('\n' + d)
+    difference = diff(expected_ast, real_ast)
+    if difference:
+        test_case.fail('\n' + difference)
     else:
         test_case.assertEqual(expected_ast, real_ast)
 

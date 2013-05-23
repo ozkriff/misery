@@ -26,8 +26,7 @@ class TestTable(unittest.TestCase):
                 ),
             ]
         )
-        t = table.Table()
-        t.generate_tables(ast_)
+        table.Table().generate_tables(ast_)
         # expected_tables = []
         # misc.assert_equal(self, expected_tables, real_tables)
         # print('\n' + my_pretty_print(t))
@@ -41,17 +40,20 @@ class TestTable(unittest.TestCase):
                     body=[
                         ast.NodeFunctionCall(
                             expression=ast.NodeIdentifier('plus'),
-                            argument_list=[ast.NodeNumber(1), ast.NodeNumber(2)],
+                            argument_list=[
+                                ast.NodeNumber(1),
+                                ast.NodeNumber(2),
+                            ],
                         ),
                     ]
                 )
             ]
         )
-        t = table.Table()
-        t.generate_tables(ast_)
-        g = generator.Generator()
-        g.table = t
-        real_output = g.generate()
+        table_ = table.Table()
+        table_.generate_tables(ast_)
+        gen = generator.Generator()
+        gen.table = table_
+        real_output = gen.generate()
         expected_output = (
             '\n'
             'void main();\n'
@@ -81,8 +83,7 @@ class TestTable(unittest.TestCase):
                 )
             ]
         )
-        t = table.Table()
-        t.generate_tables(ast_)
+        table.Table().generate_tables(ast_)
         # print('\n' + my_pretty_print(t))
         # g = Generator()
         # g.table = t
