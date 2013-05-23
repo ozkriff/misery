@@ -152,10 +152,11 @@ class Table:
         )
 
     def parse_statement(self, function, statement):
-        '''Составляет из AST statement`а ячейки таблицы.
+        '''
+        Translates AST Node to Table Node.
 
-        function -- таблица текущей функции
-        statement -- то, что нужно разобрать
+        function -- current functions`s table
+        statement -- statement to parse
         '''
         if isinstance(statement, ast.NodeVariableDeclaration):
             self.parse_variable_declaration_statement(function, statement)
