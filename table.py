@@ -113,6 +113,8 @@ class Table:
             return self.parse_function_call(expression)
         elif isinstance(expression, ast.NodeNumber):
             return self.parse_number(expression)
+        else:
+            assert False
 
     def parse_variable_declaration_statement(self, function, statement):
         expression_id = self.parse_expression(statement.expression)
