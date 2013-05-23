@@ -77,7 +77,7 @@ class Generator:
         elif isinstance(statement, table.FunctionCallStatement):
             out += self.generate_function_call_statement(function, statement)
         else:
-            assert False
+            raise Exception("Not Implemented")
         return out
 
     def generate_function(self, function):
