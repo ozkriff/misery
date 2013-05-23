@@ -180,7 +180,7 @@ class Table:
         for declaration in ast_.declaration_sequence:
             if isinstance(declaration, ast.NodeFunctionDeclaration):
                 self.parse_function_declaration(declaration)
-            elif isinstance(declaration, NodeTypeDeclaration):
+            elif isinstance(declaration, ast.NodeTypeDeclaration):
                 assert False  # TODO
             else:
                 assert False
