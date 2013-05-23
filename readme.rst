@@ -4,6 +4,7 @@ Run all unit tests::
 
 Test coverage::
 
+    clear old data: python -m coverage erase
     generate info: python -m coverage run -m unittest discover
     simple report: python -m coverage report -m
     html report: python -m coverage html -d coverage_html
