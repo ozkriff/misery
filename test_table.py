@@ -15,7 +15,7 @@ class TestTable(unittest.TestCase):
             declaration_sequence=[
                 ast.NodeFunctionDeclaration(
                     name='f1',
-                    interface=ast.NodeFunctionInterface(),
+                    interface=ast.NodeFunctionInterface(parameter_list=[]),
                     body=[
                         ast.NodeVariableDeclaration(
                             expression=ast.NodeNumber(1),
@@ -36,7 +36,7 @@ class TestTable(unittest.TestCase):
             declaration_sequence=[
                 ast.NodeFunctionDeclaration(
                     name='main',
-                    interface=ast.NodeFunctionInterface(),
+                    interface=ast.NodeFunctionInterface(parameter_list=[]),
                     body=[
                         ast.NodeFunctionCall(
                             expression=ast.NodeIdentifier('plus'),
@@ -72,7 +72,7 @@ class TestTable(unittest.TestCase):
             declaration_sequence=[
                 ast.NodeFunctionDeclaration(
                     name='main',
-                    interface=ast.NodeFunctionInterface(),
+                    interface=ast.NodeFunctionInterface(parameter_list=[]),
                     body=[
                         ast.NodeIf(
                             condition=ast.NodeNumber(1),

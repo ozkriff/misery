@@ -13,7 +13,7 @@ class TestParser(unittest.TestCase):
         declaration_sequence=[
             ast.NodeFunctionDeclaration(
                 name='fname',
-                interface=ast.NodeFunctionInterface(),
+                interface=ast.NodeFunctionInterface(parameter_list=[]),
                 body=[],
             )
         ]
@@ -130,7 +130,7 @@ class TestParser(unittest.TestCase):
             declaration_sequence=[
                 ast.NodeFunctionDeclaration(
                     name='testfunc2',
-                    interface=ast.NodeFunctionInterface(),
+                    interface=ast.NodeFunctionInterface(parameter_list=[]),
                     body=[],
                 )
             ]
@@ -145,6 +145,7 @@ class TestParser(unittest.TestCase):
                 ast.NodeFunctionDeclaration(
                     name='testfunc2',
                     interface=ast.NodeFunctionInterface(
+                        parameter_list=[],
                         return_type=ast.NodeIdentifier('Integer'),
                     ),
                     body=[],
@@ -362,6 +363,7 @@ class TestParser(unittest.TestCase):
             ast.NodeReturn(
                 expression=ast.NodeFunctionCall(
                     expression=ast.NodeIdentifier('x'),
+                    argument_list=[],
                 ),
             ),
         )

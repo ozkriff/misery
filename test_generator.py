@@ -15,7 +15,7 @@ class TestGenerator(unittest.TestCase):
             declaration_sequence=[
                 ast.NodeFunctionDeclaration(
                     name='f1',
-                    interface=ast.NodeFunctionInterface(),
+                    interface=ast.NodeFunctionInterface(parameter_list=[]),
                     body=[
                         ast.NodeVariableDeclaration(
                             expression=ast.NodeFunctionCall(
@@ -32,7 +32,7 @@ class TestGenerator(unittest.TestCase):
                 ),
                 ast.NodeFunctionDeclaration(
                     name='f2',
-                    interface=ast.NodeFunctionInterface(),
+                    interface=ast.NodeFunctionInterface(parameter_list=[]),
                     body=[
                         ast.NodeVariableDeclaration(
                             expression=ast.NodeFunctionCall(
@@ -46,7 +46,7 @@ class TestGenerator(unittest.TestCase):
                 ),
                 ast.NodeFunctionDeclaration(
                     name='main',
-                    interface=ast.NodeFunctionInterface(),
+                    interface=ast.NodeFunctionInterface(parameter_list=[]),
                     body=[],
                 ),
             ]

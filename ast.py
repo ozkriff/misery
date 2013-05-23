@@ -76,7 +76,7 @@ class NodeFunctionDeclaration(BaseNode):
 
 
 class NodeFunctionInterface(BaseNode):
-    def __init__(self, parameter_list=[], return_type=None):
+    def __init__(self, parameter_list, return_type=None):
         self.parameter_list = parameter_list
         self.return_type = return_type
 
@@ -88,7 +88,7 @@ class NodeFormalParameter(BaseNode):
 
 
 class NodeFunctionCall(BaseNode):
-    def __init__(self, expression, argument_list=[]):
+    def __init__(self, expression, argument_list):
         self.expression = expression
         self.argument_list = argument_list
 
