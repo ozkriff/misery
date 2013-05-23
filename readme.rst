@@ -11,6 +11,7 @@ Test coverage::
 
 TODO:
 
+- return_type=ast.NodeIdentifier('Integer') ??? NodeType!
 - Table.current_indent_level
 - qualifiedIdentifier: module.submodule.Class.Subclass
 - generics

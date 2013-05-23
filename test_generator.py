@@ -87,4 +87,42 @@ class TestGenerator(unittest.TestCase):
         )
         misc.assert_equal(self, expected_output, real_output)
 
+    def test_2(self):
+        ast_ = ast.NodeModule(
+            declaration_sequence=[
+                ast.NodeFunctionDeclaration(
+                    name='f1',
+                    interface=ast.NodeFunctionInterface(
+                        parameter_list =[
+                            ast.NodeFormalParameter(
+                                name='a',
+                                type=ast.NodeIdentifier('int')
+                            ),
+                            ast.NodeFormalParameter(
+                                name='b',
+                                type=ast.NodeIdentifier('int')
+                            ),
+                        ],
+                        return_type=ast.NodeIdentifier('int'),
+                    ),
+                    body=[]
+                ),
+            ]
+        )
+        g = generator.Generator()
+        g.table = table.Table()
+        g.table.generate_tables(ast_)
+        # print('\n' + my_pretty_print(g))
+        real_output = g.generate()
+        expected_output = (
+            '\n'
+            'int f1(int a, int b);\n'
+            '\n'
+            'int f1(int a, int b) {\n'
+            '\n'
+            '}\n'
+            '\n'
+        )
+        misc.assert_equal(self, expected_output, real_output)
+
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
