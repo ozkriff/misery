@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 import unittest
 import ast
 import misc
@@ -51,11 +52,11 @@ class TestGenerator(unittest.TestCase):
                 ),
             ]
         )
-        g = generator.Generator()
-        g.table = table.Table()
-        g.table.generate_tables(ast_)
-        # print('\n' + my_pretty_print(g))
-        real_output = g.generate()
+        gen = generator.Generator()
+        gen.table = table.Table()
+        gen.table.generate_tables(ast_)
+        # print('\n' + my_pretty_print(gen))
+        real_output = gen.generate()
         expected_output = (
             '// import: stdio\n'
             '// import: ogre3d\n'
@@ -109,11 +110,11 @@ class TestGenerator(unittest.TestCase):
                 ),
             ]
         )
-        g = generator.Generator()
-        g.table = table.Table()
-        g.table.generate_tables(ast_)
-        # print('\n' + my_pretty_print(g))
-        real_output = g.generate()
+        gen = generator.Generator()
+        gen.table = table.Table()
+        gen.table.generate_tables(ast_)
+        # print('\n' + my_pretty_print(gen))
+        real_output = gen.generate()
         expected_output = (
             '\n'
             'int f1(int a, int b);\n'
