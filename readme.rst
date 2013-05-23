@@ -12,6 +12,7 @@ Test coverage::
 
 TODO:
 
+- Rename: 'type' -> '???'
 - return_type=ast.NodeIdentifier('Integer') ??? NodeType!
 - Table.current_indent_level
 - qualifiedIdentifier: module.submodule.Class.Subclass
