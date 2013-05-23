@@ -9,8 +9,10 @@ import generator  # TODO: table should not depend on generator!!!
 
 
 class TestTable(unittest.TestCase):
+    ''' Test 'Table' class. '''
 
     def test_1(self):
+        ''' Just generate some tables. '''
         ast_ = ast.NodeModule(
             declaration_sequence=[
                 ast.NodeFunctionDeclaration(
@@ -32,6 +34,7 @@ class TestTable(unittest.TestCase):
         # print('\n' + my_pretty_print(t))
 
     def test_2(self):
+        ''' bla bla bla. '''
         ast_ = ast.NodeModule(
             declaration_sequence=[
                 ast.NodeFunctionDeclaration(
@@ -68,6 +71,7 @@ class TestTable(unittest.TestCase):
         misc.assert_equal(self, expected_output, real_output)
 
     def test_if(self):
+        ''' Test IF. '''
         ast_ = ast.NodeModule(
             declaration_sequence=[
                 ast.NodeFunctionDeclaration(

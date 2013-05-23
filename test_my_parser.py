@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+
+''' Test my_parser module. '''
+
+
 import unittest
 import ast
 import misc
@@ -7,6 +11,7 @@ import copy
 import my_parser
 
 class TestParser(unittest.TestCase):
+    ''' Test my_parser.make_parser() function. '''
 
     # TODO: Rename
     _std_module = ast.NodeModule(
@@ -20,6 +25,7 @@ class TestParser(unittest.TestCase):
     )
 
     def test_empty_module(self):
+        ''' Parse empty string. '''
         input_string = ''
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())
@@ -29,6 +35,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_empty_import(self):
+        ''' Parse empty import statement. '''
         input_string = 'import{}'
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())
@@ -39,6 +46,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_import(self):
+        ''' Parse import statement. '''
         input_string = 'import{module1}'
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())
@@ -49,6 +57,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_import_2(self):
+        ''' Parse import statement with two modules. '''
         input_string = 'import{module1 module2}'
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())
@@ -59,6 +68,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_type_declaration(self):
+        ''' Parse type simple declaration. '''
         input_string = 'type MyInteger Integer'
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())
@@ -73,6 +83,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_struct_type_declaration(self):
+        ''' Some test :) '''
         input_string = '''
             type MyStruct struct {
                 field1 Int
@@ -103,6 +114,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_type_alias(self):
+        ''' Some test :) '''
         input_string = 'type MyInteger Integer'
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())
@@ -117,6 +129,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_const_declaration(self):
+        ''' Some test :) '''
         input_string = 'const importantIdentifier Integer = 10'
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())
@@ -132,6 +145,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_func(self):
+        ''' Some test :) '''
         input_string = 'func testfunc2() {}'
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())
@@ -147,6 +161,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_func_with_return_value(self):
+        ''' Some test :) '''
         input_string = 'func testfunc2() -> Integer {}'
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())
@@ -165,6 +180,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_func_with_parameter(self):
+        ''' Some test :) '''
         input_string = 'func testfunc(par ParType) {}'
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())
@@ -188,6 +204,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_func_with_2_parameters(self):
+        ''' Some test :) '''
         input_string = 'func testfunc(par1 ParType, par2 ParType) {}'
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())
@@ -215,6 +232,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_func_body_2_empty_blocks(self):
+        ''' Some test :) '''
         input_string = 'func fname() { {} {} }'
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())
@@ -223,6 +241,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_func_call(self):
+        ''' Some test :) '''
         input_string = 'func fname() { fname2() }'
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())
@@ -235,6 +254,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_declaration_without_initialization(self):
+        ''' Some test :) '''
         input_string = 'func fname() { var testVar Integer }'
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())
@@ -247,6 +267,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_declaration_with_type_and_initialization(self):
+        ''' Some test :) '''
         input_string = 'func fname() { var testVar Integer = 666 }'
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())
@@ -260,6 +281,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_declaration_with_initialization(self):
+        ''' Some test :) '''
         input_string = 'func fname() { var testVar = 666 }'
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())
@@ -272,6 +294,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_declaration_with_ctor(self):
+        ''' Some test :) '''
         input_string = 'func fname() { var p Parser() }'
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())
@@ -285,6 +308,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_declaration_with_init_2(self):
+        ''' Some test :) '''
         input_string = 'func fname() { var v2 Int = plus(1, 2) }'
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())
@@ -301,6 +325,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_declaration_with_ctor_and_arguments(self):
+        ''' Some test :) '''
         input_string = 'func fname() { var p Parser(lexer, 1) }'
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())
@@ -318,6 +343,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_if(self):
+        ''' Some test :) '''
         input_string = 'func fname() { if 1 {} }'
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())
@@ -331,6 +357,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_if_else(self):
+        ''' Some test :) '''
         input_string = 'func fname() { if 1 {} else {} }'
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())
@@ -345,6 +372,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_nested_func_call_1(self):
+        ''' Some test :) '''
         input_string = 'func fname() { a()() }'
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())
@@ -361,6 +389,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_return_1(self):
+        ''' Some test :) '''
         input_string = 'func fname() { return 1 }'
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())
@@ -371,6 +400,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_return_2(self):
+        ''' Some test :) '''
         input_string = 'func fname() { return }'
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())
@@ -381,6 +411,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_return_3(self):
+        ''' Some test :) '''
         input_string = 'func fname() { return x() }'
         real_ast = my_parser.make_parser().parse(
                 input_string, lexer=my_parser.make_lexer())

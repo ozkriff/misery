@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 
+''' Test 'generator' module. '''
+
+
 import unittest
 import ast
 import misc
@@ -9,8 +12,10 @@ import table
 
 
 class TestGenerator(unittest.TestCase):
+    ''' Test 'Generator' class. '''
 
     def test_1(self):
+        ''' Generate some code. '''
         ast_ = ast.NodeModule(
             import_list=['stdio', 'ogre3d'],
             declaration_sequence=[
@@ -89,6 +94,7 @@ class TestGenerator(unittest.TestCase):
         misc.assert_equal(self, expected_output, real_output)
 
     def test_2(self):
+        ''' Generate some simple code. '''
         ast_ = ast.NodeModule(
             declaration_sequence=[
                 ast.NodeFunctionDeclaration(
