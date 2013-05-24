@@ -113,7 +113,7 @@ def assert_equal(test_case, expected_ast, real_ast):
     difference = diff(expected_ast, real_ast)
     if difference:
         test_case.fail('\n' + difference)
-    else:
-        test_case.assertEqual(expected_ast, real_ast)
+    # else:
+    #     test_case.assertEqual(expected_ast, real_ast)
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
