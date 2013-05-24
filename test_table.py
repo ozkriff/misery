@@ -58,18 +58,18 @@ class TestTable(unittest.TestCase):
         real_output = table_
 
         func = table.Function(
-            name="main",
+            name='main',
             interface=ast.NodeFunctionInterface(
                 return_type=None,
                 parameter_list=[],
             ),
         )
         func.constant_list = [
-            table.Constant(type="int", value=1),
-            table.Constant(type="int", value=2),
+            table.Constant(type='int', value=1),
+            table.Constant(type='int', value=2),
         ]
         func.variable_list = [
-            table.Variable(type="int", name="tmp_0"),
+            table.Variable(type='int', name='tmp_0'),
         ]
         func.statement_list = [
             table.FunctionCallStatement(
@@ -78,7 +78,7 @@ class TestTable(unittest.TestCase):
         func.expression_list = [
             table.FunctionCallExpression(
                 result_id=table.LinkToVariable(id=0),
-                name="plus",
+                name='plus',
                 argument_id_list=[
                     table.LinkToNumberConstant(id=0),
                     table.LinkToNumberConstant(id=1),

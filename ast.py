@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # See LICENSE file for copyright and license details
 
-"""
+'''
 Asbtract Syntax Tree
-"""
+'''
 
 
 class BaseNode(object):

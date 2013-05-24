@@ -115,7 +115,7 @@ class Table:
         elif isinstance(expression, ast.NodeNumber):
             return self._parse_number(expression)
         else:
-            raise Exception("Not Implemented")
+            raise Exception('Not Implemented')
 
     def _parse_variable_declaration_statement(self, function, statement):
         expression_id = self._parse_expression(statement.expression)
@@ -166,7 +166,7 @@ class Table:
         elif isinstance(statement, ast.NodeIf):
             self._parse_if_statement(function, statement)
         else:
-            raise Exception("Not Implemented")
+            raise Exception('Not Implemented')
 
     def _parse_function_declaration(self, declaration):
         function = Function(
@@ -183,8 +183,8 @@ class Table:
             if isinstance(declaration, ast.NodeFunctionDeclaration):
                 self._parse_function_declaration(declaration)
             elif isinstance(declaration, ast.NodeTypeDeclaration):
-                raise Exception("Not Implemented")
+                raise Exception('Not Implemented')
             else:
-                raise Exception("Not Implemented")
+                raise Exception('Not Implemented')
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
