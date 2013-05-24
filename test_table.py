@@ -5,7 +5,6 @@ import unittest
 import ast
 import misc
 import table
-import generator  # TODO: table should not depend on generator!!!
 
 
 class TestTable(unittest.TestCase):
@@ -33,13 +32,14 @@ class TestTable(unittest.TestCase):
         # misc.assert_equal(self, expected_tables, real_tables)
         # print('\n' + my_pretty_print(t))
 
-    def test_2(self):
-        ''' bla bla bla. '''
+    def test_generate_function_call(self):
+        ''' Generate table with simple function call. '''
         ast_ = ast.NodeModule(
             declaration_sequence=[
                 ast.NodeFunctionDeclaration(
                     name='main',
-                    interface=ast.NodeFunctionInterface(parameter_list=[]),
+                    interface=ast.NodeFunctionInterface(
+                        parameter_list=[]),
                     body=[
                         ast.NodeFunctionCall(
                             expression=ast.NodeIdentifier('plus'),
@@ -54,20 +54,39 @@ class TestTable(unittest.TestCase):
         )
         table_ = table.Table()
         table_.generate_tables(ast_)
-        gen = generator.Generator()
-        gen.table = table_
-        real_output = gen.generate()
-        expected_output = (
-            '\n'
-            'void main();\n'
-            '\n'
-            'void main() {\n'
-            '  int tmp_0;\n'
-            '\n'
-            '  plus(&tmp_0, 1, 2);\n'
-            '}\n'
-            '\n'
+        real_output = table_
+
+        func = table.Function(
+            name="main",
+            interface=ast.NodeFunctionInterface(
+                return_type=None,
+                parameter_list=[],
+            ),
         )
+        func.constant_list = [
+            table.Constant(type="int", value=1),
+            table.Constant(type="int", value=2),
+        ]
+        func.variable_list = [
+            table.Variable(type="int", name="tmp_0"),
+        ]
+        func.statement_list = [
+            table.FunctionCallStatement(
+                expression_id=table.LinkToFunctionCall(id=0)),
+        ]
+        func.expression_list = [
+            table.FunctionCallExpression(
+                result_id=table.LinkToVariable(id=0),
+                name="plus",
+                argument_id_list=[
+                    table.LinkToNumberConstant(id=0),
+                    table.LinkToNumberConstant(id=1),
+                ],
+            ),
+        ]
+        expected_output = table.Table()
+        expected_output.declaration_list=[func]
+
         misc.assert_equal(self, expected_output, real_output)
 
     def test_if(self):
