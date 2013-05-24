@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-import copy
-import unittest
 import ast
-import misc
 import ply.yacc
 import ply.lex
 
