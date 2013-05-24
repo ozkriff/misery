@@ -85,7 +85,7 @@ class TestTable(unittest.TestCase):
             ),
         ]
         expected_output = table.Table()
-        expected_output.declaration_list=[func]
+        expected_output.declaration_list = [func]
 
         misc.assert_equal(self, expected_output, real_output)
 
