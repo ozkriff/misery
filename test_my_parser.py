@@ -427,4 +427,37 @@ class TestParser(unittest.TestCase):
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
+
+# TODO: Why +1?
+class TestFindColumn(unittest.TestCase):
+    ''' Test my_parser.find_column() function. '''
+
+    def test_simple(self):
+        ''' Basic test. '''
+        input_data = '1 2 3\n'
+        pos = 3
+        real_column = my_parser.find_column(input_data, pos)
+        expected_column = 4
+        misc.assert_equal(self, expected_column, real_column)
+
+    def test_simple_multiline(self):
+        ''' Basic test. '''
+        input_data = (
+            '1 2 3\n'
+            '4 5 6\n'
+        )
+        pos = 8
+        real_column = my_parser.find_column(input_data, pos)
+        expected_column = 4
+        misc.assert_equal(self, expected_column, real_column)
+
+    def test_no_newline(self):
+        ''' Basic test. '''
+        input_data = ''
+        pos = 0
+        real_column = my_parser.find_column(input_data, pos)
+        expected_column = 1
+        misc.assert_equal(self, expected_column, real_column)
+
+
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
