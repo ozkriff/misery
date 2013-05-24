@@ -21,11 +21,10 @@ Test coverage::
     html report: python -m coverage html -d coverage_html
 
 
-TODO:
+TODO
+----
 
 - Rename: 'type' -> '???'
-- return_type=ast.NodeIdentifier('Integer') ??? NodeType!
-- Table.current_indent_level
 - qualifiedIdentifier: module.submodule.Class.Subclass
 - generics
 - varargs
@@ -36,13 +35,8 @@ TODO:
 - nested funcs
 - pep8, pylint, pyflakes
 
-- try to use verbose test names::
-
-    def test_that_a_player_cannot_move_into_an_already_occupied_board_cell(self): pass
-    def test_corectness_of_verify_win_combinations_3(self): pass
-    def test_that_parsed_response_contains_status_key(self): pass
-
-Notes:
+Notes
+-----
 
 Print lexems::
 
