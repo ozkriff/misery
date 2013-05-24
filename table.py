@@ -74,14 +74,14 @@ class Table:
         self.symbol_list = []
         self.import_list = None
 
-    def parse_number(self, number):
+    def _parse_number(self, number):
         assert isinstance(number, ast.NodeNumber)
         self.declaration_list[-1].constant_list.append(
             Constant(type='int', value=number.value))
         return LinkToNumberConstant(
             id=len(self.declaration_list[-1].constant_list) - 1)
 
-    def parse_function_call(self, function_call_node):
+    def _parse_function_call(self, function_call_node):
         assert isinstance(function_call_node, ast.NodeFunctionCall)
         last_declaration = self.declaration_list[-1]
         varname = 'tmp_' + str(len(last_declaration.variable_list))
@@ -93,7 +93,7 @@ class Table:
             id=len(last_declaration.variable_list) - 1)
         argument_id_list = []
         for argument in function_call_node.argument_list:
-            id = self.parse_expression(argument)
+            id = self._parse_expression(argument)
             argument_id_list.append(id)
         # TODO: parse function_call_node.expression!
         assert isinstance(function_call_node.expression, ast.NodeIdentifier)
@@ -108,16 +108,16 @@ class Table:
         return LinkToFunctionCall(
             id=len(last_declaration.expression_list) - 1)
 
-    def parse_expression(self, expression):
+    def _parse_expression(self, expression):
         if isinstance(expression, ast.NodeFunctionCall):
-            return self.parse_function_call(expression)
+            return self._parse_function_call(expression)
         elif isinstance(expression, ast.NodeNumber):
-            return self.parse_number(expression)
+            return self._parse_number(expression)
         else:
             raise Exception("Not Implemented")
 
-    def parse_variable_declaration_statement(self, function, statement):
-        expression_id = self.parse_expression(statement.expression)
+    def _parse_variable_declaration_statement(self, function, statement):
+        expression_id = self._parse_expression(statement.expression)
         function.variable_list.append(
             Variable(
                 name=statement.name,
@@ -131,13 +131,13 @@ class Table:
             )
         )
 
-    def parse_function_call_statement(self, function, statement):
-        expression_id = self.parse_expression(statement)
+    def _parse_function_call_statement(self, function, statement):
+        expression_id = self._parse_expression(statement)
         function.statement_list.append(
             FunctionCallStatement(expression_id=expression_id))
 
-    def parse_if_statement(self, function, statement):
-        # expression_id = self.parse_expression(statement.expression)
+    def _parse_if_statement(self, function, statement):
+        # expression_id = self._parse_expression(statement.expression)
         # function.variable_list.append(
         #     Variable(
         #         name=statement.name,
@@ -151,7 +151,7 @@ class Table:
             )
         )
 
-    def parse_statement(self, function, statement):
+    def _parse_statement(self, function, statement):
         '''
         Translates AST Node to Table Node.
 
@@ -159,28 +159,28 @@ class Table:
         statement -- statement to parse
         '''
         if isinstance(statement, ast.NodeVariableDeclaration):
-            self.parse_variable_declaration_statement(function, statement)
+            self._parse_variable_declaration_statement(function, statement)
         elif isinstance(statement, ast.NodeFunctionCall):
-            self.parse_function_call_statement(function, statement)
+            self._parse_function_call_statement(function, statement)
         elif isinstance(statement, ast.NodeIf):
-            self.parse_if_statement(function, statement)
+            self._parse_if_statement(function, statement)
         else:
             raise Exception("Not Implemented")
 
-    def parse_function_declaration(self, declaration):
+    def _parse_function_declaration(self, declaration):
         function = Function(
             name=declaration.name,
             interface=declaration.interface,
         )
         self.declaration_list.append(function)
         for statement in declaration.body:
-            self.parse_statement(function, statement)
+            self._parse_statement(function, statement)
 
     def generate_tables(self, ast_):
         self.import_list = copy.deepcopy(ast_.import_list)
         for declaration in ast_.declaration_sequence:
             if isinstance(declaration, ast.NodeFunctionDeclaration):
-                self.parse_function_declaration(declaration)
+                self._parse_function_declaration(declaration)
             elif isinstance(declaration, ast.NodeTypeDeclaration):
                 raise Exception("Not Implemented")
             else:
