@@ -8,12 +8,30 @@ import unittest
 import misc
 
 
+# TODO: Add more tests!
 class TestDiff(unittest.TestCase):
     ''' Test misc.diff function. '''
 
-    def test_1(self):
-        ''' Diff two lines. '''
-        pass
+    def test_lists(self):
+        ''' Diff lists. '''
+        list1 = [1, 2, 3, 4, 5]
+        list2 = [1, 2, 0, 0, 5]
+        real_output = misc.diff(list1, list2)
+        expected_output = (
+            '--- \n'
+            '+++ \n'
+            '@@ -1,7 +1,7 @@\n'
+            ' [\n'
+            '     1,\n'
+            '     2,\n'
+            '-    3,\n'
+            '-    4,\n'
+            '+    0,\n'
+            '+    0,\n'
+            '     5,\n'
+            ' ]'
+        )
+        self.assertEqual(expected_output, real_output)
 
 
 class TestPrettyPrinter(unittest.TestCase):
@@ -30,6 +48,19 @@ class TestPrettyPrinter(unittest.TestCase):
         ''' Print empty list. '''
         input_data = []
         expected_output = '[]'
+        real_output = misc.pretty_print(input_data)
+        self.assertEqual(expected_output, real_output)
+
+    def test_simple_list(self):
+        ''' Print simple list. '''
+        input_data = [1, 2, 3]
+        expected_output = (
+            '[\n'
+            '    1,\n'
+            '    2,\n'
+            '    3,\n'
+            ']'
+        )
         real_output = misc.pretty_print(input_data)
         self.assertEqual(expected_output, real_output)
 
@@ -108,5 +139,59 @@ class TestPrettyPrinter(unittest.TestCase):
         expected_output = 'TestClass()'
         real_output = misc.pretty_print(input_data)
         self.assertEqual(expected_output, real_output)
+
+    def test_object_with_one_field(self):
+        ''' Print object wothout fields. '''
+        class TestClass:
+            pass
+        input_data = TestClass()
+        input_data.field1 = 1
+        expected_output = 'TestClass(field1=1)'
+        real_output = misc.pretty_print(input_data)
+        self.assertEqual(expected_output, real_output)
+
+    def test_object_with_two_field(self):
+        ''' Print object wothout fields. '''
+        class TestClass:
+            pass
+        input_data = TestClass()
+        input_data.field1 = 1
+        input_data.field2 = 'hi'
+        expected_output = (
+            'TestClass(\n'
+            '    field2=\"hi\",\n'
+            '    field1=1,\n'
+            ')'
+        )
+        real_output = misc.pretty_print(input_data)
+        self.assertEqual(expected_output, real_output)
+
+
+class TestAssertEqual(unittest.TestCase):
+    ''' Test misc.assert_equal function. '''
+
+    class TestCaseMock:
+
+        def __init__(self):
+            self.is_ok = True
+
+        def assertEqual(self, expected, real):
+            return expected == real
+
+        def fail(self, diff):
+            if diff:
+                self.is_ok = False
+
+    def test_failed(self):
+        ''' Test failed. '''
+        mock = self.TestCaseMock()
+        misc.assert_equal(mock, 1, 2)
+        self.assertEqual(mock.is_ok, False)
+
+    def test_passed(self):
+        ''' Test failed. '''
+        mock = self.TestCaseMock()
+        misc.assert_equal(mock, 1, 1)
+        self.assertEqual(mock.is_ok, True)
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
