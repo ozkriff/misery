@@ -24,7 +24,7 @@ class PrettyPrinter:
             for key in node.keys():
                 value = node[key]
                 out += next_indent + key + ': '
-                out += pretty_print(value, indent_level + 1)
+                out += self.pretty_print(value, indent_level + 1)
                 out += '\n'
             out += indent + '}'
             return out
@@ -35,7 +35,7 @@ class PrettyPrinter:
                 out += '[\n'
                 for value in node:
                     out += next_indent
-                    out += pretty_print(value, indent_level + 1)
+                    out += self.pretty_print(value, indent_level + 1)
                     out += ',' + '\n'
                 out += indent + ']'
             else:
@@ -47,7 +47,7 @@ class PrettyPrinter:
             out += '<TUPLE>(\n'
             for value in node:
                 out += next_indent
-                out += pretty_print(value, indent_level + 1)
+                out += self.pretty_print(value, indent_level + 1)
                 out += ',' + '\n'
             out += indent + ')'
             return out
@@ -62,14 +62,14 @@ class PrettyPrinter:
                 for key in obj.__dict__.keys():
                     value = obj.__dict__[key]
                     out += next_indent + key + '='
-                    out += pretty_print(value, indent_level + 1)
+                    out += self.pretty_print(value, indent_level + 1)
                     out += ',' + '\n'
                 out += indent + ')'
             else:
                 for key in obj.__dict__.keys():
                     value = obj.__dict__[key]
                     out += key + '='
-                    out += pretty_print(value, indent_level + 1) + ')'
+                    out += self.pretty_print(value, indent_level + 1) + ')'
             return out
 
         out = ''
