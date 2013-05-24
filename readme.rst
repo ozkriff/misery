@@ -1,3 +1,14 @@
+
+MISERY
+======
+
+Misery is a statically typed, imperative programming language.
+
+Misery compiler generates native code via compilation to ANSI C.
+
+Misery compiler is implemented in Python.
+
+
 Run all unit tests::
 
     python -m unittest discover -v
@@ -38,3 +49,6 @@ Print lexems::
     lexer.input(input_string);
     for tok in lexer:
         my_pretty_print.my_pretty_print(tok)
+
+
+See LICENSE file for copyright and license details.

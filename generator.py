@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# See LICENSE file for copyright and license details
+
 
 
 import table
