@@ -7,7 +7,17 @@ import table
 
 class Generator:
 
-    indent = '  '
+    def __init__(self):
+        self.indent_level = 0
+
+    def indent(self):
+        return self.indent_level * '  '
+
+    def increnent_indent(self):
+        self.indent_level += 1
+
+    def decrenent_indent(self):
+        self.indent_level -= 1
 
     def generate_function_parameters(self, parameter_list):
         out = ''
@@ -36,9 +46,11 @@ class Generator:
         for argument in expression.argument_id_list:
             if isinstance(argument, table.LinkToFunctionCall):
                 last_declaration = self.table.declaration_list[-1]
+                out += self.indent()
                 out += self.generate_expression(
                     last_declaration.expression_list[argument.id])
-        out += self.indent + expression.name + '('
+                out += ';' + '\n'
+        out += expression.name + '('
         # out var. passed by pointer
         out += '&' + function.variable_list[expression.result_id.id].name
         for argument in expression.argument_id_list:
@@ -50,24 +62,44 @@ class Generator:
                 out += str(function.variable_list[result_id].name)
             else:
                 out += str(argument.__class__)
-        out += ');'
-        out += '\n'
+        out += ')'
         return out
 
     def generate_variable_declaration_statement(self, function, statement):
         out = ''
         expression = function.expression_list[statement.expression_id.id]
+        out += self.indent()
         out += self.generate_expression(function, expression)
+        out += ';' + '\n'
         expression_id = statement.expression_id.id
         result_id = function.expression_list[expression_id].result_id.id
-        out += self.indent + function.variable_list[statement.variable_id].name
+        out += self.indent()
+        out += function.variable_list[statement.variable_id].name
         out += ' = ' + function.variable_list[result_id].name + ';\n'
         return out
 
     def generate_function_call_statement(self, function, statement):
         out = ''
         expression = function.expression_list[statement.expression_id.id]
+        out += self.indent()
         out += self.generate_expression(function, expression)
+        out += ';' + '\n'
+        return out
+
+    def generate_if_statement(self, function, statement):
+        out = ''
+
+        expression = function.expression_list[statement.expression_id.id]
+        cond = self.generate_expression(function, expression)
+
+        out += self.indent() + 'if (' + cond + ') {' + '\n'
+
+        block = function.block_list[statement.if_branch_id]
+        self.increnent_indent()
+        out += self.generate_block(function, block)
+        self.decrenent_indent()
+
+        out += self.indent() + '}' + '\n'
         return out
 
     def generate_statement(self, function, statement):
@@ -77,21 +109,30 @@ class Generator:
                 function, statement)
         elif isinstance(statement, table.FunctionCallStatement):
             out += self.generate_function_call_statement(function, statement)
+        elif isinstance(statement, table.IfStatement):
+            out += self.generate_if_statement(function, statement)
         else:
             raise Exception("Not Implemented")
+        return out
+
+    def generate_block(self, function, block):
+        out = ''
+        for statement in block:
+            out += self.generate_statement(function, statement)
         return out
 
     def generate_function(self, function):
         out = ''
         out += self.generate_function_header(function.name, function.interface)
         out += ' {\n'
+        self.increnent_indent()
         for variable in function.variable_list:
-            out += self.indent
+            out += self.indent()
             out += variable.type + ' ' + variable.name
             out += ';' + '\n'
         out += '\n'
-        for statement in function.statement_list:
-            out += self.generate_statement(function, statement)
+        out += self.generate_block(function, function.block_list[0])
+        self.decrenent_indent()
         out += '}\n'
         return out
 

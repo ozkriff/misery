@@ -22,7 +22,7 @@ class Function:
     def __init__(self, name, interface):
         self.name = name
         self.interface = interface
-        self.statement_list = []
+        self.block_list = []
         self.constant_list = []
         self.variable_list = []
         self.expression_list = []
@@ -117,7 +117,8 @@ class Table:
         else:
             raise Exception('Not Implemented')
 
-    def _parse_variable_declaration_statement(self, function, statement):
+    def _parse_variable_declaration_statement(
+            self, function, statement, block):
         expression_id = self._parse_expression(statement.expression)
         function.variable_list.append(
             Variable(
@@ -125,34 +126,29 @@ class Table:
                 type=statement.type.value,
             )
         )
-        function.statement_list.append(
+        block.append(
             VariableDeclarationStatement(
                 variable_id=len(function.variable_list) - 1,
                 expression_id=expression_id,
             )
         )
 
-    def _parse_function_call_statement(self, function, statement):
+    def _parse_function_call_statement(self, function, statement, block):
         expression_id = self._parse_expression(statement)
-        function.statement_list.append(
+        block.append(
             FunctionCallStatement(expression_id=expression_id))
 
-    def _parse_if_statement(self, function, statement):
-        # expression_id = self._parse_expression(statement.expression)
-        # function.variable_list.append(
-        #     Variable(
-        #         name=statement.name,
-        #         type=statement.type.value,
-        #     )
-        # )
-        function.statement_list.append(
+    def _parse_if_statement(self, function, statement, block):
+        expression_id = self._parse_expression(statement.condition)
+        block_id = self._parse_block(function, statement.branch_if)
+        block.append(
             IfStatement(
-                expression_id=None,
-                if_branch_id=None,
+                expression_id=expression_id,
+                if_branch_id=block_id,
             )
         )
 
-    def _parse_statement(self, function, statement):
+    def _parse_statement(self, function, statement, block):
         '''
         Translates AST Node to Table Node.
 
@@ -160,13 +156,21 @@ class Table:
         statement -- statement to parse
         '''
         if isinstance(statement, ast.NodeVariableDeclaration):
-            self._parse_variable_declaration_statement(function, statement)
+            self._parse_variable_declaration_statement(
+                function, statement, block)
         elif isinstance(statement, ast.NodeFunctionCall):
-            self._parse_function_call_statement(function, statement)
+            self._parse_function_call_statement(function, statement, block)
         elif isinstance(statement, ast.NodeIf):
-            self._parse_if_statement(function, statement)
+            self._parse_if_statement(function, statement, block)
         else:
             raise Exception('Not Implemented')
+
+    def _parse_block(self, function, declaration):
+        function.block_list.append([])
+        for statement in declaration:
+            self._parse_statement(
+                function, statement, function.block_list[-1])
+        return len(function.block_list) - 1
 
     def _parse_function_declaration(self, declaration):
         function = Function(
@@ -174,8 +178,7 @@ class Table:
             interface=declaration.interface,
         )
         self.declaration_list.append(function)
-        for statement in declaration.body:
-            self._parse_statement(function, statement)
+        self._parse_block(function, declaration.body)
 
     def generate_tables(self, ast_):
         self.import_list = copy.deepcopy(ast_.import_list)
