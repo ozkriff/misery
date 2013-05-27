@@ -45,7 +45,9 @@ def find_column(input, lexpos):
     last_cr = input.rfind('\n', 0, lexpos)
     if last_cr < 0:
         last_cr = 0
-    column = (lexpos - last_cr) + 1
+    else:
+        last_cr += 1
+    column = (lexpos - last_cr)
     return column
 
 
@@ -87,7 +89,7 @@ def make_lexer():
 
     # TODO: standart error messages!
     def t_error(t):
-        column = find_column(t.lexer.lexdata, t.lexpos) - 1
+        column = find_column(t.lexer.lexdata, t.lexpos)
         # TODO: fix style
         print(
             (
@@ -319,7 +321,7 @@ def make_parser():
 
     def p_error(p):
         toklen = len(str(p.value))  # TODO: rewrite :(
-        column = find_column(p.lexer.lexdata, p.lexpos) - 1
+        column = find_column(p.lexer.lexdata, p.lexpos)
         print('Parser error: unexpected token at [%(lineno)d,%(column)d]' % {
             'lineno': p.lineno - 1,
             'column': column - 1,

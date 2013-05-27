@@ -429,7 +429,6 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
 
-# TODO: Why +1?
 class TestFindColumn(unittest.TestCase):
     ''' Test my_parser.find_column() function. '''
 
@@ -438,7 +437,7 @@ class TestFindColumn(unittest.TestCase):
         input_data = '1 2 3\n'
         pos = 3
         real_column = my_parser.find_column(input_data, pos)
-        expected_column = 4
+        expected_column = 3
         misc.assert_equal(self, expected_column, real_column)
 
     def test_simple_multiline(self):
@@ -449,7 +448,7 @@ class TestFindColumn(unittest.TestCase):
         )
         pos = 8
         real_column = my_parser.find_column(input_data, pos)
-        expected_column = 4
+        expected_column = 2
         misc.assert_equal(self, expected_column, real_column)
 
     def test_no_newline(self):
@@ -457,7 +456,7 @@ class TestFindColumn(unittest.TestCase):
         input_data = ''
         pos = 0
         real_column = my_parser.find_column(input_data, pos)
-        expected_column = 1
+        expected_column = 0
         misc.assert_equal(self, expected_column, real_column)
 
 
