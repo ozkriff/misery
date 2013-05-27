@@ -6,21 +6,7 @@ Asbtract Syntax Tree
 '''
 
 
-class BaseNode(object):
-
-    def __eq__(self, other):
-        if isinstance(other, BaseNode):
-            return self.__dict__ == other.__dict__
-        else:
-            return False
-
-    def __ne__(self, other):
-        return not self == other
-
-    __hash__ = object.__hash__  # py3 warning
-
-
-class NodeModule(BaseNode):
+class NodeModule():
     def __init__(self, import_list=None, declaration_sequence=None):
         assert import_list is None or isinstance(import_list, list)
         assert (declaration_sequence is None or
@@ -29,72 +15,72 @@ class NodeModule(BaseNode):
         self.declaration_sequence = declaration_sequence
 
 
-class NodeTypeDeclaration(BaseNode):
+class NodeTypeDeclaration():
     def __init__(self, name, type):
         self.name = name
         self.type = type
 
 
-class NodeIdentifier(BaseNode):
+class NodeIdentifier():
     def __init__(self, value):
         self.value = value
 
 
 # TODO: value -> field_list ?
-class NodeTypeStruct(BaseNode):
+class NodeTypeStruct():
     def __init__(self, value):
         self.value = value
 
 
-class NodeField(BaseNode):
+class NodeField():
     def __init__(self, name, type):
         self.name = name
         self.type = type
 
 
-class NodeConstDeclaration(BaseNode):
+class NodeConstDeclaration():
     def __init__(self, name, type, expression):
         self.name = name
         self.type = type
         self.expression = expression
 
 
-class NodeNumber(BaseNode):
+class NodeNumber():
     def __init__(self, value):
         self.value = value
 
 
-class NodeString(BaseNode):
+class NodeString():
     def __init__(self, value):
         self.value = value
 
 
-class NodeFunctionDeclaration(BaseNode):
+class NodeFunctionDeclaration():
     def __init__(self, name, interface, body):
         self.name = name
         self.interface = interface
         self.body = body
 
 
-class NodeFunctionInterface(BaseNode):
+class NodeFunctionInterface():
     def __init__(self, parameter_list, return_type=None):
         self.parameter_list = parameter_list
         self.return_type = return_type
 
 
-class NodeFormalParameter(BaseNode):
+class NodeFormalParameter():
     def __init__(self, name, type):
         self.name = name
         self.type = type
 
 
-class NodeFunctionCall(BaseNode):
+class NodeFunctionCall():
     def __init__(self, expression, argument_list):
         self.expression = expression
         self.argument_list = argument_list
 
 
-class NodeVariableDeclaration(BaseNode):
+class NodeVariableDeclaration():
     def __init__(
             self,
             name,
@@ -107,14 +93,14 @@ class NodeVariableDeclaration(BaseNode):
         self.constructor_argument_list = constructor_argument_list
 
 
-class NodeIf(BaseNode):
+class NodeIf():
     def __init__(self, condition, branch_if, branch_else=None):
         self.condition = condition
         self.branch_if = branch_if
         self.branch_else = branch_else
 
 
-class NodeReturn(BaseNode):
+class NodeReturn():
     def __init__(self, expression=None):
         self.expression = expression
 
