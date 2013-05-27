@@ -61,7 +61,8 @@ class Generator:
                 result_id = function.expression_list[argument.id].result_id.id
                 out += str(function.variable_list[result_id].name)
             else:
-                out += str(argument.__class__)
+                # out += str(argument.__class__)
+                raise Exception("Not Implemented")
         out += ')'
         return out
 
