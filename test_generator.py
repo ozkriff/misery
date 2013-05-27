@@ -201,4 +201,42 @@ class TestGenerator(unittest.TestCase):
         )
         misc.assert_equal(self, expected_output, real_output)
 
+    def test_return(self):
+        ''' Test return. '''
+        func = table.Function(
+            name='main',
+            interface=ast.NodeFunctionInterface(
+                return_type=None,
+                parameter_list=[],
+            ),
+        )
+        func.constant_list = [table.Constant(type="int", value=0)]
+        func.variable_list = []
+        func.block_list = [
+            [
+                table.ReturnStatement(
+                    expression_id=table.LinkToNumberConstant(id=0),
+                ),
+            ],
+        ]
+        func.expression_list = []
+        table_ = table.Table()
+        table_.declaration_list = [func]
+
+        gen = generator.Generator()
+        gen.table = table_
+        real_output = gen.generate()
+        expected_output = (
+            '\n'
+            'void main();\n'
+            '\n'
+            'void main() {\n'
+            '\n'
+            '  return 0;\n'
+            '}\n'
+            '\n'
+        )
+        misc.assert_equal(self, expected_output, real_output)
+
+
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:

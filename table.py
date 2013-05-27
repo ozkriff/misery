@@ -41,6 +41,11 @@ class VariableDeclarationStatement:
         self.expression_id = expression_id
 
 
+class ReturnStatement:
+    def __init__(self, expression_id):
+        self.expression_id = expression_id
+
+
 class FunctionCallStatement:
     def __init__(self, expression_id):
         self.expression_id = expression_id
@@ -114,6 +119,8 @@ class Table:
             return self._parse_function_call(expression)
         elif isinstance(expression, ast.NodeNumber):
             return self._parse_number(expression)
+        elif expression is None:
+            return
         else:
             raise Exception('Not Implemented')
 
@@ -148,6 +155,12 @@ class Table:
             )
         )
 
+    def _parse_return_statement(self, function, statement, block):
+        expression_id = self._parse_expression(statement.expression)
+        block.append(
+            ReturnStatement(expression_id=expression_id),
+        )
+
     def _parse_statement(self, function, statement, block):
         '''
         Translates AST Node to Table Node.
@@ -162,6 +175,8 @@ class Table:
             self._parse_function_call_statement(function, statement, block)
         elif isinstance(statement, ast.NodeIf):
             self._parse_if_statement(function, statement, block)
+        elif isinstance(statement, ast.NodeReturn):
+            self._parse_return_statement(function, statement, block)
         else:
             raise Exception('Not Implemented')
 

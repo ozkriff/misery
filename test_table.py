@@ -224,4 +224,87 @@ class TestTable(unittest.TestCase):
 
         misc.assert_equal(self, expected_output, real_output)
 
+    def test_return_none(self):
+        ''' Return from function. '''
+        ast_ = ast.NodeModule(
+            declaration_sequence=[
+                ast.NodeFunctionDeclaration(
+                    name='main',
+                    interface=ast.NodeFunctionInterface(
+                        parameter_list=[]),
+                    body=[
+                        ast.NodeReturn(expression=None),
+                    ]
+                )
+            ]
+        )
+        table_ = table.Table()
+        table_.generate_tables(ast_)
+        real_output = table_
+
+        func = table.Function(
+            name='main',
+            interface=ast.NodeFunctionInterface(
+                return_type=None,
+                parameter_list=[],
+            ),
+        )
+        func.constant_list = []
+        func.variable_list = []
+        func.block_list = [
+            [
+                table.ReturnStatement(
+                    expression_id=None,
+                ),
+            ],
+        ]
+        func.expression_list = []
+        expected_output = table.Table()
+        expected_output.declaration_list = [func]
+
+        misc.assert_equal(self, expected_output, real_output)
+
+    def test_return_integer_constant(self):
+        ''' Return integer constant from function. '''
+        ast_ = ast.NodeModule(
+            declaration_sequence=[
+                ast.NodeFunctionDeclaration(
+                    name='main',
+                    interface=ast.NodeFunctionInterface(
+                        parameter_list=[]),
+                    body=[
+                        ast.NodeReturn(expression=ast.NodeNumber(0)),
+                    ]
+                )
+            ]
+        )
+        table_ = table.Table()
+        table_.generate_tables(ast_)
+        real_output = table_
+
+        func = table.Function(
+            name='main',
+            interface=ast.NodeFunctionInterface(
+                return_type=None,
+                parameter_list=[],
+            ),
+        )
+        func.constant_list = [
+            table.Constant(type="int", value=0)
+        ]
+        func.variable_list = []
+        func.block_list = [
+            [
+                table.ReturnStatement(
+                    expression_id=table.LinkToNumberConstant(id=0),
+                ),
+            ],
+        ]
+        func.expression_list = []
+        expected_output = table.Table()
+        expected_output.declaration_list = [func]
+
+        misc.assert_equal(self, expected_output, real_output)
+
+
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:

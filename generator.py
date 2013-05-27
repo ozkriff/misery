@@ -102,6 +102,13 @@ class Generator:
         out += self.indent() + '}' + '\n'
         return out
 
+    def generate_return_statement(self, function, statement):
+        out = ''
+        out += self.indent() + 'return '
+        out += '0' # TODO: expression?
+        out += ';' + '\n'
+        return out
+
     def generate_statement(self, function, statement):
         out = ''
         if isinstance(statement, table.VariableDeclarationStatement):
@@ -111,6 +118,8 @@ class Generator:
             out += self.generate_function_call_statement(function, statement)
         elif isinstance(statement, table.IfStatement):
             out += self.generate_if_statement(function, statement)
+        elif isinstance(statement, table.ReturnStatement):
+            out += self.generate_return_statement(function, statement)
         else:
             raise Exception("Not Implemented")
         return out
