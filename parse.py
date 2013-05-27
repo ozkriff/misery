@@ -317,7 +317,7 @@ def make_parser():
         p[0] = p[1]
 
     def p_error(p):
-        toklen = len(str(p.value))  # TODO: rewrite :(
+        toklen = len(str(p.value))
         column = find_column(p.lexer.lexdata, p.lexpos)
         print('filename:%(lineno)d:%(column)d: Parser error: unexpected token ' % {
             'lineno': p.lineno - 1,
