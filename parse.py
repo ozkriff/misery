@@ -90,16 +90,14 @@ def make_lexer():
     # TODO: standart error messages!
     def t_error(t):
         column = find_column(t.lexer.lexdata, t.lexpos)
-        # TODO: fix style
-        print(
-            (
-                'Lexer error: Illegal character at '
-                '[%(lineno)d,%(column)d]. Skimy_pretty_printing...'
-            ) % {
-                'lineno': t.lineno - 1,
-                'column': column - 1,
-            }
+        errormsg = (
+            'Lexer error: Illegal character at '
+            '[%(lineno)d,%(column)d]. Skimy_pretty_printing...'
         )
+        print(errormsg % {
+            'lineno': t.lineno - 1,
+            'column': column - 1,
+        })
         print('  ' + t.lexer.lexdata.split('\n')[t.lineno - 1])
         print('  ' + (' ' * (column - 1)) + '^')
         t.lexer.skip(1)
