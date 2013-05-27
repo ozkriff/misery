@@ -10,16 +10,16 @@ class Generator:
     def __init__(self):
         self.indent_level = 0
 
-    def indent(self):
+    def _indent(self):
         return self.indent_level * '  '
 
-    def increnent_indent(self):
+    def _increnent_indent(self):
         self.indent_level += 1
 
-    def decrenent_indent(self):
+    def _decrenent_indent(self):
         self.indent_level -= 1
 
-    def generate_function_parameters(self, parameter_list):
+    def _generate_function_parameters(self, parameter_list):
         out = ''
         is_first = True
         for parameter in parameter_list:
@@ -30,24 +30,24 @@ class Generator:
             out += parameter.type.value + ' ' + parameter.name
         return out
 
-    def generate_function_header(self, name, interface):
+    def _generate_function_header(self, name, interface):
         out = ''
         return_type = 'void'
         if interface.return_type:
             return_type = interface.return_type.value
-        function_parameters = self.generate_function_parameters(
+        function_parameters = self._generate_function_parameters(
             interface.parameter_list)
         out += return_type + ' ' + name + '(' + function_parameters + ')'
         return out
 
-    def generate_expression(self, function, expression):
+    def _generate_expression(self, function, expression):
         out = ''
         assert isinstance(expression, table.FunctionCallExpression)
         for argument in expression.argument_id_list:
             if isinstance(argument, table.LinkToFunctionCall):
                 last_declaration = self.table.declaration_list[-1]
-                out += self.indent()
-                out += self.generate_expression(
+                out += self._indent()
+                out += self._generate_expression(
                     function, last_declaration.expression_list[argument.id])
                 out += ';' + '\n'
         out += expression.name + '('
@@ -66,83 +66,83 @@ class Generator:
         out += ')'
         return out
 
-    def generate_variable_declaration_statement(self, function, statement):
+    def _generate_variable_declaration_statement(self, function, statement):
         out = ''
         expression = function.expression_list[statement.expression_id.id]
-        out += self.indent()
-        out += self.generate_expression(function, expression)
+        out += self._indent()
+        out += self._generate_expression(function, expression)
         out += ';' + '\n'
         expression_id = statement.expression_id.id
         result_id = function.expression_list[expression_id].result_id.id
-        out += self.indent()
+        out += self._indent()
         out += function.variable_list[statement.variable_id].name
         out += ' = ' + function.variable_list[result_id].name + ';\n'
         return out
 
-    def generate_function_call_statement(self, function, statement):
+    def _generate_function_call_statement(self, function, statement):
         out = ''
         expression = function.expression_list[statement.expression_id.id]
-        out += self.indent()
-        out += self.generate_expression(function, expression)
+        out += self._indent()
+        out += self._generate_expression(function, expression)
         out += ';' + '\n'
         return out
 
-    def generate_if_statement(self, function, statement):
+    def _generate_if_statement(self, function, statement):
         out = ''
 
         expression = function.expression_list[statement.expression_id.id]
-        cond = self.generate_expression(function, expression)
+        cond = self._generate_expression(function, expression)
 
-        out += self.indent() + 'if (' + cond + ') {' + '\n'
+        out += self._indent() + 'if (' + cond + ') {' + '\n'
 
         block = function.block_list[statement.if_branch_id]
-        self.increnent_indent()
-        out += self.generate_block(function, block)
-        self.decrenent_indent()
+        self._increnent_indent()
+        out += self._generate_block(function, block)
+        self._decrenent_indent()
 
-        out += self.indent() + '}' + '\n'
+        out += self._indent() + '}' + '\n'
         return out
 
-    def generate_return_statement(self, function, statement):
+    def _generate_return_statement(self, function, statement):
         out = ''
-        out += self.indent() + 'return '
+        out += self._indent() + 'return '
         out += '0' # TODO: expression?
         out += ';' + '\n'
         return out
 
-    def generate_statement(self, function, statement):
+    def _generate_statement(self, function, statement):
         out = ''
         if isinstance(statement, table.VariableDeclarationStatement):
-            out += self.generate_variable_declaration_statement(
+            out += self._generate_variable_declaration_statement(
                 function, statement)
         elif isinstance(statement, table.FunctionCallStatement):
-            out += self.generate_function_call_statement(function, statement)
+            out += self._generate_function_call_statement(function, statement)
         elif isinstance(statement, table.IfStatement):
-            out += self.generate_if_statement(function, statement)
+            out += self._generate_if_statement(function, statement)
         elif isinstance(statement, table.ReturnStatement):
-            out += self.generate_return_statement(function, statement)
+            out += self._generate_return_statement(function, statement)
         else:
             raise Exception("Not Implemented")
         return out
 
-    def generate_block(self, function, block):
+    def _generate_block(self, function, block):
         out = ''
         for statement in block:
-            out += self.generate_statement(function, statement)
+            out += self._generate_statement(function, statement)
         return out
 
-    def generate_function(self, function):
+    def _generate_function(self, function):
         out = ''
-        out += self.generate_function_header(function.name, function.interface)
+        out += self._generate_function_header(function.name, function.interface)
         out += ' {\n'
-        self.increnent_indent()
+        self._increnent_indent()
         for variable in function.variable_list:
-            out += self.indent()
+            out += self._indent()
             out += variable.type + ' ' + variable.name
             out += ';' + '\n'
         out += '\n'
-        out += self.generate_block(function, function.block_list[0])
-        self.decrenent_indent()
+        out += self._generate_block(function, function.block_list[0])
+        self._decrenent_indent()
         out += '}\n'
         return out
 
@@ -154,13 +154,13 @@ class Generator:
         out += '\n'
         for declaration in self.table.declaration_list:
             if isinstance(declaration, table.Function):
-                out += self.generate_function_header(
+                out += self._generate_function_header(
                     declaration.name, declaration.interface)
                 out += ';\n'
         out += '\n'
         for declaration in self.table.declaration_list:
             assert isinstance(declaration, table.Function)
-            out += self.generate_function(declaration)
+            out += self._generate_function(declaration)
             out += '\n'
         return out
 
