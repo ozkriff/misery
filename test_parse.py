@@ -85,7 +85,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_struct_type_declaration(self):
-        ''' Some test :) '''
+        ''' Parse struct type declaration. '''
         input_string = '''
             type MyStruct struct {
                 field1 Int
@@ -116,7 +116,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_type_alias(self):
-        ''' Some test :) '''
+        ''' Parse alias type declaration. '''
         input_string = 'type MyInteger Integer'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
@@ -131,7 +131,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_const_declaration(self):
-        ''' Some test :) '''
+        ''' Parse constant declaration. '''
         input_string = 'const importantIdentifier Integer = 10'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
@@ -147,7 +147,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_func(self):
-        ''' Some test :) '''
+        ''' Parse minimal fnction declaration. '''
         input_string = 'func testfunc2() {}'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
@@ -163,7 +163,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_func_with_return_value(self):
-        ''' Some test :) '''
+        ''' Parse function that returns Integer. '''
         input_string = 'func testfunc2() -> Integer {}'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
@@ -182,7 +182,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_func_with_parameter(self):
-        ''' Some test :) '''
+        ''' Parse function that takes one parameter. '''
         input_string = 'func testfunc(par ParType) {}'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
@@ -206,7 +206,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_func_with_2_parameters(self):
-        ''' Some test :) '''
+        ''' Parse function that takes two parameters. '''
         input_string = 'func testfunc(par1 ParType, par2 ParType) {}'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
@@ -234,7 +234,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_func_body_2_empty_blocks(self):
-        ''' Some test :) '''
+        ''' Parse fnction with empty blocks. '''
         input_string = 'func fname() { {} {} }'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
@@ -243,7 +243,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_func_call(self):
-        ''' Some test :) '''
+        ''' Parse simple function call. '''
         input_string = 'func fname() { fname2() }'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
@@ -256,7 +256,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_declaration_without_initialization(self):
-        ''' Some test :) '''
+        ''' Parse variable declaration statement. '''
         input_string = 'func fname() { var testVar Integer }'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
@@ -269,7 +269,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_declaration_with_type_and_initialization(self):
-        ''' Some test :) '''
+        ''' Parse variable declaration statement with initiaization. '''
         input_string = 'func fname() { var testVar Integer = 666 }'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
@@ -283,7 +283,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_declaration_with_initialization(self):
-        ''' Some test :) '''
+        ''' Parse variable declaration statement with initiaization and without explicit  type. '''
         input_string = 'func fname() { var testVar = 666 }'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
@@ -296,7 +296,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_declaration_with_ctor(self):
-        ''' Some test :) '''
+        ''' Parse variable declaration statement with constructor call. '''
         input_string = 'func fname() { var p Parser() }'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
@@ -310,7 +310,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_declaration_with_init_2(self):
-        ''' Some test :) '''
+        ''' Parse variable declaration statement with complex initiaization. '''
         input_string = 'func fname() { var v2 Int = plus(1, 2) }'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
@@ -327,7 +327,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_declaration_with_ctor_and_arguments(self):
-        ''' Some test :) '''
+        ''' Parse variable declaration statement with constructor call with arguments. '''
         input_string = 'func fname() { var p Parser(lexer, 1) }'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
@@ -345,7 +345,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_if(self):
-        ''' Some test :) '''
+        ''' Parse if statement. '''
         input_string = 'func fname() { if 1 {} }'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
@@ -359,7 +359,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_if_else(self):
-        ''' Some test :) '''
+        ''' Parse if-else statement. '''
         input_string = 'func fname() { if 1 {} else {} }'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
@@ -374,7 +374,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_nested_func_call_1(self):
-        ''' Some test :) '''
+        ''' Parse nested function call. '''
         input_string = 'func fname() { a()() }'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
@@ -391,7 +391,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_return_1(self):
-        ''' Some test :) '''
+        ''' Parse return statement with integer. '''
         input_string = 'func fname() { return 1 }'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
@@ -402,7 +402,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_return_2(self):
-        ''' Some test :) '''
+        ''' Parse return statement without any value. '''
         input_string = 'func fname() { return }'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
@@ -413,7 +413,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_return_3(self):
-        ''' Some test :) '''
+        ''' Parse return statement with function call. '''
         input_string = 'func fname() { return x() }'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
