@@ -87,12 +87,11 @@ def make_lexer():
 
     t_ignore_COMMENT = r'\#.*'
 
-    # TODO: standart error messages!
     def t_error(t):
         column = find_column(t.lexer.lexdata, t.lexpos)
         errormsg = (
-            'Lexer error: Illegal character at '
-            '[%(lineno)d,%(column)d]. Skimy_pretty_printing...'
+            'filename:[%(lineno)d:%(column)d: '
+            'Lexer error: Illegal character...'
         )
         print(errormsg % {
             'lineno': t.lineno - 1,
@@ -320,7 +319,7 @@ def make_parser():
     def p_error(p):
         toklen = len(str(p.value))  # TODO: rewrite :(
         column = find_column(p.lexer.lexdata, p.lexpos)
-        print('Parser error: unexpected token at [%(lineno)d,%(column)d]' % {
+        print('filename:%(lineno)d:%(column)d: Parser error: unexpected token ' % {
             'lineno': p.lineno - 1,
             'column': column - 1,
         })
