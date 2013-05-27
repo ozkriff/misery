@@ -8,7 +8,7 @@ Miscellaneous classes and functions.
 
 
 class PrettyPrinter:
-    ''' TODO: Some description. '''
+    ''' Prettyprints values. '''
 
     def __init__(self, shiftwidth=4):
         self.shiftwidth = shiftwidth
