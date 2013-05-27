@@ -112,7 +112,7 @@ def make_parser():
 
     def p_module(p):
         'module : import_list declaration_sequence'
-        p[0] = ast.NodeModule(import_list=p[1], declaration_sequence=p[2])
+        p[0] = ast.Module(import_list=p[1], declaration_sequence=p[2])
 
     # def p_qualifiedIdentifier(p):
     #     'qualifiedIdentifier : IDENTIFIER'
@@ -156,45 +156,45 @@ def make_parser():
 
     def p_block_2(p):
         'block : LCURLY statement_sequence RETURN RCURLY'
-        p[2].append(ast.NodeReturn(expression=None))
+        p[2].append(ast.Return(expression=None))
         p[0] = p[2]
 
     def p_block_3(p):
         'block : LCURLY statement_sequence RETURN expression RCURLY'
-        p[2].append(ast.NodeReturn(expression=p[4]))
+        p[2].append(ast.Return(expression=p[4]))
         p[0] = p[2]
 
     def p_function_interface(p):
         'function_interface : LPAREN parameter_list RPAREN ARROW type'
-        p[0] = ast.NodeFunctionInterface(parameter_list=p[2], return_type=p[5])
+        p[0] = ast.FunctionInterface(parameter_list=p[2], return_type=p[5])
 
     def p_function_interface_without_return_type(p):
         'function_interface : LPAREN parameter_list RPAREN'
-        p[0] = ast.NodeFunctionInterface(parameter_list=p[2])
+        p[0] = ast.FunctionInterface(parameter_list=p[2])
 
     def p_function_declaration(p):
         'declaration : FUNC IDENTIFIER function_interface block'
-        p[0] = ast.NodeFunctionDeclaration(
+        p[0] = ast.FunctionDeclaration(
             name=p[2], interface=p[3], body=p[4])
 
     def p_type_declaration(p):
         'declaration : TYPE IDENTIFIER type'
-        p[0] = ast.NodeTypeDeclaration(name=p[2], type=p[3])
+        p[0] = ast.TypeDeclaration(name=p[2], type=p[3])
 
     # TODO: join with variable declaration
     def p_const_declaration(p):
         'declaration : CONST IDENTIFIER type ASSIGN expression'
-        p[0] = ast.NodeConstDeclaration(
+        p[0] = ast.ConstDeclaration(
             name=p[2], type=p[3], expression=p[5])
 
     # TODO: ?
     def p_type_identifier(p):
         'type : IDENTIFIER'
-        p[0] = ast.NodeIdentifier(value=p[1])
+        p[0] = ast.Identifier(value=p[1])
 
     def p_type_struct(p):
         'type : STRUCT LCURLY field_list RCURLY'
-        p[0] = ast.NodeTypeStruct(value=p[3])
+        p[0] = ast.TypeStruct(value=p[3])
 
     def p_field_list_1(p):
         'field_list : field'
@@ -207,7 +207,7 @@ def make_parser():
 
     def p_field(p):
         'field : IDENTIFIER type'
-        p[0] = ast.NodeField(name=p[1], type=p[2])
+        p[0] = ast.Field(name=p[1], type=p[2])
 
     # wo_tc - without trailing comma
     def p_parameter_list_1(p):
@@ -233,7 +233,7 @@ def make_parser():
 
     def p_parameter(p):
         'parameter : IDENTIFIER type'
-        p[0] = ast.NodeFormalParameter(name=p[1], type=p[2])
+        p[0] = ast.Parameter(name=p[1], type=p[2])
 
     def p_statement_sequence_empty(p):
         'statement_sequence :'
@@ -254,29 +254,29 @@ def make_parser():
 
     def p_statement_variable_declaration_with_init(p):
         'statement : VAR IDENTIFIER ASSIGN expression'
-        p[0] = ast.NodeVariableDeclaration(name=p[2], expression=p[4])
+        p[0] = ast.VariableDeclaration(name=p[2], expression=p[4])
 
     def p_statement_variable_declaration_with_type_and_init(p):
         'statement : VAR IDENTIFIER type ASSIGN expression'
-        p[0] = ast.NodeVariableDeclaration(
+        p[0] = ast.VariableDeclaration(
             name=p[2], type=p[3], expression=p[5])
 
     def p_statement_variable_declaration_constructor(p):
         'statement : VAR IDENTIFIER type LPAREN expression_list RPAREN'
-        p[0] = ast.NodeVariableDeclaration(
+        p[0] = ast.VariableDeclaration(
             name=p[2], type=p[3], constructor_argument_list=p[5])
 
     def p_statement_variable_declaration(p):
         'statement : VAR IDENTIFIER type'
-        p[0] = ast.NodeVariableDeclaration(name=p[2], type=p[3])
+        p[0] = ast.VariableDeclaration(name=p[2], type=p[3])
 
     def p_statement_if(p):
         'statement : IF expression block'
-        p[0] = ast.NodeIf(condition=p[2], branch_if=p[3])
+        p[0] = ast.If(condition=p[2], branch_if=p[3])
 
     def p_statement_if_else(p):
         'statement : IF expression block ELSE block'
-        p[0] = ast.NodeIf(condition=p[2], branch_if=p[3], branch_else=p[5])
+        p[0] = ast.If(condition=p[2], branch_if=p[3], branch_else=p[5])
 
     def p_expression_list_1(p):
         'expression_list :'
@@ -301,19 +301,19 @@ def make_parser():
 
     def p_function_call(p):
         'function_call : expression LPAREN expression_list RPAREN'
-        p[0] = ast.NodeFunctionCall(expression=p[1], argument_list=p[3])
+        p[0] = ast.FunctionCall(expression=p[1], argument_list=p[3])
 
     def p_expression_string(p):
         'expression : STRING'
-        p[0] = ast.NodeString(value=p[1])
+        p[0] = ast.String(value=p[1])
 
     def p_expression_identifier(p):
         'expression : IDENTIFIER'
-        p[0] = ast.NodeIdentifier(value=p[1])
+        p[0] = ast.Identifier(value=p[1])
 
     def p_expression_number(p):
         'expression : NUMBER'
-        p[0] = ast.NodeNumber(value=p[1])
+        p[0] = ast.Number(value=p[1])
 
     def p_expression_function_call(p):
         'expression : function_call'

@@ -16,11 +16,11 @@ class TestParser(unittest.TestCase):
     ''' Test parse.make_parser() function. '''
 
     # TODO: Rename
-    _std_module = ast.NodeModule(
+    _std_module = ast.Module(
         declaration_sequence=[
-            ast.NodeFunctionDeclaration(
+            ast.FunctionDeclaration(
                 name='fname',
-                interface=ast.NodeFunctionInterface(parameter_list=[]),
+                interface=ast.FunctionInterface(parameter_list=[]),
                 body=[],
             )
         ]
@@ -31,7 +31,7 @@ class TestParser(unittest.TestCase):
         input_string = ''
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
-        expected_ast = ast.NodeModule(
+        expected_ast = ast.Module(
             declaration_sequence=[],
         )
         misc.assert_equal(self, expected_ast, real_ast)
@@ -41,7 +41,7 @@ class TestParser(unittest.TestCase):
         input_string = 'import{}'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
-        expected_ast = ast.NodeModule(
+        expected_ast = ast.Module(
             import_list=[],
             declaration_sequence=[],
         )
@@ -52,7 +52,7 @@ class TestParser(unittest.TestCase):
         input_string = 'import{module1}'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
-        expected_ast = ast.NodeModule(
+        expected_ast = ast.Module(
             import_list=['module1'],
             declaration_sequence=[],
         )
@@ -63,7 +63,7 @@ class TestParser(unittest.TestCase):
         input_string = 'import{module1 module2}'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
-        expected_ast = ast.NodeModule(
+        expected_ast = ast.Module(
             import_list=['module1', 'module2'],
             declaration_sequence=[],
         )
@@ -74,11 +74,11 @@ class TestParser(unittest.TestCase):
         input_string = 'type MyInteger Integer'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
-        expected_ast = ast.NodeModule(
+        expected_ast = ast.Module(
             declaration_sequence=[
-                ast.NodeTypeDeclaration(
+                ast.TypeDeclaration(
                     name='MyInteger',
-                    type=ast.NodeIdentifier('Integer'),
+                    type=ast.Identifier('Integer'),
                 )
             ]
         )
@@ -94,19 +94,19 @@ class TestParser(unittest.TestCase):
         '''
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
-        expected_ast = ast.NodeModule(
+        expected_ast = ast.Module(
             declaration_sequence=[
-                ast.NodeTypeDeclaration(
+                ast.TypeDeclaration(
                     name='MyStruct',
-                    type=ast.NodeTypeStruct(
+                    type=ast.TypeStruct(
                         value=[
-                            ast.NodeField(
+                            ast.Field(
                                 name='field1',
-                                type=ast.NodeIdentifier('Int'),
+                                type=ast.Identifier('Int'),
                             ),
-                            ast.NodeField(
+                            ast.Field(
                                 name='field2',
-                                type=ast.NodeIdentifier('Float'),
+                                type=ast.Identifier('Float'),
                             )
                         ]
                     )
@@ -120,11 +120,11 @@ class TestParser(unittest.TestCase):
         input_string = 'type MyInteger Integer'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
-        expected_ast = ast.NodeModule(
+        expected_ast = ast.Module(
             declaration_sequence=[
-                ast.NodeTypeDeclaration(
+                ast.TypeDeclaration(
                     name='MyInteger',
-                    type=ast.NodeIdentifier('Integer'),
+                    type=ast.Identifier('Integer'),
                 )
             ]
         )
@@ -135,12 +135,12 @@ class TestParser(unittest.TestCase):
         input_string = 'const importantIdentifier Integer = 10'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
-        expected_ast = ast.NodeModule(
+        expected_ast = ast.Module(
             declaration_sequence=[
-                ast.NodeConstDeclaration(
+                ast.ConstDeclaration(
                     name='importantIdentifier',
-                    type=ast.NodeIdentifier('Integer'),
-                    expression=ast.NodeNumber(10),
+                    type=ast.Identifier('Integer'),
+                    expression=ast.Number(10),
                 )
             ]
         )
@@ -151,11 +151,11 @@ class TestParser(unittest.TestCase):
         input_string = 'func testfunc2() {}'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
-        expected_ast = ast.NodeModule(
+        expected_ast = ast.Module(
             declaration_sequence=[
-                ast.NodeFunctionDeclaration(
+                ast.FunctionDeclaration(
                     name='testfunc2',
-                    interface=ast.NodeFunctionInterface(parameter_list=[]),
+                    interface=ast.FunctionInterface(parameter_list=[]),
                     body=[],
                 )
             ]
@@ -167,13 +167,13 @@ class TestParser(unittest.TestCase):
         input_string = 'func testfunc2() -> Integer {}'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
-        expected_ast = ast.NodeModule(
+        expected_ast = ast.Module(
             declaration_sequence=[
-                ast.NodeFunctionDeclaration(
+                ast.FunctionDeclaration(
                     name='testfunc2',
-                    interface=ast.NodeFunctionInterface(
+                    interface=ast.FunctionInterface(
                         parameter_list=[],
-                        return_type=ast.NodeIdentifier('Integer'),
+                        return_type=ast.Identifier('Integer'),
                     ),
                     body=[],
                 )
@@ -186,17 +186,17 @@ class TestParser(unittest.TestCase):
         input_string = 'func testfunc(par ParType) {}'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
-        interface = ast.NodeFunctionInterface(
+        interface = ast.FunctionInterface(
             parameter_list=[
-                ast.NodeFormalParameter(
+                ast.Parameter(
                     name='par',
-                    type=ast.NodeIdentifier('ParType')
+                    type=ast.Identifier('ParType')
                 )
             ],
         )
-        expected_ast = ast.NodeModule(
+        expected_ast = ast.Module(
             declaration_sequence=[
-                ast.NodeFunctionDeclaration(
+                ast.FunctionDeclaration(
                     name='testfunc',
                     interface=interface,
                     body=[],
@@ -210,21 +210,21 @@ class TestParser(unittest.TestCase):
         input_string = 'func testfunc(par1 ParType, par2 ParType) {}'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
-        interface = ast.NodeFunctionInterface(
+        interface = ast.FunctionInterface(
             parameter_list=[
-                ast.NodeFormalParameter(
+                ast.Parameter(
                     name='par1',
-                    type=ast.NodeIdentifier('ParType'),
+                    type=ast.Identifier('ParType'),
                 ),
-                ast.NodeFormalParameter(
+                ast.Parameter(
                     name='par2',
-                    type=ast.NodeIdentifier('ParType'),
+                    type=ast.Identifier('ParType'),
                 )
             ]
         )
-        expected_ast = ast.NodeModule(
+        expected_ast = ast.Module(
             declaration_sequence=[
-                ast.NodeFunctionDeclaration(
+                ast.FunctionDeclaration(
                     name='testfunc',
                     interface=interface,
                     body=[],
@@ -248,8 +248,8 @@ class TestParser(unittest.TestCase):
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
-        funccall = ast.NodeFunctionCall(
-            expression=ast.NodeIdentifier('fname2'),
+        funccall = ast.FunctionCall(
+            expression=ast.Identifier('fname2'),
             argument_list=[],
         )
         expected_ast.declaration_sequence[0].body.append(funccall)
@@ -261,9 +261,9 @@ class TestParser(unittest.TestCase):
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
-        var = ast.NodeVariableDeclaration(
+        var = ast.VariableDeclaration(
             name='testVar',
-            type=ast.NodeIdentifier('Integer'),
+            type=ast.Identifier('Integer'),
         )
         expected_ast.declaration_sequence[0].body.append(var)
         misc.assert_equal(self, expected_ast, real_ast)
@@ -274,10 +274,10 @@ class TestParser(unittest.TestCase):
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
-        var = ast.NodeVariableDeclaration(
+        var = ast.VariableDeclaration(
             name='testVar',
-            type=ast.NodeIdentifier('Integer'),
-            expression=ast.NodeNumber(666),
+            type=ast.Identifier('Integer'),
+            expression=ast.Number(666),
         )
         expected_ast.declaration_sequence[0].body.append(var)
         misc.assert_equal(self, expected_ast, real_ast)
@@ -288,9 +288,9 @@ class TestParser(unittest.TestCase):
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
-        var = ast.NodeVariableDeclaration(
+        var = ast.VariableDeclaration(
             name='testVar',
-            expression=ast.NodeNumber(666),
+            expression=ast.Number(666),
         )
         expected_ast.declaration_sequence[0].body.append(var)
         misc.assert_equal(self, expected_ast, real_ast)
@@ -301,9 +301,9 @@ class TestParser(unittest.TestCase):
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
-        var = ast.NodeVariableDeclaration(
+        var = ast.VariableDeclaration(
             name='p',
-            type=ast.NodeIdentifier('Parser'),
+            type=ast.Identifier('Parser'),
             constructor_argument_list=[],
         )
         expected_ast.declaration_sequence[0].body.append(var)
@@ -315,13 +315,13 @@ class TestParser(unittest.TestCase):
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
-        var = ast.NodeVariableDeclaration(
+        var = ast.VariableDeclaration(
             name='v2',
-            expression=ast.NodeFunctionCall(
-                expression=ast.NodeIdentifier('plus'),
-                argument_list=[ast.NodeNumber(1), ast.NodeNumber(2)],
+            expression=ast.FunctionCall(
+                expression=ast.Identifier('plus'),
+                argument_list=[ast.Number(1), ast.Number(2)],
             ),
-            type=ast.NodeIdentifier('Int'),
+            type=ast.Identifier('Int'),
         )
         expected_ast.declaration_sequence[0].body.append(var)
         misc.assert_equal(self, expected_ast, real_ast)
@@ -333,12 +333,12 @@ class TestParser(unittest.TestCase):
             input_string, lexer=parse.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
-            ast.NodeVariableDeclaration(
+            ast.VariableDeclaration(
                 name='p',
-                type=ast.NodeIdentifier('Parser'),
+                type=ast.Identifier('Parser'),
                 constructor_argument_list=[
-                    ast.NodeIdentifier('lexer'),
-                    ast.NodeNumber(1),
+                    ast.Identifier('lexer'),
+                    ast.Number(1),
                 ],
             )
         )
@@ -351,8 +351,8 @@ class TestParser(unittest.TestCase):
             input_string, lexer=parse.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
-            ast.NodeIf(
-                condition=ast.NodeNumber(1),
+            ast.If(
+                condition=ast.Number(1),
                 branch_if=[],
             )
         )
@@ -365,8 +365,8 @@ class TestParser(unittest.TestCase):
             input_string, lexer=parse.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
-            ast.NodeIf(
-                condition=ast.NodeNumber(1),
+            ast.If(
+                condition=ast.Number(1),
                 branch_if=[],
                 branch_else=[],
             )
@@ -380,9 +380,9 @@ class TestParser(unittest.TestCase):
             input_string, lexer=parse.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
-            ast.NodeFunctionCall(
-                expression=ast.NodeFunctionCall(
-                    expression=ast.NodeIdentifier('a'),
+            ast.FunctionCall(
+                expression=ast.FunctionCall(
+                    expression=ast.Identifier('a'),
                     argument_list=[],
                 ),
                 argument_list=[],
@@ -397,7 +397,7 @@ class TestParser(unittest.TestCase):
             input_string, lexer=parse.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
-            ast.NodeReturn(expression=ast.NodeNumber(1)),
+            ast.Return(expression=ast.Number(1)),
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
@@ -408,7 +408,7 @@ class TestParser(unittest.TestCase):
             input_string, lexer=parse.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
-            ast.NodeReturn(expression=None),
+            ast.Return(expression=None),
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
@@ -419,9 +419,9 @@ class TestParser(unittest.TestCase):
             input_string, lexer=parse.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
-            ast.NodeReturn(
-                expression=ast.NodeFunctionCall(
-                    expression=ast.NodeIdentifier('x'),
+            ast.Return(
+                expression=ast.FunctionCall(
+                    expression=ast.Identifier('x'),
                     argument_list=[],
                 ),
             ),
@@ -435,8 +435,8 @@ class TestParser(unittest.TestCase):
             input_string, lexer=parse.make_lexer())
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
-            ast.NodeReturn(
-                expression=ast.NodeString('hi')),
+            ast.Return(
+                expression=ast.String('hi')),
         )
         misc.assert_equal(self, expected_ast, real_ast)
 

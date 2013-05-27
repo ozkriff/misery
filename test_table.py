@@ -13,16 +13,16 @@ class TestTable(unittest.TestCase):
 
     def test_1(self):
         ''' Just generate some tables. '''
-        ast_ = ast.NodeModule(
+        ast_ = ast.Module(
             declaration_sequence=[
-                ast.NodeFunctionDeclaration(
+                ast.FunctionDeclaration(
                     name='f1',
-                    interface=ast.NodeFunctionInterface(parameter_list=[]),
+                    interface=ast.FunctionInterface(parameter_list=[]),
                     body=[
-                        ast.NodeVariableDeclaration(
-                            expression=ast.NodeNumber(1),
+                        ast.VariableDeclaration(
+                            expression=ast.Number(1),
                             name='a',
-                            type=ast.NodeIdentifier('int'),
+                            type=ast.Identifier('int'),
                         ),
                     ]
                 ),
@@ -35,18 +35,18 @@ class TestTable(unittest.TestCase):
 
     def test_generate_function_call(self):
         ''' Generate table with simple function call. '''
-        ast_ = ast.NodeModule(
+        ast_ = ast.Module(
             declaration_sequence=[
-                ast.NodeFunctionDeclaration(
+                ast.FunctionDeclaration(
                     name='main',
-                    interface=ast.NodeFunctionInterface(
+                    interface=ast.FunctionInterface(
                         parameter_list=[]),
                     body=[
-                        ast.NodeFunctionCall(
-                            expression=ast.NodeIdentifier('plus'),
+                        ast.FunctionCall(
+                            expression=ast.Identifier('plus'),
                             argument_list=[
-                                ast.NodeNumber(1),
-                                ast.NodeNumber(2),
+                                ast.Number(1),
+                                ast.Number(2),
                             ],
                         ),
                     ]
@@ -59,7 +59,7 @@ class TestTable(unittest.TestCase):
 
         func = table.Function(
             name='main',
-            interface=ast.NodeFunctionInterface(
+            interface=ast.FunctionInterface(
                 return_type=None,
                 parameter_list=[],
             ),
@@ -94,19 +94,19 @@ class TestTable(unittest.TestCase):
 
     def test_blocks(self):
         ''' Generate table with simple function call. '''
-        ast_ = ast.NodeModule(
+        ast_ = ast.Module(
             declaration_sequence=[
-                ast.NodeFunctionDeclaration(
+                ast.FunctionDeclaration(
                     name='main',
-                    interface=ast.NodeFunctionInterface(
+                    interface=ast.FunctionInterface(
                         parameter_list=[]),
                     body=[
-                        ast.NodeFunctionCall(
-                            expression=ast.NodeIdentifier('f1'),
+                        ast.FunctionCall(
+                            expression=ast.Identifier('f1'),
                             argument_list=[],
                         ),
-                        ast.NodeFunctionCall(
-                            expression=ast.NodeIdentifier('f2'),
+                        ast.FunctionCall(
+                            expression=ast.Identifier('f2'),
                             argument_list=[],
                         ),
                     ]
@@ -119,7 +119,7 @@ class TestTable(unittest.TestCase):
 
         func = table.Function(
             name='main',
-            interface=ast.NodeFunctionInterface(
+            interface=ast.FunctionInterface(
                 return_type=None,
                 parameter_list=[],
             ),
@@ -156,21 +156,21 @@ class TestTable(unittest.TestCase):
 
     def test_if(self):
         ''' Conditional expression. '''
-        ast_ = ast.NodeModule(
+        ast_ = ast.Module(
             declaration_sequence=[
-                ast.NodeFunctionDeclaration(
+                ast.FunctionDeclaration(
                     name='main',
-                    interface=ast.NodeFunctionInterface(
+                    interface=ast.FunctionInterface(
                         parameter_list=[]),
                     body=[
-                        ast.NodeIf(
-                            condition=ast.NodeFunctionCall(
-                                expression=ast.NodeIdentifier('f1'),
+                        ast.If(
+                            condition=ast.FunctionCall(
+                                expression=ast.Identifier('f1'),
                                 argument_list=[],
                             ),
                             branch_if=[
-                                ast.NodeFunctionCall(
-                                    expression=ast.NodeIdentifier('f2'),
+                                ast.FunctionCall(
+                                    expression=ast.Identifier('f2'),
                                     argument_list=[],
                                 ),
                             ],
@@ -185,7 +185,7 @@ class TestTable(unittest.TestCase):
 
         func = table.Function(
             name='main',
-            interface=ast.NodeFunctionInterface(
+            interface=ast.FunctionInterface(
                 return_type=None,
                 parameter_list=[],
             ),
@@ -226,14 +226,14 @@ class TestTable(unittest.TestCase):
 
     def test_return_none(self):
         ''' Return from function. '''
-        ast_ = ast.NodeModule(
+        ast_ = ast.Module(
             declaration_sequence=[
-                ast.NodeFunctionDeclaration(
+                ast.FunctionDeclaration(
                     name='main',
-                    interface=ast.NodeFunctionInterface(
+                    interface=ast.FunctionInterface(
                         parameter_list=[]),
                     body=[
-                        ast.NodeReturn(expression=None),
+                        ast.Return(expression=None),
                     ]
                 )
             ]
@@ -244,7 +244,7 @@ class TestTable(unittest.TestCase):
 
         func = table.Function(
             name='main',
-            interface=ast.NodeFunctionInterface(
+            interface=ast.FunctionInterface(
                 return_type=None,
                 parameter_list=[],
             ),
@@ -266,14 +266,14 @@ class TestTable(unittest.TestCase):
 
     def test_return_integer_constant(self):
         ''' Return integer constant from function. '''
-        ast_ = ast.NodeModule(
+        ast_ = ast.Module(
             declaration_sequence=[
-                ast.NodeFunctionDeclaration(
+                ast.FunctionDeclaration(
                     name='main',
-                    interface=ast.NodeFunctionInterface(
+                    interface=ast.FunctionInterface(
                         parameter_list=[]),
                     body=[
-                        ast.NodeReturn(expression=ast.NodeNumber(0)),
+                        ast.Return(expression=ast.Number(0)),
                     ]
                 )
             ]
@@ -284,7 +284,7 @@ class TestTable(unittest.TestCase):
 
         func = table.Function(
             name='main',
-            interface=ast.NodeFunctionInterface(
+            interface=ast.FunctionInterface(
                 return_type=None,
                 parameter_list=[],
             ),

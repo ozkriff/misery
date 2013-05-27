@@ -17,43 +17,43 @@ class TestGenerator(unittest.TestCase):
 
     def test_1(self):
         ''' Generate some code. '''
-        ast_ = ast.NodeModule(
+        ast_ = ast.Module(
             import_list=['stdio', 'ogre3d'],
             declaration_sequence=[
-                ast.NodeFunctionDeclaration(
+                ast.FunctionDeclaration(
                     name='f1',
-                    interface=ast.NodeFunctionInterface(parameter_list=[]),
+                    interface=ast.FunctionInterface(parameter_list=[]),
                     body=[
-                        ast.NodeVariableDeclaration(
-                            expression=ast.NodeFunctionCall(
-                                expression=ast.NodeIdentifier('plus'),
+                        ast.VariableDeclaration(
+                            expression=ast.FunctionCall(
+                                expression=ast.Identifier('plus'),
                                 argument_list=[
-                                    ast.NodeNumber(1),
-                                    ast.NodeNumber(2),
+                                    ast.Number(1),
+                                    ast.Number(2),
                                 ]
                             ),
                             name='a',
-                            type=ast.NodeIdentifier('int'),
+                            type=ast.Identifier('int'),
                         ),
                     ]
                 ),
-                ast.NodeFunctionDeclaration(
+                ast.FunctionDeclaration(
                     name='f2',
-                    interface=ast.NodeFunctionInterface(parameter_list=[]),
+                    interface=ast.FunctionInterface(parameter_list=[]),
                     body=[
-                        ast.NodeVariableDeclaration(
-                            expression=ast.NodeFunctionCall(
-                                expression=ast.NodeIdentifier('x'),
+                        ast.VariableDeclaration(
+                            expression=ast.FunctionCall(
+                                expression=ast.Identifier('x'),
                                 argument_list=[]
                             ),
                             name='a',
-                            type=ast.NodeIdentifier('int'),
+                            type=ast.Identifier('int'),
                         ),
                     ]
                 ),
-                ast.NodeFunctionDeclaration(
+                ast.FunctionDeclaration(
                     name='main',
-                    interface=ast.NodeFunctionInterface(parameter_list=[]),
+                    interface=ast.FunctionInterface(parameter_list=[]),
                     body=[],
                 ),
             ]
@@ -96,18 +96,18 @@ class TestGenerator(unittest.TestCase):
 
     def test_nested_func_calls(self):
         ''' Generate nested function calls. '''
-        ast_ = ast.NodeModule(
+        ast_ = ast.Module(
             import_list=[],
             declaration_sequence=[
-                ast.NodeFunctionDeclaration(
+                ast.FunctionDeclaration(
                     name='main',
-                    interface=ast.NodeFunctionInterface(parameter_list=[]),
+                    interface=ast.FunctionInterface(parameter_list=[]),
                     body=[
-                        ast.NodeFunctionCall(
-                            expression=ast.NodeIdentifier('a'),
+                        ast.FunctionCall(
+                            expression=ast.Identifier('a'),
                             argument_list=[
-                                ast.NodeFunctionCall(
-                                    expression=ast.NodeIdentifier('b'),
+                                ast.FunctionCall(
+                                    expression=ast.Identifier('b'),
                                     argument_list=[]
                                 ),
                             ]
@@ -138,22 +138,22 @@ class TestGenerator(unittest.TestCase):
 
     def test_2(self):
         ''' Generate some simple code. '''
-        ast_ = ast.NodeModule(
+        ast_ = ast.Module(
             declaration_sequence=[
-                ast.NodeFunctionDeclaration(
+                ast.FunctionDeclaration(
                     name='f1',
-                    interface=ast.NodeFunctionInterface(
+                    interface=ast.FunctionInterface(
                         parameter_list=[
-                            ast.NodeFormalParameter(
+                            ast.Parameter(
                                 name='a',
-                                type=ast.NodeIdentifier('int')
+                                type=ast.Identifier('int')
                             ),
-                            ast.NodeFormalParameter(
+                            ast.Parameter(
                                 name='b',
-                                type=ast.NodeIdentifier('int')
+                                type=ast.Identifier('int')
                             ),
                         ],
-                        return_type=ast.NodeIdentifier('int'),
+                        return_type=ast.Identifier('int'),
                     ),
                     body=[]
                 ),
@@ -179,7 +179,7 @@ class TestGenerator(unittest.TestCase):
         ''' Test if. '''
         func = table.Function(
             name='main',
-            interface=ast.NodeFunctionInterface(
+            interface=ast.FunctionInterface(
                 return_type=None,
                 parameter_list=[],
             ),
@@ -247,7 +247,7 @@ class TestGenerator(unittest.TestCase):
         ''' Test return. '''
         func = table.Function(
             name='main',
-            interface=ast.NodeFunctionInterface(
+            interface=ast.FunctionInterface(
                 return_type=None,
                 parameter_list=[],
             ),

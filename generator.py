@@ -106,7 +106,7 @@ class Generator:
     def _generate_return_statement(self, function, statement):
         out = ''
         out += self._indent() + 'return '
-        out += '0' # TODO: expression?
+        out += '0'  # TODO: expression?
         out += ';' + '\n'
         return out
 
@@ -133,7 +133,8 @@ class Generator:
 
     def _generate_function(self, function):
         out = ''
-        out += self._generate_function_header(function.name, function.interface)
+        out += self._generate_function_header(
+            function.name, function.interface)
         out += ' {\n'
         self._increnent_indent()
         for variable in function.variable_list:
