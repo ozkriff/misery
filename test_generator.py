@@ -94,6 +94,48 @@ class TestGenerator(unittest.TestCase):
         )
         misc.assert_equal(self, expected_output, real_output)
 
+    def test_nested_func_calls(self):
+        ''' Generate nested function calls. '''
+        ast_ = ast.NodeModule(
+            import_list=[],
+            declaration_sequence=[
+                ast.NodeFunctionDeclaration(
+                    name='main',
+                    interface=ast.NodeFunctionInterface(parameter_list=[]),
+                    body=[
+                        ast.NodeFunctionCall(
+                            expression=ast.NodeIdentifier('a'),
+                            argument_list=[
+                                ast.NodeFunctionCall(
+                                    expression=ast.NodeIdentifier('b'),
+                                    argument_list=[]
+                                ),
+                            ]
+                        ),
+                    ]
+                )
+            ]
+        )
+        gen = generator.Generator()
+        gen.table = table.Table()
+        gen.table.generate_tables(ast_)
+        real_output = gen.generate()
+        # TODO: fix indentation
+        expected_output = (
+            '\n'
+            'void main();\n'
+            '\n'
+            'void main() {\n'
+            '  int tmp_0;\n'
+            '  int tmp_1;\n'
+            '\n'
+            '    b(&tmp_1);\n'
+            'a(&tmp_0, tmp_1);\n'
+            '}\n'
+            '\n'
+        )
+        misc.assert_equal(self, expected_output, real_output)
+
     def test_2(self):
         ''' Generate some simple code. '''
         ast_ = ast.NodeModule(

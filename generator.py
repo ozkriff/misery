@@ -48,7 +48,7 @@ class Generator:
                 last_declaration = self.table.declaration_list[-1]
                 out += self.indent()
                 out += self.generate_expression(
-                    last_declaration.expression_list[argument.id])
+                    function, last_declaration.expression_list[argument.id])
                 out += ';' + '\n'
         out += expression.name + '('
         # out var. passed by pointer
