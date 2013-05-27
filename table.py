@@ -28,7 +28,6 @@ class Function:
         self.expression_list = []
 
 
-# TODO: ...
 class IfStatement:
     def __init__(self, expression_id, if_branch_id):
         self.expression_id = expression_id
