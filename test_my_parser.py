@@ -432,16 +432,16 @@ class TestParser(unittest.TestCase):
 class TestFindColumn(unittest.TestCase):
     ''' Test my_parser.find_column() function. '''
 
-    def test_simple(self):
-        ''' Basic test. '''
+    def test_one_line(self):
+        ''' Call find_column with one-line string. '''
         input_data = '1 2 3\n'
         pos = 3
         real_column = my_parser.find_column(input_data, pos)
         expected_column = 3
         misc.assert_equal(self, expected_column, real_column)
 
-    def test_simple_multiline(self):
-        ''' Basic test. '''
+    def test_two_lines(self):
+        ''' Call find_column with two-line string. '''
         input_data = (
             '1 2 3\n'
             '4 5 6\n'
@@ -451,8 +451,8 @@ class TestFindColumn(unittest.TestCase):
         expected_column = 2
         misc.assert_equal(self, expected_column, real_column)
 
-    def test_no_newline(self):
-        ''' Basic test. '''
+    def test_empty_string(self):
+        ''' Call find_column with empty string. '''
         input_data = ''
         pos = 0
         real_column = my_parser.find_column(input_data, pos)
