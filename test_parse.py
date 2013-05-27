@@ -428,6 +428,18 @@ class TestParser(unittest.TestCase):
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
+    def test_string(self):
+        ''' Parse anythong with string. '''
+        input_string = 'func fname() { return "hi" }'
+        real_ast = parse.make_parser().parse(
+            input_string, lexer=parse.make_lexer())
+        expected_ast = copy.deepcopy(self._std_module)
+        expected_ast.declaration_sequence[0].body.append(
+            ast.NodeReturn(
+                expression=ast.NodeString('hi')),
+        )
+        misc.assert_equal(self, expected_ast, real_ast)
+
 
 class TestFindColumn(unittest.TestCase):
     ''' Test parse.find_column() function. '''
