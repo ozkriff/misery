@@ -22,6 +22,8 @@ class Generator:
     def _generate_function_parameters(self, parameter_list):
         out = ''
         is_first = True
+        if len(parameter_list) == 0:
+            return 'void'
         for parameter in parameter_list:
             if is_first:
                 is_first = False
