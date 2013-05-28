@@ -20,10 +20,10 @@ class Generator:
         self.indent_level -= 1
 
     def _generate_function_parameters(self, parameter_list):
-        out = ''
-        is_first = True
         if len(parameter_list) == 0:
             return 'void'
+        out = ''
+        is_first = True
         for parameter in parameter_list:
             if is_first:
                 is_first = False
