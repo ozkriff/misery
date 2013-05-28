@@ -319,7 +319,11 @@ def make_parser():
     def p_error(p):
         toklen = len(str(p.value))
         column = find_column(p.lexer.lexdata, p.lexpos)
-        print('filename:%(lineno)d:%(column)d: Parser error: unexpected token ' % {
+        errmsg = (
+            'filename:%(lineno)d:%(column)d: '
+            'Parser error: unexpected token '
+        )
+        print(errmsg % {
             'lineno': p.lineno - 1,
             'column': column - 1,
         })

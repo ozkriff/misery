@@ -283,7 +283,9 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_declaration_with_initialization(self):
-        ''' Parse variable declaration statement with initiaization and without explicit  type. '''
+        ''' Parse variable declaration statement with
+            initiaization and without explicit  type.
+        '''
         input_string = 'func fname() { var testVar = 666 }'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
@@ -310,7 +312,9 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_declaration_with_init_2(self):
-        ''' Parse variable declaration statement with complex initiaization. '''
+        ''' Parse variable declaration statement with
+            complex initiaization.
+        '''
         input_string = 'func fname() { var v2 Int = plus(1, 2) }'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
@@ -327,7 +331,9 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_declaration_with_ctor_and_arguments(self):
-        ''' Parse variable declaration statement with constructor call with arguments. '''
+        ''' Parse variable declaration statement with
+            constructor call with arguments.
+        '''
         input_string = 'func fname() { var p Parser(lexer, 1) }'
         real_ast = parse.make_parser().parse(
             input_string, lexer=parse.make_lexer())
