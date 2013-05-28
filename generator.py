@@ -56,6 +56,7 @@ class Generator:
             self, function, expression):
         out = ''
         # out var. passed by pointer
+        # TODO: check in symtable if there are any return value
         out += '&' + function.variable_list[expression.result_id.id].name
         for argument in expression.argument_id_list:
             out += ', '
