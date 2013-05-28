@@ -34,12 +34,11 @@ class Generator:
 
     def _generate_function_header(self, name, interface):
         out = ''
-        return_type = 'void'
+        out += 'void ' + name + '('
         if interface.return_type:
-            return_type = interface.return_type.value
-        function_parameters = self._generate_function_parameters(
-            interface.parameter_list)
-        out += return_type + ' ' + name + '(' + function_parameters + ')'
+            out += interface.return_type.value + '* __result, '
+        out += self._generate_function_parameters(interface.parameter_list)
+        out += ')'
         return out
 
     def _generate_expression(self, function, expression):

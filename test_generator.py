@@ -166,9 +166,9 @@ class TestGenerator(unittest.TestCase):
         real_output = gen.generate()
         expected_output = (
             '\n'
-            'int f1(int a, int b);\n'
+            'void f1(int* __result, int a, int b);\n'
             '\n'
-            'int f1(int a, int b) {\n'
+            'void f1(int* __result, int a, int b) {\n'
             '\n'
             '}\n'
             '\n'
