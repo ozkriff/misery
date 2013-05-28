@@ -6,19 +6,19 @@ import copy
 import ast
 
 
-class Variable:
+class Variable(object):
     def __init__(self, name, type):
         self.name = name
         self.type = type
 
 
-class Constant:
+class Constant(object):
     def __init__(self, value, type):
         self.value = value
         self.type = type
 
 
-class Function:
+class Function(object):
     def __init__(self, name, interface):
         self.name = name
         self.interface = interface
@@ -28,51 +28,51 @@ class Function:
         self.expression_list = []
 
 
-class IfStatement:
+class IfStatement(object):
     def __init__(self, expression_id, if_branch_id):
         self.expression_id = expression_id
         self.if_branch_id = if_branch_id
 
 
-class VariableDeclarationStatement:
+class VariableDeclarationStatement(object):
     def __init__(self, variable_id, expression_id):
         self.variable_id = variable_id
         self.expression_id = expression_id
 
 
-class ReturnStatement:
+class ReturnStatement(object):
     def __init__(self, expression_id):
         self.expression_id = expression_id
 
 
-class FunctionCallStatement:
+class FunctionCallStatement(object):
     def __init__(self, expression_id):
         self.expression_id = expression_id
 
 
-class FunctionCallExpression:
+class FunctionCallExpression(object):
     def __init__(self, name, argument_id_list, result_id):
         self.name = name
         self.argument_id_list = argument_id_list
         self.result_id = result_id
 
 
-class LinkToNumberConstant:
+class LinkToNumberConstant(object):
     def __init__(self, id):
         self.id = id
 
 
-class LinkToVariable:
+class LinkToVariable(object):
     def __init__(self, id):
         self.id = id
 
 
-class LinkToFunctionCall:
+class LinkToFunctionCall(object):
     def __init__(self, id):
         self.id = id
 
 
-class Table:
+class Table(object):
 
     def __init__(self):
         self.declaration_list = []

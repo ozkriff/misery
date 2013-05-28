@@ -7,7 +7,7 @@ Miscellaneous classes and functions.
 '''
 
 
-class PrettyPrinter:
+class PrettyPrinter(object):
     ''' Prettyprints values. '''
 
     def __init__(self, shiftwidth=4):

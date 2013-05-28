@@ -5,7 +5,7 @@
 import table
 
 
-class Generator:
+class Generator(object):
 
     def __init__(self):
         self.indent_level = 0

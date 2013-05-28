@@ -6,7 +6,7 @@ Asbtract Syntax Tree
 '''
 
 
-class Module():
+class Module(object):
     def __init__(self, import_list=None, declaration_sequence=None):
         assert import_list is None or isinstance(import_list, list)
         assert (declaration_sequence is None or
@@ -15,37 +15,37 @@ class Module():
         self.declaration_sequence = declaration_sequence
 
 
-class TypeDeclaration():
+class TypeDeclaration(object):
     def __init__(self, name, type):
         self.name = name
         self.type = type
 
 
-class Identifier():
+class Identifier(object):
     def __init__(self, value):
         self.value = value
 
 
 # TODO: value -> field_list ?
-class TypeStruct():
+class TypeStruct(object):
     def __init__(self, value):
         self.value = value
 
 
-class Field():
+class Field(object):
     def __init__(self, name, type):
         self.name = name
         self.type = type
 
 
-class ConstDeclaration():
+class ConstDeclaration(object):
     def __init__(self, name, type, expression):
         self.name = name
         self.type = type
         self.expression = expression
 
 
-class Number():
+class Number(object):
     def __init__(self, value):
         self.value = value
 
@@ -55,32 +55,32 @@ class String():
         self.value = value
 
 
-class FunctionDeclaration():
+class FunctionDeclaration(object):
     def __init__(self, name, interface, body):
         self.name = name
         self.interface = interface
         self.body = body
 
 
-class FunctionInterface():
+class FunctionInterface(object):
     def __init__(self, parameter_list, return_type=None):
         self.parameter_list = parameter_list
         self.return_type = return_type
 
 
-class Parameter():
+class Parameter(object):
     def __init__(self, name, type):
         self.name = name
         self.type = type
 
 
-class FunctionCall():
+class FunctionCall(object):
     def __init__(self, expression, argument_list):
         self.expression = expression
         self.argument_list = argument_list
 
 
-class VariableDeclaration():
+class VariableDeclaration(object):
     def __init__(
             self,
             name,
@@ -93,14 +93,14 @@ class VariableDeclaration():
         self.constructor_argument_list = constructor_argument_list
 
 
-class If():
+class If(object):
     def __init__(self, condition, branch_if, branch_else=None):
         self.condition = condition
         self.branch_if = branch_if
         self.branch_else = branch_else
 
 
-class Return():
+class Return(object):
     def __init__(self, expression=None):
         self.expression = expression
 
