@@ -41,9 +41,8 @@ class Generator:
         out += ')'
         return out
 
-    def _generate_expression(self, function, expression):
+    def _generate_expression_dependancies(self, function, expression):
         out = ''
-        assert isinstance(expression, table.FunctionCallExpression)
         for argument in expression.argument_id_list:
             if isinstance(argument, table.LinkToFunctionCall):
                 last_declaration = self.table.declaration_list[-1]
@@ -51,6 +50,12 @@ class Generator:
                 out += self._generate_expression(
                     function, last_declaration.expression_list[argument.id])
                 out += ';' + '\n'
+        return out
+
+    def _generate_expression(self, function, expression):
+        assert isinstance(expression, table.FunctionCallExpression)
+        out = ''
+        out += self._generate_expression_dependancies(function, expression)
         out += expression.name + '('
         # out var. passed by pointer
         out += '&' + function.variable_list[expression.result_id.id].name
@@ -62,7 +67,6 @@ class Generator:
                 result_id = function.expression_list[argument.id].result_id.id
                 out += str(function.variable_list[result_id].name)
             else:
-                # out += str(argument.__class__)
                 raise Exception("Not Implemented")
         out += ')'
         return out
