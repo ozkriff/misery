@@ -60,7 +60,7 @@ class Generator(object):
         elif isinstance(argument, table.LinkToVariable):
             out += function.variable_list[argument.id].name
         else:
-            raise Exception("Not Implemented")
+            raise Exception("Wrong argument type")
         return out
 
     def _generate_function_call_expression_arguments(
