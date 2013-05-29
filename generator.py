@@ -50,6 +50,17 @@ class Generator(object):
                     function, last_declaration.expression_list[argument.id])
         return out
 
+    def _generate_argument(self, function, argument):
+        out = ''
+        if isinstance(argument, table.LinkToNumberConstant):
+            out += str(function.constant_list[argument.id].value)
+        elif isinstance(argument, table.LinkToFunctionCall):
+            result_id = function.expression_list[argument.id].result_id.id
+            out += str(function.variable_list[result_id].name)
+        else:
+            raise Exception("Not Implemented")
+        return out
+
     def _generate_function_call_expression_arguments(
             self, function, expression):
         out = ''
@@ -57,14 +68,7 @@ class Generator(object):
         # TODO: check in symtable if there are any return value
         out += '&' + function.variable_list[expression.result_id.id].name
         for argument in expression.argument_id_list:
-            out += ', '
-            if isinstance(argument, table.LinkToNumberConstant):
-                out += str(function.constant_list[argument.id].value)
-            elif isinstance(argument, table.LinkToFunctionCall):
-                result_id = function.expression_list[argument.id].result_id.id
-                out += str(function.variable_list[result_id].name)
-            else:
-                raise Exception("Not Implemented")
+            out += ', ' + self._generate_argument(function, argument)
         return out
 
     def _generate_expression(self, function, expression):
@@ -112,21 +116,14 @@ class Generator(object):
         return out
 
     def _generate_return_statement(self, function, statement):
-        preout = ''
         out = ''
+        if isinstance(statement.expression_id, table.LinkToFunctionCall):
+            expression = function.expression_list[statement.expression_id.id]
+            out += self._generate_expression(function, expression)
         out += self._indent()
         out += 'return '
-        if isinstance(statement.expression_id, table.LinkToNumberConstant):
-            constand_id = statement.expression_id.id
-            out += str(function.constant_list[constand_id].value)
-        elif isinstance(statement.expression_id, table.LinkToFunctionCall):
-            expression = function.expression_list[statement.expression_id.id]
-            preout += self._generate_expression(function, expression)
-            out += function.variable_list[expression.result_id.id].name
-        else:
-            raise Exception("Not Implemented")
+        out += self._generate_argument(function, statement.expression_id)
         out += ';' + '\n'
-        out = preout + out
         return out
 
     def _generate_statement(self, function, statement):
