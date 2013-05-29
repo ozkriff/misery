@@ -177,17 +177,22 @@ class Generator(object):
         out += '}\n'
         return out
 
+    def _generate_forward_declarations(self):
+        out = ''
+        for declaration in self.table.declaration_list:
+            if isinstance(declaration, table.Function):
+                out += self._generate_function_header(
+                    declaration.name, declaration.interface)
+                out += ';\n'
+        return out
+
     def generate(self):
         out = ''
         if self.table.import_list is not None:
             for import_node in self.table.import_list:
                 out += '// import: ' + import_node + '\n'
         out += '\n'
-        for declaration in self.table.declaration_list:
-            if isinstance(declaration, table.Function):
-                out += self._generate_function_header(
-                    declaration.name, declaration.interface)
-                out += ';\n'
+        out += self._generate_forward_declarations()
         out += '\n'
         for declaration in self.table.declaration_list:
             assert isinstance(declaration, table.Function)
