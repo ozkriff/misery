@@ -120,7 +120,6 @@ class TestGenerator(unittest.TestCase):
         gen.table = table.Table()
         gen.table.generate_tables(ast_)
         real_output = gen.generate()
-        # TODO: fix indentation
         expected_output = (
             '\n'
             'void main(void);\n'
@@ -129,8 +128,8 @@ class TestGenerator(unittest.TestCase):
             '  int tmp_0;\n'
             '  int tmp_1;\n'
             '\n'
-            '    b(&tmp_1);\n'
-            'a(&tmp_0, tmp_1);\n'
+            '  b(&tmp_1);\n'
+            '  a(&tmp_0, tmp_1);\n'
             '}\n'
             '\n'
         )
@@ -234,7 +233,8 @@ class TestGenerator(unittest.TestCase):
             '  int tmp_0;\n'
             '  int tmp_1;\n'
             '\n'
-            '  if (f1(&tmp_0)) {\n'
+            '  f1(&tmp_0);\n'
+            '  if (tmp_0) {\n'
             '    f2(&tmp_1);\n'
             '    f3(&tmp_1);\n'
             '  }\n'

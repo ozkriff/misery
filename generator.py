@@ -46,10 +46,8 @@ class Generator(object):
         for argument in expression.argument_id_list:
             if isinstance(argument, table.LinkToFunctionCall):
                 last_declaration = self.table.declaration_list[-1]
-                out += self._indent()
                 out += self._generate_expression(
                     function, last_declaration.expression_list[argument.id])
-                out += ';' + '\n'
         return out
 
     def _generate_function_call_expression_arguments(
@@ -73,18 +71,18 @@ class Generator(object):
         assert isinstance(expression, table.FunctionCallExpression)
         out = ''
         out += self._generate_expression_dependancies(function, expression)
-        out += expression.name + '('
+        out += self._indent()
+        out += expression.name
+        out += '('
         out += self._generate_function_call_expression_arguments(
             function, expression)
-        out += ')'
+        out += ');\n'
         return out
 
     def _generate_variable_declaration_statement(self, function, statement):
         out = ''
         expression = function.expression_list[statement.expression_id.id]
-        out += self._indent()
         out += self._generate_expression(function, expression)
-        out += ';' + '\n'
         expression_id = statement.expression_id.id
         result_id = function.expression_list[expression_id].result_id.id
         out += self._indent()
@@ -95,24 +93,21 @@ class Generator(object):
     def _generate_function_call_statement(self, function, statement):
         out = ''
         expression = function.expression_list[statement.expression_id.id]
-        out += self._indent()
         out += self._generate_expression(function, expression)
-        out += ';' + '\n'
         return out
 
     def _generate_if_statement(self, function, statement):
         out = ''
-
         expression = function.expression_list[statement.expression_id.id]
-        cond = self._generate_expression(function, expression)
-
-        out += self._indent() + 'if (' + cond + ') {' + '\n'
-
+        assert isinstance(expression, table.FunctionCallExpression)
+        out += self._generate_expression(function, expression)
+        out += self._indent() + 'if ('
+        out += function.variable_list[expression.result_id.id].name
+        out += ') {\n'
         block = function.block_list[statement.if_branch_id]
         self._increnent_indent()
         out += self._generate_block(function, block)
         self._decrenent_indent()
-
         out += self._indent() + '}' + '\n'
         return out
 
