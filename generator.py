@@ -71,8 +71,7 @@ class Generator(object):
             out += ', ' + self._generate_argument(function, argument)
         return out
 
-    def _generate_expression(self, function, expression):
-        assert isinstance(expression, table.FunctionCallExpression)
+    def _generate_function_call_expression(self, function, expression):
         out = ''
         out += self._generate_expression_dependancies(function, expression)
         out += self._indent()
@@ -81,6 +80,16 @@ class Generator(object):
         out += self._generate_function_call_expression_arguments(
             function, expression)
         out += ');\n'
+        return out
+
+    def _generate_expression(self, function, expression):
+        ''' Generate evaluation code. '''
+        out = ''
+        if isinstance(expression, table.FunctionCallExpression):
+            out += self._generate_function_call_expression(
+                function, expression)
+        else:
+            raise Exception("Not Implemented")
         return out
 
     def _generate_variable_declaration_statement(self, function, statement):
