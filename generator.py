@@ -186,11 +186,17 @@ class Generator(object):
                 out += ';\n'
         return out
 
+    def _generate_imports(self):
+        if self.table.import_list is None:
+            return ''
+        out = ''
+        for import_node in self.table.import_list:
+            out += '// import: ' + import_node + '\n'
+        return out
+
     def generate(self):
         out = ''
-        if self.table.import_list is not None:
-            for import_node in self.table.import_list:
-                out += '// import: ' + import_node + '\n'
+        out += self._generate_imports()
         out += '\n'
         out += self._generate_forward_declarations()
         out += '\n'
