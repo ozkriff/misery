@@ -156,16 +156,21 @@ class Generator(object):
             out += self._generate_statement(function, statement)
         return out
 
+    def _generate_local_variables(self, function):
+        out = ''
+        for variable in function.variable_list:
+            out += self._indent()
+            out += variable.type + ' ' + variable.name
+            out += ';' + '\n'
+        return out
+
     def _generate_function(self, function):
         out = ''
         out += self._generate_function_header(
             function.name, function.interface)
         out += ' {\n'
         self._increnent_indent()
-        for variable in function.variable_list:
-            out += self._indent()
-            out += variable.type + ' ' + variable.name
-            out += ';' + '\n'
+        out += self._generate_local_variables(function)
         out += '\n'
         out += self._generate_block(function, function.block_list[0])
         self._decrenent_indent()
