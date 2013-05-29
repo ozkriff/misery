@@ -252,7 +252,7 @@ class TestGenerator(unittest.TestCase):
                 parameter_list=[],
             ),
         )
-        func.constant_list = [table.Constant(type="int", value=0)]
+        func.constant_list = [table.Constant(type="int", value=1)]
         func.variable_list = []
         func.block_list = [
             [
@@ -274,7 +274,7 @@ class TestGenerator(unittest.TestCase):
             '\n'
             'void main(void) {\n'
             '\n'
-            '  return 0;\n'
+            '  return 1;\n'
             '}\n'
             '\n'
         )

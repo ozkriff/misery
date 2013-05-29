@@ -113,8 +113,13 @@ class Generator(object):
 
     def _generate_return_statement(self, function, statement):
         out = ''
-        out += self._indent() + 'return '
-        out += '0'  # TODO: expression?
+        out += self._indent()
+        out += 'return '
+        if isinstance(statement.expression_id, table.LinkToNumberConstant):
+            constand_id = statement.expression_id.id
+            out += str(function.constant_list[constand_id].value)
+        else:
+            raise Exception("Not Implemented")
         out += ';' + '\n'
         return out
 
