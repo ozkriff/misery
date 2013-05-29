@@ -194,13 +194,18 @@ class Generator(object):
             out += '// import: ' + import_node + '\n'
         return out
 
+    def _generate_declaration(self, declaration):
+        out = ''
+        if isinstance(declaration, table.Function):
+            out += self._generate_function(declaration)
+        else:
+            raise Exception("Not Implemented")
+        return out
+
     def _generate_declarations(self):
         out = ''
         for declaration in self.table.declaration_list:
-            if isinstance(declaration, table.Function):
-                out += self._generate_function(declaration)
-            else:
-                raise Exception("Not Implemented")
+            out += self._generate_declaration(declaration)
             out += '\n'
         return out
 
