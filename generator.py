@@ -194,16 +194,23 @@ class Generator(object):
             out += '// import: ' + import_node + '\n'
         return out
 
+    def _generate_declarations(self):
+        out = ''
+        for declaration in self.table.declaration_list:
+            if isinstance(declaration, table.Function):
+                out += self._generate_function(declaration)
+            else:
+                raise Exception("Not Implemented")
+            out += '\n'
+        return out
+
     def generate(self):
         out = ''
         out += self._generate_imports()
         out += '\n'
         out += self._generate_forward_declarations()
         out += '\n'
-        for declaration in self.table.declaration_list:
-            assert isinstance(declaration, table.Function)
-            out += self._generate_function(declaration)
-            out += '\n'
+        out += self._generate_declarations()
         return out
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
