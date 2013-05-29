@@ -57,6 +57,8 @@ class Generator(object):
         elif isinstance(argument, table.LinkToFunctionCall):
             result_id = function.expression_list[argument.id].result_id.id
             out += str(function.variable_list[result_id].name)
+        elif isinstance(argument, table.LinkToVariable):
+            out += function.variable_list[argument.id].name
         else:
             raise Exception("Not Implemented")
         return out
@@ -115,7 +117,7 @@ class Generator(object):
         assert isinstance(expression, table.FunctionCallExpression)
         out += self._generate_expression(function, expression)
         out += self._indent() + 'if ('
-        out += function.variable_list[expression.result_id.id].name
+        out += self._generate_argument(function, expression.result_id)
         out += ') {\n'
         block = function.block_list[statement.if_branch_id]
         self._increnent_indent()
