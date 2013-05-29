@@ -112,15 +112,21 @@ class Generator(object):
         return out
 
     def _generate_return_statement(self, function, statement):
+        preout = ''
         out = ''
         out += self._indent()
         out += 'return '
         if isinstance(statement.expression_id, table.LinkToNumberConstant):
             constand_id = statement.expression_id.id
             out += str(function.constant_list[constand_id].value)
+        elif isinstance(statement.expression_id, table.LinkToFunctionCall):
+            expression = function.expression_list[statement.expression_id.id]
+            preout += self._generate_expression(function, expression)
+            out += function.variable_list[expression.result_id.id].name
         else:
             raise Exception("Not Implemented")
         out += ';' + '\n'
+        out = preout + out
         return out
 
     def _generate_statement(self, function, statement):

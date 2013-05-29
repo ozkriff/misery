@@ -243,8 +243,8 @@ class TestGenerator(unittest.TestCase):
         )
         misc.assert_equal(self, expected_output, real_output)
 
-    def test_return(self):
-        ''' Test return. '''
+    def test_return_integer_constant(self):
+        ''' Test returning integer constant. '''
         func = table.Function(
             name='main',
             interface=ast.FunctionInterface(
@@ -252,7 +252,9 @@ class TestGenerator(unittest.TestCase):
                 parameter_list=[],
             ),
         )
-        func.constant_list = [table.Constant(type="int", value=1)]
+        func.constant_list = [
+            table.Constant(type="int", value=1),
+        ]
         func.variable_list = []
         func.block_list = [
             [
@@ -275,6 +277,52 @@ class TestGenerator(unittest.TestCase):
             'void main(void) {\n'
             '\n'
             '  return 1;\n'
+            '}\n'
+            '\n'
+        )
+        misc.assert_equal(self, expected_output, real_output)
+
+    def test_return_function_call_result(self):
+        ''' Test returning function call result. '''
+        func = table.Function(
+            name='main',
+            interface=ast.FunctionInterface(
+                return_type=None,
+                parameter_list=[],
+            ),
+        )
+        func.constant_list = []
+        func.variable_list = [
+            table.Variable(type='int', name='tmp_0'),
+        ]
+        func.block_list = [
+            [
+                table.ReturnStatement(
+                    expression_id=table.LinkToFunctionCall(id=0)),
+            ],
+        ]
+        func.expression_list = [
+            table.FunctionCallExpression(
+                result_id=table.LinkToVariable(id=0),
+                name='f',
+                argument_id_list=[],
+            ),
+        ]
+        table_ = table.Table()
+        table_.declaration_list = [func]
+
+        gen = generator.Generator()
+        gen.table = table_
+        real_output = gen.generate()
+        expected_output = (
+            '\n'
+            'void main(void);\n'
+            '\n'
+            'void main(void) {\n'
+            '  int tmp_0;\n'
+            '\n'
+            '  f(&tmp_0);\n'
+            '  return tmp_0;\n'
             '}\n'
             '\n'
         )
