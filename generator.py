@@ -133,10 +133,10 @@ class Generator(object):
         if isinstance(statement.expression_id, table.LinkToFunctionCall):
             expression = function.expression_list[statement.expression_id.id]
             out += self._generate_expression(function, expression)
-        out += self._indent()
-        out += 'return '
+        out += self._indent() + '*__result = '
         out += self._generate_argument(function, statement.expression_id)
-        out += ';' + '\n'
+        out += ';\n'
+        out += self._indent() + 'return;\n'
         return out
 
     def _generate_statement(self, function, statement):
