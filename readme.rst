@@ -44,14 +44,16 @@ Print lexems::
     for tok in lexer:
         my_pretty_print.my_pretty_print(tok)
 
-def flattenTree(inlist, outlist):
-    for node in inlist:
-        if isinstance(node, str):
-            outlist.append(node)
-        elif isinstance(node, list):
-            flattenTree(node, outlist)
-        else:
-            raise RuntimeError('flattenTree: bad type')
+flattenTree::
+
+    def flattenTree(inlist, outlist):
+        for node in inlist:
+            if isinstance(node, str):
+                outlist.append(node)
+            elif isinstance(node, list):
+                flattenTree(node, outlist)
+            else:
+                raise RuntimeError('flattenTree: bad type')
 
 
 See LICENSE file for copyright and license details.
