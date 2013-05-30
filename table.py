@@ -67,6 +67,11 @@ class LinkToVariable(object):
         self.id = id
 
 
+class LinkToParameter(object):
+    def __init__(self, name):
+        self.name = name
+
+
 class LinkToFunctionCall(object):
     def __init__(self, id):
         self.id = id
@@ -85,6 +90,12 @@ class Table(object):
             Constant(type='int', value=number.value))
         return LinkToNumberConstant(
             id=len(self.declaration_list[-1].constant_list) - 1)
+
+    def _parse_identifier(self, identidier_node):
+        assert isinstance(identidier_node, ast.Identifier)
+        # TODO: find this identifier
+        return LinkToParameter(name=identidier_node.value)
+        # return None
 
     def _parse_function_call(self, function_call_node):
         assert isinstance(function_call_node, ast.FunctionCall)
@@ -118,6 +129,8 @@ class Table(object):
             return self._parse_function_call(expression)
         elif isinstance(expression, ast.Number):
             return self._parse_number(expression)
+        elif isinstance(expression, ast.Identifier):
+            return self._parse_identifier(expression)
         elif expression is None:
             return
         else:

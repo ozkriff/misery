@@ -306,5 +306,142 @@ class TestTable(unittest.TestCase):
 
         misc.assert_equal(self, expected_output, real_output)
 
+    def test_factorial(self):
+        ''' Test table generation for simple factorial function. '''
+
+        body = [
+            ast.If(
+                branch_if=[
+                    ast.Return(expression=ast.Number(1)),
+                ],
+                condition=ast.FunctionCall(
+                    expression=ast.Identifier('isEqualInteger'),
+                    argument_list=[
+                        ast.Identifier('n'),
+                        ast.Number(0),
+                    ],
+                ),
+            ),
+            ast.Return(
+                expression=ast.FunctionCall(
+                    expression=ast.Identifier('multiplyInteger'),
+                    argument_list=[
+                        ast.FunctionCall(
+                            expression=ast.Identifier('fac'),
+                            argument_list=[
+                                ast.FunctionCall(
+                                    expression=ast.Identifier('minusInteger'),
+                                    argument_list=[
+                                        ast.Identifier('n'),
+                                        ast.Number(1),
+                                    ],
+                                ),
+                            ],
+                        ),
+                        ast.Identifier('n'),
+                    ],
+                ),
+            ),
+        ]
+        ast_ = ast.Module(
+            declaration_sequence=[
+                ast.FunctionDeclaration(
+                    name='fac',
+                    interface=ast.FunctionInterface(
+                        return_type=ast.Identifier('int'),
+                        parameter_list=[
+                            ast.Parameter(
+                                name='n',
+                                type=ast.Identifier('int'),
+                            ),
+                        ],
+                    ),
+                    body=body,
+                )
+            ]
+        )
+
+        table_ = table.Table()
+        table_.generate_tables(ast_)
+        real_output = table_
+
+        func = table.Function(
+            name='fac',
+            interface=ast.FunctionInterface(
+                return_type=ast.Identifier('int'),
+                parameter_list=[
+                    ast.Parameter(
+                        name='n',
+                        type=ast.Identifier('int')
+                    ),
+                ],
+            ),
+        )
+        func.constant_list = [
+            table.Constant(type='int', value=0),
+            table.Constant(type='int', value=1),
+            table.Constant(type='int', value=1),
+        ]
+        func.variable_list = [
+            table.Variable(name='tmp_0', type='int'),
+            table.Variable(name='tmp_1', type='int'),
+            table.Variable(name='tmp_2', type='int'),
+            table.Variable(name='tmp_3', type='int'),
+        ]
+        func.block_list = [
+            [
+                table.IfStatement(
+                    expression_id=table.LinkToFunctionCall(id=0),
+                    if_branch_id=1,
+                ),
+            ],
+            [
+                table.ReturnStatement(
+                    expression_id=table.LinkToNumberConstant(id=1),
+                ),
+                # TODO: next statement should be in previous block!
+                table.ReturnStatement(
+                    expression_id=table.LinkToFunctionCall(id=3),
+                ),
+            ],
+        ]
+        func.expression_list = [
+            table.FunctionCallExpression(
+                result_id=table.LinkToVariable(id=0),
+                name='isEqualInteger',
+                argument_id_list=[
+                    table.LinkToParameter(name='n'),
+                    table.LinkToNumberConstant(id=0),
+                ],
+            ),
+            table.FunctionCallExpression(
+                result_id=table.LinkToVariable(id=3),
+                name='minusInteger',
+                argument_id_list=[
+                    table.LinkToParameter(name='n'),
+                    table.LinkToNumberConstant(id=2),
+                ],
+            ),
+            table.FunctionCallExpression(
+                result_id=table.LinkToVariable(id=2),
+                name='fac',
+                argument_id_list=[
+                    table.LinkToFunctionCall(id=1),
+                ],
+            ),
+            table.FunctionCallExpression(
+                result_id=table.LinkToVariable(id=1),
+                name='multiplyInteger',
+                argument_id_list=[
+                    table.LinkToFunctionCall(id=2),
+                    table.LinkToParameter(name='n'),
+                ],
+            ),
+        ]
+        expected_output = table.Table()
+        expected_output.declaration_list = [func]
+
+        misc.assert_equal(self, expected_output, real_output)
+
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
