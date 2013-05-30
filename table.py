@@ -161,12 +161,6 @@ class Table(object):
         )
 
     def _parse_statement(self, function, statement, block):
-        '''
-        Translates AST Node to Table Node.
-
-        function -- current functions`s table
-        statement -- statement to parse
-        '''
         if isinstance(statement, ast.VariableDeclaration):
             self._parse_variable_declaration_statement(
                 function, statement, block)
