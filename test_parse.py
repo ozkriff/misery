@@ -453,8 +453,8 @@ class TestParser(unittest.TestCase):
                 if isEqualInteger(n, 0) {
                     return 1
                 }
-                var f Integer = fac(minusInteger(n, 1))
-                return multiplyInteger(f, n)
+                return multiplyInteger(
+                        fac(minusInteger(n, 1)), n)
             }
         '''
         real_ast = parse.make_parser().parse(
@@ -472,27 +472,22 @@ class TestParser(unittest.TestCase):
                     ],
                 ),
             ),
-            ast.VariableDeclaration(
-                name="f",
-                type=ast.Identifier("Integer"),
-                expression=ast.FunctionCall(
-                    expression=ast.Identifier("fac"),
-                    argument_list=[
-                        ast.FunctionCall(
-                            expression=ast.Identifier("minusInteger"),
-                            argument_list=[
-                                ast.Identifier("n"),
-                                ast.Number(1),
-                            ],
-                        ),
-                    ],
-                ),
-            ),
             ast.Return(
                 expression=ast.FunctionCall(
                     expression=ast.Identifier("multiplyInteger"),
                     argument_list=[
-                        ast.Identifier("f"),
+                        ast.FunctionCall(
+                            expression=ast.Identifier("fac"),
+                            argument_list=[
+                                ast.FunctionCall(
+                                    expression=ast.Identifier("minusInteger"),
+                                    argument_list=[
+                                        ast.Identifier("n"),
+                                        ast.Number(1),
+                                    ],
+                                ),
+                            ],
+                        ),
                         ast.Identifier("n"),
                     ],
                 ),
