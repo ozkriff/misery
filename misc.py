@@ -7,6 +7,9 @@ Miscellaneous classes and functions.
 '''
 
 
+import string
+
+
 class PrettyPrinter(object):
     ''' Prettyprints values. '''
 
@@ -116,5 +119,20 @@ def assert_equal(test_case, expected_ast, real_ast):
         test_case.fail('\n' + difference)
     # else:
     #     test_case.assertEqual(expected_ast, real_ast)
+
+
+def flattenTree(tree):
+    def _flattenTree(inlist, outlist):
+        for node in inlist:
+            if isinstance(node, str):
+                outlist.append(node)
+            elif isinstance(node, list):
+                _flattenTree(node, outlist)
+            else:
+                raise RuntimeError('flattenTree: bad type')
+    outlist = []
+    _flattenTree(tree, outlist)
+    return outlist
+
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
