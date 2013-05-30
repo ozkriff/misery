@@ -446,6 +446,77 @@ class TestParser(unittest.TestCase):
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
+    def test_factorial(self):
+        ''' Parse factorial function. '''
+        input_string = '''
+            func fac(n int) -> int {
+                if isEqualInteger(n, 0) {
+                    return 1
+                }
+                var f Integer = fac(minusInteger(n, 1))
+                return multiplyInteger(f, n)
+            }
+        '''
+        real_ast = parse.make_parser().parse(
+            input_string, lexer=parse.make_lexer())
+        expected_body = [
+            ast.If(
+                branch_if=[
+                    ast.Return(expression=ast.Number(1)),
+                ],
+                condition=ast.FunctionCall(
+                    expression=ast.Identifier("isEqualInteger"),
+                    argument_list=[
+                        ast.Identifier("n"),
+                        ast.Number(0),
+                    ],
+                ),
+            ),
+            ast.VariableDeclaration(
+                name="f",
+                type=ast.Identifier("Integer"),
+                expression=ast.FunctionCall(
+                    expression=ast.Identifier("fac"),
+                    argument_list=[
+                        ast.FunctionCall(
+                            expression=ast.Identifier("minusInteger"),
+                            argument_list=[
+                                ast.Identifier("n"),
+                                ast.Number(1),
+                            ],
+                        ),
+                    ],
+                ),
+            ),
+            ast.Return(
+                expression=ast.FunctionCall(
+                    expression=ast.Identifier("multiplyInteger"),
+                    argument_list=[
+                        ast.Identifier("f"),
+                        ast.Identifier("n"),
+                    ],
+                ),
+            ),
+        ]
+        expected_ast = ast.Module(
+            declaration_sequence=[
+                ast.FunctionDeclaration(
+                    name='fac',
+                    interface=ast.FunctionInterface(
+                        return_type=ast.Identifier("int"),
+                        parameter_list=[
+                            ast.Parameter(
+                                name="n",
+                                type=ast.Identifier("int"),
+                            ),
+                        ],
+                    ),
+                    body=expected_body,
+                )
+            ]
+        )
+        misc.assert_equal(self, expected_ast, real_ast)
+
 
 class TestFindColumn(unittest.TestCase):
     ''' Test parse.find_column() function. '''
