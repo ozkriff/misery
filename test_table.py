@@ -394,14 +394,13 @@ class TestTable(unittest.TestCase):
                     expression_id=table.LinkToFunctionCall(id=0),
                     if_branch_id=1,
                 ),
+                table.ReturnStatement(
+                    expression_id=table.LinkToFunctionCall(id=3),
+                ),
             ],
             [
                 table.ReturnStatement(
                     expression_id=table.LinkToNumberConstant(id=1),
-                ),
-                # TODO: next statement should be in previous block!
-                table.ReturnStatement(
-                    expression_id=table.LinkToFunctionCall(id=3),
                 ),
             ],
         ]

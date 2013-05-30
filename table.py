@@ -188,9 +188,10 @@ class Table(object):
 
     def _parse_block(self, function, declaration):
         function.block_list.append([])
+        b = function.block_list[-1]
         for statement in declaration:
             self._parse_statement(
-                function, statement, function.block_list[-1])
+                function, statement, b)
         return len(function.block_list) - 1
 
     def _parse_function_declaration(self, declaration):
