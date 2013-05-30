@@ -59,8 +59,10 @@ class Generator(object):
             out += str(function.variable_list[result_id].name)
         elif isinstance(argument, table.LinkToVariable):
             out += function.variable_list[argument.id].name
+        elif isinstance(argument, table.LinkToParameter):
+            out += argument.name
         else:
-            raise Exception("Wrong argument type")
+            raise Exception("Wrong argument type: " + str(type(argument)))
         return out
 
     def _generate_function_call_expression_arguments(
