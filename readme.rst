@@ -35,6 +35,7 @@ TODO
 - nested funcs
 - pep8, pylint, pyflakes
 - implement pointer as special kind of templates
+- do not implement NULL pointer!
 
 Notes
 -----
