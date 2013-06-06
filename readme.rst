@@ -34,6 +34,7 @@ TODO
 - var myClosure = func() { killAllHumans() }
 - nested funcs
 - pep8, pylint, pyflakes
+- implement pointer as special kind of templates
 
 Notes
 -----
