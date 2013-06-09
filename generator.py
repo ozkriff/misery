@@ -7,6 +7,44 @@ import table
 
 class Generator(object):
 
+    prefix = (
+        '#include <stdio.h>\n'
+        '\n'
+        'void printInteger(int n) {\n'
+        '  printf("INTEGER: %d\\n", n);\n'
+        '}\n'
+        '\n'
+        'void isEqualInteger(int* __result, int a, int b) {\n'
+        '  *__result = (a == b);\n'
+        '}\n'
+        '\n'
+        'void minusInteger(int* __result, int a, int b) {\n'
+        '  *__result = (a - b);\n'
+        '}\n'
+        '\n'
+        'void multiplyInteger(int* __result, int a, int b) {\n'
+        '  *__result = (a * b);\n'
+        '}\n'
+        '\n'
+    )
+
+    postfix = (
+        '\n'
+        'int main(void) {\n'
+        '  int n;\n'
+        '  fac(&n, 2);\n'
+        '  printInteger(n);\n'
+        '  fac(&n, 3);\n'
+        '  printInteger(n);\n'
+        '  fac(&n, 4);\n'
+        '  printInteger(n);\n'
+        '  fac(&n, 5);\n'
+        '  printInteger(n);\n'
+        '  return 0;\n'
+        '}\n'
+        '\n'
+    )
+
     def __init__(self):
         self.indent_level = 0
 

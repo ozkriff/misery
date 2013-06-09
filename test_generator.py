@@ -436,4 +436,12 @@ class TestGenerator(unittest.TestCase):
         )
         misc.assert_equal(self, expected_output, real_output)
 
+        # ===============================================
+
+        real_output = (generator.Generator.prefix +
+            real_output + generator.Generator.postfix)
+        f = open('out.c', 'w')
+        f.write(real_output)
+        f.close()
+
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
