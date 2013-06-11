@@ -15,7 +15,10 @@ import parse
 class TestParser(unittest.TestCase):
     ''' Test parse.make_parser() function. '''
 
-    # TODO: Rename
+    # Standart module.
+    # Usage:
+    #   expected_ast = copy.deepcopy(self._std_module)
+    #   <add specific detaild to expected_ast>
     _std_module = ast.Module(
         declaration_sequence=[
             ast.FunctionDeclaration(
