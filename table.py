@@ -203,6 +203,7 @@ class Table(object):
         self._parse_block(function, declaration.body)
 
     def generate_tables(self, ast_):
+        self.identifier_list = IdentifierTable(ast_).identifier_list
         self.import_list = copy.deepcopy(ast_.import_list)
         for declaration in ast_.declaration_sequence:
             if isinstance(declaration, ast.FunctionDeclaration):

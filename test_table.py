@@ -89,6 +89,9 @@ class TestTable(unittest.TestCase):
         ]
         expected_output = table.Table()
         expected_output.declaration_list = [func]
+        expected_output.identifier_list = {
+            'main': ast.FunctionInterface(parameter_list=[]),
+        }
 
         misc.assert_equal(self, expected_output, real_output)
 
@@ -151,6 +154,9 @@ class TestTable(unittest.TestCase):
         ]
         expected_output = table.Table()
         expected_output.declaration_list = [func]
+        expected_output.identifier_list = {
+            'main': ast.FunctionInterface(parameter_list=[]),
+        }
 
         misc.assert_equal(self, expected_output, real_output)
 
@@ -221,6 +227,9 @@ class TestTable(unittest.TestCase):
         ]
         expected_output = table.Table()
         expected_output.declaration_list = [func]
+        expected_output.identifier_list = {
+            'main': ast.FunctionInterface(parameter_list=[]),
+        }
 
         misc.assert_equal(self, expected_output, real_output)
 
@@ -261,6 +270,9 @@ class TestTable(unittest.TestCase):
         func.expression_list = []
         expected_output = table.Table()
         expected_output.declaration_list = [func]
+        expected_output.identifier_list = {
+            'main': ast.FunctionInterface(parameter_list=[]),
+        }
 
         misc.assert_equal(self, expected_output, real_output)
 
@@ -303,6 +315,9 @@ class TestTable(unittest.TestCase):
         func.expression_list = []
         expected_output = table.Table()
         expected_output.declaration_list = [func]
+        expected_output.identifier_list = {
+            'main': ast.FunctionInterface(parameter_list=[]),
+        }
 
         misc.assert_equal(self, expected_output, real_output)
 
@@ -439,6 +454,17 @@ class TestTable(unittest.TestCase):
         ]
         expected_output = table.Table()
         expected_output.declaration_list = [func]
+        expected_output.identifier_list = {
+            'fac': ast.FunctionInterface(
+                return_type=ast.Identifier('int'),
+                parameter_list=[
+                    ast.Parameter(
+                        name='n',
+                        type=ast.Identifier('int'),
+                    ),
+                ],
+            ),
+        }
 
         misc.assert_equal(self, expected_output, real_output)
 
