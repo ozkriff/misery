@@ -220,7 +220,6 @@ class IdentifierTable(object):
         for declaration in ast_.declaration_sequence:
             if isinstance(declaration, ast.FunctionDeclaration):
                 identifier_list[declaration.name] = declaration.interface
-        if len(identifier_list) != 0:
-            self.identifier_list = identifier_list
+        self.identifier_list = identifier_list
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
