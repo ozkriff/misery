@@ -215,15 +215,12 @@ class Table(object):
 
 class IdentifierTable(object):
 
-    def _generate_identifier_table(self, ast_):
+    def __init__(self, ast_):
         identifier_list = {}
         for declaration in ast_.declaration_sequence:
             if isinstance(declaration, ast.FunctionDeclaration):
                 identifier_list[declaration.name] = declaration.interface
         if len(identifier_list) != 0:
             self.identifier_list = identifier_list
-
-    def generate(self, ast_):
-        self._generate_identifier_table(ast_)
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
