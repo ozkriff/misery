@@ -438,8 +438,11 @@ class TestGenerator(unittest.TestCase):
 
         # ===============================================
 
-        real_output = (generator.Generator.prefix +
-            real_output + generator.Generator.postfix)
+        real_output = (
+            generator.Generator.prefix +
+            real_output +
+            generator.Generator.postfix
+        )
         f = open('out.c', 'w')
         f.write(real_output)
         f.close()
