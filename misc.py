@@ -121,6 +121,12 @@ def assert_equal(test_case, expected_ast, real_ast):
     #     test_case.assertEqual(expected_ast, real_ast)
 
 
+def assert_is_part_of(test_case, expected, real):
+    if not is_part_of(expected, real):
+        # TODO: Need more info. Print detailed report
+        test_case.fail('Not part of')
+
+
 def flattenTree(tree):
     def _flattenTree(inlist, outlist):
         for node in inlist:
@@ -133,6 +139,47 @@ def flattenTree(tree):
     outlist = []
     _flattenTree(tree, outlist)
     return outlist
+
+
+def is_part_of(expected, real):
+    '''
+    Checks if 'real' contains at least everything that 'expected' contains.
+    '''
+    if isinstance(expected, list):
+        for value1 in expected:
+            found = False
+            for value2 in real:
+                if is_part_of(value1, value2):
+                    found = True
+                    break
+            if not found:
+                return False
+        return True
+    elif isinstance(expected, dict):
+        for key in expected.keys():
+            if key not in real:
+                return False
+            elif not is_part_of(expected[key], real[key]):
+                return False
+        return True
+    elif isinstance(expected, str):
+        return expected == real
+    elif isinstance(expected, int):
+        return expected == real
+    elif isinstance(expected, float):
+        return expected == real
+    elif expected is None:
+        return real is None
+    else:
+        # some object
+        for key in expected.__dict__.keys():
+            if not key in real.__dict__.keys():
+                return False
+            expected_value = expected.__dict__[key]
+            real_value = real.__dict__[key]
+            if not is_part_of(expected_value, real_value):
+                return False
+        return True
 
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:

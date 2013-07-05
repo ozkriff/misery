@@ -196,6 +196,77 @@ class TestAssertEqual(unittest.TestCase):
         self.assertEqual(mock.is_ok, True)
 
 
+class TestIsPartOf(unittest.TestCase):
+
+    def test_same_numbers(self):
+        self.assertTrue(misc.is_part_of(1, 1))
+
+    def test_different_numbers(self):
+        self.assertFalse(misc.is_part_of(1, 2))
+
+    def test_list_3(self):
+        self.assertTrue(misc.is_part_of([], []))
+
+    def test_list_4(self):
+        self.assertTrue(misc.is_part_of([], [1]))
+
+    def test_list_5(self):
+        self.assertTrue(misc.is_part_of([1, 2, 3], [1, 2, 3]))
+
+    def test_list_6(self):
+        self.assertTrue(misc.is_part_of(
+            [1, 2, 3],
+            [1, 1.5, 2, 2.5, 3],
+        ))
+
+    def test_list_7(self):
+        self.assertFalse(misc.is_part_of(
+            [1, 1.5, 2, 2.5, 3],
+            [1, 2, 3],
+        ))
+
+    def test_map_1(self):
+        self.assertTrue(misc.is_part_of({}, {}))
+
+    def test_map_2(self):
+        self.assertTrue(misc.is_part_of({'key1': 1}, {'key1': 1}))
+
+    def test_map_3(self):
+        self.assertTrue(misc.is_part_of({'key1': 1}, {'key1': 1, 'key2': 2}))
+
+    def test_map_4(self):
+        self.assertFalse(misc.is_part_of({'key1': 1, 'key2': 2}, {'key1': 1}))
+
+    def test_map_5(self):
+        self.assertTrue(misc.is_part_of(
+            {'key1': {'key2': 2}},
+            {'key1': {'key2': 2, 'key3': 3}},
+        ))
+
+    class SimpleObject:
+        pass
+
+    def test_object_1(self):
+        a = self.SimpleObject()
+        b = self.SimpleObject()
+        b.someField = 1
+        self.assertTrue(misc.is_part_of(a, b))
+
+    def test_object_2(self):
+        a = self.SimpleObject()
+        a.someField = 1
+        b = self.SimpleObject()
+        self.assertFalse(misc.is_part_of(a, b))
+
+    def test_object_3(self):
+        a = self.SimpleObject()
+        a.someField = [1, 2, 3]
+        b = self.SimpleObject()
+        b.someField = [1, 2, 3, 4]
+        b.someField2 = 1
+        self.assertTrue(misc.is_part_of(a, b))
+
+
 class TestFlattenTree(unittest.TestCase):
     ''' TestSuite for misc.flattenTree() function. '''
 
