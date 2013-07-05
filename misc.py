@@ -127,7 +127,7 @@ def assert_is_part_of(test_case, expected, real):
         test_case.fail('Not part of')
 
 
-def flattenTree(tree):
+def flatten_tree(tree):
     def _flattenTree(inlist, outlist):
         for node in inlist:
             if isinstance(node, str):

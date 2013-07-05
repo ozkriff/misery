@@ -268,10 +268,10 @@ class TestIsPartOf(unittest.TestCase):
 
 
 class TestFlattenTree(unittest.TestCase):
-    ''' TestSuite for misc.flattenTree() function. '''
+    ''' TestSuite for misc.flatten_tree() function. '''
 
     def test_simple(self):
-        ''' Basic misc.flattenTree() test. '''
+        ''' Basic misc.flatten_tree() test. '''
         input_list = [
             [
                 '1',
@@ -280,7 +280,7 @@ class TestFlattenTree(unittest.TestCase):
             [[['3']]],
             '4'
         ]
-        real_output = misc.flattenTree(input_list)
+        real_output = misc.flatten_tree(input_list)
         expected_output = ['1', '2', '3', '4']
         misc.assert_equal(self, expected_output, real_output)
 
