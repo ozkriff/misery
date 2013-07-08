@@ -128,16 +128,16 @@ def assert_is_part_of(test_case, expected, real):
 
 
 def flatten_tree(tree):
-    def _flattenTree(inlist, outlist):
+    def _flatten_tree(inlist, outlist):
         for node in inlist:
             if isinstance(node, str):
                 outlist.append(node)
             elif isinstance(node, list):
-                _flattenTree(node, outlist)
+                _flatten_tree(node, outlist)
             else:
                 raise RuntimeError('flattenTree: bad type')
     outlist = []
-    _flattenTree(tree, outlist)
+    _flatten_tree(tree, outlist)
     return outlist
 
 
