@@ -405,15 +405,66 @@ class TestGenerator(unittest.TestCase):
                 ],
             ),
         ]
+
+        funcStart = table.Function(
+            name='start',
+            interface=ast.FunctionInterface(parameter_list=[]),
+        )
+        funcStart.constant_list = [
+            table.Constant(type='int', value=8),
+            table.Constant(type='int', value=4),
+            table.Constant(type='int', value=8),
+        ]
+        funcStart.variable_list = [
+            table.Variable(name='tmp_0', type='int'),
+            table.Variable(name='tmp_1', type='int'),
+            table.Variable(name='tmp_2', type='int'),
+            table.Variable(name='tmp_3', type='int'),
+        ]
+        funcStart.block_list = [
+            [
+                table.FunctionCallStatement(
+                    expression_id=table.LinkToFunctionCall(id=0),
+                ),
+            ],
+        ]
+        funcStart.expression_list = [
+            table.FunctionCallExpression(
+                result_id=table.LinkToVariable(id=0),
+                name='printInteger',
+                argument_id_list=[
+                    table.LinkToFunctionCall(id=1),
+                ],
+            ),
+            table.FunctionCallExpression(
+                result_id=table.LinkToVariable(id=1),
+                name='fac',
+                argument_id_list=[
+                    table.LinkToNumberConstant(id=0),
+                ],
+            ),
+        ]
+
         input_table = table.Table()
-        input_table.declaration_list = [func]
+        input_table.declaration_list = [funcStart, func]
 
         gen = generator.Generator()
         gen.table = input_table
         real_output = gen.generate()
         expected_output = (
             '\n'
+            'void start(void);\n'
             'void fac(int* __result, int n);\n'
+            '\n'
+            'void start(void) {\n'
+            '  int tmp_0;\n'
+            '  int tmp_1;\n'
+            '  int tmp_2;\n'
+            '  int tmp_3;\n'
+            '\n'
+            '  minusInteger(&tmp_3, n, 8);\n'
+            '  printInteger(&tmp_0, tmp_1);\n'
+            '}\n'
             '\n'
             'void fac(int* __result, int n) {\n'
             '  int tmp_0;\n'
@@ -438,13 +489,8 @@ class TestGenerator(unittest.TestCase):
 
         # ===============================================
 
-        real_output = (
-            generator.Generator.prefix +
-            real_output +
-            generator.Generator.postfix
-        )
         f = open('out.c', 'w')
-        f.write(real_output)
+        f.write(gen.generate_full())
         f.close()
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:

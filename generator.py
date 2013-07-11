@@ -10,7 +10,8 @@ class Generator(object):
     prefix = (
         '#include <stdio.h>\n'
         '\n'
-        'void printInteger(int n) {\n'
+        '/* void printInteger(int n) {*/\n'
+        'void printInteger(int* __result, int n) {\n'
         '  printf("INTEGER: %d\\n", n);\n'
         '}\n'
         '\n'
@@ -31,15 +32,7 @@ class Generator(object):
     postfix = (
         '\n'
         'int main(void) {\n'
-        '  int n;\n'
-        '  fac(&n, 2);\n'
-        '  printInteger(n);\n'
-        '  fac(&n, 3);\n'
-        '  printInteger(n);\n'
-        '  fac(&n, 4);\n'
-        '  printInteger(n);\n'
-        '  fac(&n, 5);\n'
-        '  printInteger(n);\n'
+        '  start();\n'
         '  return 0;\n'
         '}\n'
         '\n'
@@ -258,6 +251,13 @@ class Generator(object):
         out += self._generate_forward_declarations()
         out += '\n'
         out += self._generate_declarations()
+        return out
+
+    def generate_full(self):
+        out = ''
+        out += Generator.prefix
+        out += self.generate()
+        out += Generator.postfix
         return out
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
