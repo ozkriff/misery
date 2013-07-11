@@ -216,11 +216,37 @@ class Table(object):
 
 class IdentifierTable(object):
 
+    def append_standart_functions(self, identifier_list):
+        identifier_list['printInteger'] = ast.FunctionInterface(
+            parameter_list=[
+                ast.Parameter(name='n', type=ast.Identifier('int')),
+            ],
+        )
+        identifier_list['isEqualInteger'] = ast.FunctionInterface(
+            parameter_list=[
+                ast.Parameter(name='a', type=ast.Identifier('int')),
+                ast.Parameter(name='b', type=ast.Identifier('int')),
+            ],
+        )
+        identifier_list['minusInteger'] = ast.FunctionInterface(
+            parameter_list=[
+                ast.Parameter(name='a', type=ast.Identifier('int')),
+                ast.Parameter(name='b', type=ast.Identifier('int')),
+            ],
+        )
+        identifier_list['multiplyInteger'] = ast.FunctionInterface(
+            parameter_list=[
+                ast.Parameter(name='a', type=ast.Identifier('int')),
+                ast.Parameter(name='b', type=ast.Identifier('int')),
+            ],
+        )
+
     def __init__(self, ast_):
         identifier_list = {}
         for declaration in ast_.declaration_sequence:
             if isinstance(declaration, ast.FunctionDeclaration):
                 identifier_list[declaration.name] = declaration.interface
+        self.append_standart_functions(identifier_list)
         self.identifier_list = identifier_list
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:

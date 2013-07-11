@@ -30,7 +30,7 @@ class TestTable(unittest.TestCase):
         )
         table.Table().generate_tables(ast_)
         # expected_tables = []
-        # misc.assert_equal(self, expected_tables, real_tables)
+        # misc.assert_is_part_of(self, expected_tables, real_tables)
         # print('\n' + my_pretty_print(t))
 
     def test_generate_function_call(self):
@@ -93,7 +93,7 @@ class TestTable(unittest.TestCase):
             'main': ast.FunctionInterface(parameter_list=[]),
         }
 
-        misc.assert_equal(self, expected_output, real_output)
+        misc.assert_is_part_of(self, expected_output, real_output)
 
     def test_blocks(self):
         ''' Generate table with simple function call. '''
@@ -158,7 +158,7 @@ class TestTable(unittest.TestCase):
             'main': ast.FunctionInterface(parameter_list=[]),
         }
 
-        misc.assert_equal(self, expected_output, real_output)
+        misc.assert_is_part_of(self, expected_output, real_output)
 
     def test_if(self):
         ''' Conditional expression. '''
@@ -231,7 +231,7 @@ class TestTable(unittest.TestCase):
             'main': ast.FunctionInterface(parameter_list=[]),
         }
 
-        misc.assert_equal(self, expected_output, real_output)
+        misc.assert_is_part_of(self, expected_output, real_output)
 
     def test_return_none(self):
         ''' Return from function. '''
@@ -274,7 +274,7 @@ class TestTable(unittest.TestCase):
             'main': ast.FunctionInterface(parameter_list=[]),
         }
 
-        misc.assert_equal(self, expected_output, real_output)
+        misc.assert_is_part_of(self, expected_output, real_output)
 
     def test_return_integer_constant(self):
         ''' Return integer constant from function. '''
@@ -319,7 +319,7 @@ class TestTable(unittest.TestCase):
             'main': ast.FunctionInterface(parameter_list=[]),
         }
 
-        misc.assert_equal(self, expected_output, real_output)
+        misc.assert_is_part_of(self, expected_output, real_output)
 
     def test_factorial(self):
         ''' Test table generation for simple factorial function. '''
@@ -466,7 +466,7 @@ class TestTable(unittest.TestCase):
             ),
         }
 
-        misc.assert_equal(self, expected_output, real_output)
+        misc.assert_is_part_of(self, expected_output, real_output)
 
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
