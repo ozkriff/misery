@@ -19,13 +19,16 @@ class Constant(object):
 
 
 class Function(object):
-    def __init__(self, name, interface):
+    def __init__(
+            self, name, interface,
+            block_list, constant_list,
+            variable_list, expression_list):
         self.name = name
         self.interface = interface
-        self.block_list = []
-        self.constant_list = []
-        self.variable_list = []
-        self.expression_list = []
+        self.block_list = block_list
+        self.constant_list = constant_list
+        self.variable_list = variable_list
+        self.expression_list = expression_list
 
 
 class IfStatement(object):
@@ -198,6 +201,10 @@ class Table(object):
         function = Function(
             name=declaration.name,
             interface=declaration.interface,
+            constant_list=[],
+            variable_list=[],
+            block_list=[],
+            expression_list=[],
         )
         self.declaration_list.append(function)
         self._parse_block(function, declaration.body)

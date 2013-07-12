@@ -63,30 +63,30 @@ class TestTable(unittest.TestCase):
                 return_type=None,
                 parameter_list=[],
             ),
+            constant_list=[
+                table.Constant(type='int', value=1),
+                table.Constant(type='int', value=2),
+            ],
+            variable_list=[
+                table.Variable(type='int', name='tmp_0'),
+            ],
+            block_list=[
+                [
+                    table.FunctionCallStatement(
+                        expression_id=table.LinkToFunctionCall(id=0)),
+                ]
+            ],
+            expression_list=[
+                table.FunctionCallExpression(
+                    result_id=table.LinkToVariable(id=0),
+                    name='plus',
+                    argument_id_list=[
+                        table.LinkToNumberConstant(id=0),
+                        table.LinkToNumberConstant(id=1),
+                    ],
+                ),
+            ],
         )
-        func.constant_list = [
-            table.Constant(type='int', value=1),
-            table.Constant(type='int', value=2),
-        ]
-        func.variable_list = [
-            table.Variable(type='int', name='tmp_0'),
-        ]
-        func.block_list = [
-            [
-                table.FunctionCallStatement(
-                    expression_id=table.LinkToFunctionCall(id=0)),
-            ]
-        ]
-        func.expression_list = [
-            table.FunctionCallExpression(
-                result_id=table.LinkToVariable(id=0),
-                name='plus',
-                argument_id_list=[
-                    table.LinkToNumberConstant(id=0),
-                    table.LinkToNumberConstant(id=1),
-                ],
-            ),
-        ]
         expected_output = table.Table()
         expected_output.declaration_list = [func]
         expected_output.identifier_list = {
@@ -126,32 +126,32 @@ class TestTable(unittest.TestCase):
                 return_type=None,
                 parameter_list=[],
             ),
-        )
-        func.constant_list = []
-        func.variable_list = [
-            table.Variable(type='int', name='tmp_0'),
-            table.Variable(type='int', name='tmp_1'),
-        ]
-        func.block_list = [
-            [
-                table.FunctionCallStatement(
-                    expression_id=table.LinkToFunctionCall(id=0)),
-                table.FunctionCallStatement(
-                    expression_id=table.LinkToFunctionCall(id=1)),
+            constant_list=[],
+            variable_list=[
+                table.Variable(type='int', name='tmp_0'),
+                table.Variable(type='int', name='tmp_1'),
             ],
-        ]
-        func.expression_list = [
-            table.FunctionCallExpression(
-                result_id=table.LinkToVariable(id=0),
-                name='f1',
-                argument_id_list=[],
-            ),
-            table.FunctionCallExpression(
-                result_id=table.LinkToVariable(id=1),
-                name='f2',
-                argument_id_list=[],
-            ),
-        ]
+            block_list=[
+                [
+                    table.FunctionCallStatement(
+                        expression_id=table.LinkToFunctionCall(id=0)),
+                    table.FunctionCallStatement(
+                        expression_id=table.LinkToFunctionCall(id=1)),
+                ],
+            ],
+            expression_list=[
+                table.FunctionCallExpression(
+                    result_id=table.LinkToVariable(id=0),
+                    name='f1',
+                    argument_id_list=[],
+                ),
+                table.FunctionCallExpression(
+                    result_id=table.LinkToVariable(id=1),
+                    name='f2',
+                    argument_id_list=[],
+                ),
+            ],
+        )
         expected_output = table.Table()
         expected_output.declaration_list = [func]
         expected_output.identifier_list = {
@@ -195,36 +195,36 @@ class TestTable(unittest.TestCase):
                 return_type=None,
                 parameter_list=[],
             ),
-        )
-        func.constant_list = []
-        func.variable_list = [
-            table.Variable(type='int', name='tmp_0'),
-            table.Variable(type='int', name='tmp_1'),
-        ]
-        func.block_list = [
-            [
-                table.IfStatement(
-                    expression_id=table.LinkToFunctionCall(id=0),
-                    if_branch_id=1,
+            constant_list=[],
+            variable_list=[
+                table.Variable(type='int', name='tmp_0'),
+                table.Variable(type='int', name='tmp_1'),
+            ],
+            block_list=[
+                [
+                    table.IfStatement(
+                        expression_id=table.LinkToFunctionCall(id=0),
+                        if_branch_id=1,
+                    ),
+                ],
+                [
+                    table.FunctionCallStatement(
+                        expression_id=table.LinkToFunctionCall(id=1)),
+                ],
+            ],
+            expression_list=[
+                table.FunctionCallExpression(
+                    result_id=table.LinkToVariable(id=0),
+                    name='f1',
+                    argument_id_list=[],
+                ),
+                table.FunctionCallExpression(
+                    result_id=table.LinkToVariable(id=1),
+                    name='f2',
+                    argument_id_list=[],
                 ),
             ],
-            [
-                table.FunctionCallStatement(
-                    expression_id=table.LinkToFunctionCall(id=1)),
-            ],
-        ]
-        func.expression_list = [
-            table.FunctionCallExpression(
-                result_id=table.LinkToVariable(id=0),
-                name='f1',
-                argument_id_list=[],
-            ),
-            table.FunctionCallExpression(
-                result_id=table.LinkToVariable(id=1),
-                name='f2',
-                argument_id_list=[],
-            ),
-        ]
+        )
         expected_output = table.Table()
         expected_output.declaration_list = [func]
         expected_output.identifier_list = {
@@ -257,17 +257,17 @@ class TestTable(unittest.TestCase):
                 return_type=None,
                 parameter_list=[],
             ),
-        )
-        func.constant_list = []
-        func.variable_list = []
-        func.block_list = [
-            [
-                table.ReturnStatement(
-                    expression_id=None,
-                ),
+            constant_list=[],
+            variable_list=[],
+            block_list=[
+                [
+                    table.ReturnStatement(
+                        expression_id=None,
+                    ),
+                ],
             ],
-        ]
-        func.expression_list = []
+            expression_list=[],
+        )
         expected_output = table.Table()
         expected_output.declaration_list = [func]
         expected_output.identifier_list = {
@@ -300,19 +300,19 @@ class TestTable(unittest.TestCase):
                 return_type=None,
                 parameter_list=[],
             ),
-        )
-        func.constant_list = [
-            table.Constant(type="int", value=0)
-        ]
-        func.variable_list = []
-        func.block_list = [
-            [
-                table.ReturnStatement(
-                    expression_id=table.LinkToNumberConstant(id=0),
-                ),
+            constant_list=[
+                table.Constant(type="int", value=0)
             ],
-        ]
-        func.expression_list = []
+            variable_list=[],
+            block_list=[
+                [
+                    table.ReturnStatement(
+                        expression_id=table.LinkToNumberConstant(id=0),
+                    ),
+                ],
+            ],
+            expression_list=[],
+        )
         expected_output = table.Table()
         expected_output.declaration_list = [func]
         expected_output.identifier_list = {
@@ -391,67 +391,67 @@ class TestTable(unittest.TestCase):
                     ),
                 ],
             ),
+            constant_list=[
+                table.Constant(type='int', value=0),
+                table.Constant(type='int', value=1),
+                table.Constant(type='int', value=1),
+            ],
+            variable_list=[
+                table.Variable(name='tmp_0', type='int'),
+                table.Variable(name='tmp_1', type='int'),
+                table.Variable(name='tmp_2', type='int'),
+                table.Variable(name='tmp_3', type='int'),
+            ],
+            block_list=[
+                [
+                    table.IfStatement(
+                        expression_id=table.LinkToFunctionCall(id=0),
+                        if_branch_id=1,
+                    ),
+                    table.ReturnStatement(
+                        expression_id=table.LinkToFunctionCall(id=3),
+                    ),
+                ],
+                [
+                    table.ReturnStatement(
+                        expression_id=table.LinkToNumberConstant(id=1),
+                    ),
+                ],
+            ],
+            expression_list=[
+                table.FunctionCallExpression(
+                    result_id=table.LinkToVariable(id=0),
+                    name='isEqualInteger',
+                    argument_id_list=[
+                        table.LinkToParameter(name='n'),
+                        table.LinkToNumberConstant(id=0),
+                    ],
+                ),
+                table.FunctionCallExpression(
+                    result_id=table.LinkToVariable(id=3),
+                    name='minusInteger',
+                    argument_id_list=[
+                        table.LinkToParameter(name='n'),
+                        table.LinkToNumberConstant(id=2),
+                    ],
+                ),
+                table.FunctionCallExpression(
+                    result_id=table.LinkToVariable(id=2),
+                    name='fac',
+                    argument_id_list=[
+                        table.LinkToFunctionCall(id=1),
+                    ],
+                ),
+                table.FunctionCallExpression(
+                    result_id=table.LinkToVariable(id=1),
+                    name='multiplyInteger',
+                    argument_id_list=[
+                        table.LinkToFunctionCall(id=2),
+                        table.LinkToParameter(name='n'),
+                    ],
+                ),
+            ],
         )
-        func.constant_list = [
-            table.Constant(type='int', value=0),
-            table.Constant(type='int', value=1),
-            table.Constant(type='int', value=1),
-        ]
-        func.variable_list = [
-            table.Variable(name='tmp_0', type='int'),
-            table.Variable(name='tmp_1', type='int'),
-            table.Variable(name='tmp_2', type='int'),
-            table.Variable(name='tmp_3', type='int'),
-        ]
-        func.block_list = [
-            [
-                table.IfStatement(
-                    expression_id=table.LinkToFunctionCall(id=0),
-                    if_branch_id=1,
-                ),
-                table.ReturnStatement(
-                    expression_id=table.LinkToFunctionCall(id=3),
-                ),
-            ],
-            [
-                table.ReturnStatement(
-                    expression_id=table.LinkToNumberConstant(id=1),
-                ),
-            ],
-        ]
-        func.expression_list = [
-            table.FunctionCallExpression(
-                result_id=table.LinkToVariable(id=0),
-                name='isEqualInteger',
-                argument_id_list=[
-                    table.LinkToParameter(name='n'),
-                    table.LinkToNumberConstant(id=0),
-                ],
-            ),
-            table.FunctionCallExpression(
-                result_id=table.LinkToVariable(id=3),
-                name='minusInteger',
-                argument_id_list=[
-                    table.LinkToParameter(name='n'),
-                    table.LinkToNumberConstant(id=2),
-                ],
-            ),
-            table.FunctionCallExpression(
-                result_id=table.LinkToVariable(id=2),
-                name='fac',
-                argument_id_list=[
-                    table.LinkToFunctionCall(id=1),
-                ],
-            ),
-            table.FunctionCallExpression(
-                result_id=table.LinkToVariable(id=1),
-                name='multiplyInteger',
-                argument_id_list=[
-                    table.LinkToFunctionCall(id=2),
-                    table.LinkToParameter(name='n'),
-                ],
-            ),
-        ]
         expected_output = table.Table()
         expected_output.declaration_list = [func]
         expected_output.identifier_list = {
