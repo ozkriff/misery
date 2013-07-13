@@ -38,7 +38,9 @@ class Generator(object):
         '\n'
     )
 
-    def __init__(self):
+    def __init__(self, table):
+        # TODO: add underscore!
+        self.table = table
         self.indent_level = 0
 
     def _indent(self):

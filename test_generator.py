@@ -58,8 +58,9 @@ class TestGenerator(unittest.TestCase):
                 ),
             ]
         )
-        gen = generator.Generator()
-        gen.table = table.Table.from_ast(ast_)
+        gen = generator.Generator(
+            table=table.Table.from_ast(ast_),
+        )
         # print('\n' + my_pretty_print(gen))
         real_output = gen.generate()
         expected_output = (
@@ -115,8 +116,9 @@ class TestGenerator(unittest.TestCase):
                 )
             ]
         )
-        gen = generator.Generator()
-        gen.table = table.Table.from_ast(ast_)
+        gen = generator.Generator(
+            table=table.Table.from_ast(ast_),
+        )
         real_output = gen.generate()
         expected_output = (
             '\n'
@@ -156,8 +158,9 @@ class TestGenerator(unittest.TestCase):
                 ),
             ]
         )
-        gen = generator.Generator()
-        gen.table = table.Table.from_ast(ast_)
+        gen = generator.Generator(
+            table=table.Table.from_ast(ast_),
+        )
         # print('\n' + my_pretty_print(gen))
         real_output = gen.generate()
         expected_output = (
@@ -222,8 +225,7 @@ class TestGenerator(unittest.TestCase):
             import_list=[],
         )
 
-        gen = generator.Generator()
-        gen.table = table_
+        gen = generator.Generator(table=table_)
         real_output = gen.generate()
         expected_output = (
             '\n'
@@ -270,8 +272,7 @@ class TestGenerator(unittest.TestCase):
             import_list=[],
         )
 
-        gen = generator.Generator()
-        gen.table = table_
+        gen = generator.Generator(table=table_)
         real_output = gen.generate()
         expected_output = (
             '\n'
@@ -318,8 +319,7 @@ class TestGenerator(unittest.TestCase):
             import_list=[],
         )
 
-        gen = generator.Generator()
-        gen.table = table_
+        gen = generator.Generator(table=table_)
         real_output = gen.generate()
         expected_output = (
             '\n'
@@ -457,8 +457,7 @@ class TestGenerator(unittest.TestCase):
             import_list=[],
         )
 
-        gen = generator.Generator()
-        gen.table = input_table
+        gen = generator.Generator(table=input_table)
         real_output = gen.generate()
         expected_output = (
             '\n'
