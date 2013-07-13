@@ -291,7 +291,7 @@ def make_parser():
         'expression_list_wo_tc : expression'
         p[0] = [p[1]]
 
-    def p_eexpression_list_wo_tc_2(p):
+    def p_expression_list_wo_tc_2(p):
         'expression_list_wo_tc : expression_list_wo_tc COMMA expression'
         p[1].append(p[3])
         p[0] = p[1]
