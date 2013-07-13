@@ -215,21 +215,20 @@ class Table(object):
 
     @classmethod
     def from_ast(cls, ast_):
-        self = Table(
+        new_table = Table(
             declaration_list=[],
-            identifier_list=[],
-            import_list=[],
+            identifier_list=IdentifierTable(ast_).identifier_list,
+            import_list=copy.deepcopy(ast_.import_list),
         )
-        self.identifier_list = IdentifierTable(ast_).identifier_list
-        self.import_list = copy.deepcopy(ast_.import_list)
+        # fill declaration_list...
         for declaration in ast_.declaration_sequence:
             if isinstance(declaration, ast.FunctionDeclaration):
-                self._parse_function_declaration(declaration)
+                new_table._parse_function_declaration(declaration)
             elif isinstance(declaration, ast.TypeDeclaration):
                 raise Exception('Not Implemented')
             else:
                 raise Exception('Not Implemented')
-        return self
+        return new_table
 
 
 class IdentifierTable(object):
