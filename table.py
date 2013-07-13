@@ -82,10 +82,14 @@ class LinkToFunctionCall(object):
 
 class Table(object):
 
-    def __init__(self):
-        self.declaration_list = []
-        self.symbol_list = []
-        self.import_list = None
+    def __init__(
+            self,
+            declaration_list,
+            identifier_list,
+            import_list):
+        # TODO: add underscore
+        self.declaration_list = declaration_list
+        self.import_list = import_list
 
     def _parse_number(self, number):
         assert isinstance(number, ast.Number)
@@ -209,7 +213,13 @@ class Table(object):
         self.declaration_list.append(function)
         self._parse_block(function, declaration.body)
 
-    def generate_tables(self, ast_):
+    @classmethod
+    def from_ast(cls, ast_):
+        self = Table(
+            declaration_list=[],
+            identifier_list=[],
+            import_list=[],
+        )
         self.identifier_list = IdentifierTable(ast_).identifier_list
         self.import_list = copy.deepcopy(ast_.import_list)
         for declaration in ast_.declaration_sequence:
@@ -219,6 +229,7 @@ class Table(object):
                 raise Exception('Not Implemented')
             else:
                 raise Exception('Not Implemented')
+        return self
 
 
 class IdentifierTable(object):

@@ -28,7 +28,7 @@ class TestTable(unittest.TestCase):
                 ),
             ]
         )
-        table.Table().generate_tables(ast_)
+        table.Table.from_ast(ast_)
         # expected_tables = []
         # misc.assert_is_part_of(self, expected_tables, real_tables)
         # print('\n' + my_pretty_print(t))
@@ -53,8 +53,7 @@ class TestTable(unittest.TestCase):
                 )
             ]
         )
-        table_ = table.Table()
-        table_.generate_tables(ast_)
+        table_ = table.Table.from_ast(ast_)
         real_output = table_
 
         func = table.Function(
@@ -87,11 +86,13 @@ class TestTable(unittest.TestCase):
                 ),
             ],
         )
-        expected_output = table.Table()
-        expected_output.declaration_list = [func]
-        expected_output.identifier_list = {
-            'main': ast.FunctionInterface(parameter_list=[]),
-        }
+        expected_output = table.Table(
+            declaration_list=[func],
+            identifier_list={
+                'main': ast.FunctionInterface(parameter_list=[]),
+            },
+            import_list=[],
+        )
 
         misc.assert_is_part_of(self, expected_output, real_output)
 
@@ -116,8 +117,7 @@ class TestTable(unittest.TestCase):
                 )
             ]
         )
-        table_ = table.Table()
-        table_.generate_tables(ast_)
+        table_ = table.Table.from_ast(ast_)
         real_output = table_
 
         func = table.Function(
@@ -152,11 +152,13 @@ class TestTable(unittest.TestCase):
                 ),
             ],
         )
-        expected_output = table.Table()
-        expected_output.declaration_list = [func]
-        expected_output.identifier_list = {
-            'main': ast.FunctionInterface(parameter_list=[]),
-        }
+        expected_output = table.Table(
+            declaration_list=[func],
+            identifier_list={
+                'main': ast.FunctionInterface(parameter_list=[]),
+            },
+            import_list=[],
+        )
 
         misc.assert_is_part_of(self, expected_output, real_output)
 
@@ -185,8 +187,7 @@ class TestTable(unittest.TestCase):
                 )
             ]
         )
-        table_ = table.Table()
-        table_.generate_tables(ast_)
+        table_ = table.Table.from_ast(ast_)
         real_output = table_
 
         func = table.Function(
@@ -225,11 +226,13 @@ class TestTable(unittest.TestCase):
                 ),
             ],
         )
-        expected_output = table.Table()
-        expected_output.declaration_list = [func]
-        expected_output.identifier_list = {
-            'main': ast.FunctionInterface(parameter_list=[]),
-        }
+        expected_output = table.Table(
+            declaration_list=[func],
+            identifier_list={
+                'main': ast.FunctionInterface(parameter_list=[]),
+            },
+            import_list=[],
+        )
 
         misc.assert_is_part_of(self, expected_output, real_output)
 
@@ -247,8 +250,7 @@ class TestTable(unittest.TestCase):
                 )
             ]
         )
-        table_ = table.Table()
-        table_.generate_tables(ast_)
+        table_ = table.Table.from_ast(ast_)
         real_output = table_
 
         func = table.Function(
@@ -268,11 +270,13 @@ class TestTable(unittest.TestCase):
             ],
             expression_list=[],
         )
-        expected_output = table.Table()
-        expected_output.declaration_list = [func]
-        expected_output.identifier_list = {
-            'main': ast.FunctionInterface(parameter_list=[]),
-        }
+        expected_output = table.Table(
+            declaration_list=[func],
+            identifier_list={
+                'main': ast.FunctionInterface(parameter_list=[]),
+            },
+            import_list=[],
+        )
 
         misc.assert_is_part_of(self, expected_output, real_output)
 
@@ -290,8 +294,7 @@ class TestTable(unittest.TestCase):
                 )
             ]
         )
-        table_ = table.Table()
-        table_.generate_tables(ast_)
+        table_ = table.Table.from_ast(ast_)
         real_output = table_
 
         func = table.Function(
@@ -313,11 +316,13 @@ class TestTable(unittest.TestCase):
             ],
             expression_list=[],
         )
-        expected_output = table.Table()
-        expected_output.declaration_list = [func]
-        expected_output.identifier_list = {
-            'main': ast.FunctionInterface(parameter_list=[]),
-        }
+        expected_output = table.Table(
+            declaration_list=[func],
+            identifier_list={
+                'main': ast.FunctionInterface(parameter_list=[]),
+            },
+            import_list=[],
+        )
 
         misc.assert_is_part_of(self, expected_output, real_output)
 
@@ -376,8 +381,7 @@ class TestTable(unittest.TestCase):
             ]
         )
 
-        table_ = table.Table()
-        table_.generate_tables(ast_)
+        table_ = table.Table.from_ast(ast_)
         real_output = table_
 
         func = table.Function(
@@ -452,19 +456,21 @@ class TestTable(unittest.TestCase):
                 ),
             ],
         )
-        expected_output = table.Table()
-        expected_output.declaration_list = [func]
-        expected_output.identifier_list = {
-            'fac': ast.FunctionInterface(
-                return_type=ast.Identifier('int'),
-                parameter_list=[
-                    ast.Parameter(
-                        name='n',
-                        type=ast.Identifier('int'),
-                    ),
-                ],
-            ),
-        }
+        expected_output = table.Table(
+            declaration_list=[func],
+            identifier_list={
+                'fac': ast.FunctionInterface(
+                    return_type=ast.Identifier('int'),
+                    parameter_list=[
+                        ast.Parameter(
+                            name='n',
+                            type=ast.Identifier('int'),
+                        ),
+                    ],
+                ),
+            },
+            import_list=[],
+        )
 
         misc.assert_is_part_of(self, expected_output, real_output)
 
