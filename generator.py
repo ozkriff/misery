@@ -39,18 +39,17 @@ class Generator(object):
     )
 
     def __init__(self, table):
-        # TODO: add underscore!
-        self.table = table
-        self.indent_level = 0
+        self._table = table
+        self._indent_level = 0
 
     def _indent(self):
-        return self.indent_level * '  '
+        return self._indent_level * '  '
 
     def _increnent_indent(self):
-        self.indent_level += 1
+        self._indent_level += 1
 
     def _decrenent_indent(self):
-        self.indent_level -= 1
+        self._indent_level -= 1
 
     def _generate_function_parameters(self, parameter_list):
         if len(parameter_list) == 0:
@@ -78,7 +77,7 @@ class Generator(object):
         out = ''
         for argument in expression.argument_id_list:
             if isinstance(argument, table.LinkToFunctionCall):
-                last_declaration = self.table.declaration_list[-1]
+                last_declaration = self._table.declaration_list[-1]
                 out += self._generate_expression(
                     function, last_declaration.expression_list[argument.id])
         return out
@@ -216,7 +215,7 @@ class Generator(object):
 
     def _generate_forward_declarations(self):
         out = ''
-        for declaration in self.table.declaration_list:
+        for declaration in self._table.declaration_list:
             if isinstance(declaration, table.Function):
                 out += self._generate_function_header(
                     declaration.name, declaration.interface)
@@ -224,10 +223,10 @@ class Generator(object):
         return out
 
     def _generate_imports(self):
-        if self.table.import_list is None:
+        if self._table.import_list is None:
             return ''
         out = ''
-        for import_node in self.table.import_list:
+        for import_node in self._table.import_list:
             out += '// import: ' + import_node + '\n'
         return out
 
@@ -241,7 +240,7 @@ class Generator(object):
 
     def _generate_declarations(self):
         out = ''
-        for declaration in self.table.declaration_list:
+        for declaration in self._table.declaration_list:
             out += self._generate_declaration(declaration)
             out += '\n'
         return out

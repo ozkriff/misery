@@ -87,8 +87,9 @@ class Table(object):
             declaration_list,
             identifier_list,
             import_list):
-        # TODO: add underscore
+        # TODO: add underscores
         self.declaration_list = declaration_list
+        self._identifier_list = identifier_list
         self.import_list = import_list
 
     def _parse_number(self, number):
