@@ -12,8 +12,7 @@ import table
 import parse
 
 
-def translate_mis_to_c(input_string):
-    ''' Helper function, compiles program in Mis to program in C. '''
+def get_generator(input_string):
     generator_ = generator.Generator(
         table=table.Table.from_ast(
             ast_=parse.make_parser().parse(
@@ -22,7 +21,12 @@ def translate_mis_to_c(input_string):
             )
         )
     )
-    real_output = generator_.generate()
+    return generator_
+
+
+def translate_mis_to_c(input_string):
+    ''' Helper function, compiles program in Mis to program in C. '''
+    real_output = get_generator(input_string).generate()
     return real_output
 
 
@@ -249,4 +253,4 @@ class TestTranslator(unittest.TestCase):
 
         # TODO:
         # with open('out.c', 'w') as file:
-        #    file.write(gen.generate_full())
+        #     file.write(get_generator(input_string).generate_full())
