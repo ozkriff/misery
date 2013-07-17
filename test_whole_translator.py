@@ -245,7 +245,7 @@ class TestTranslator(unittest.TestCase):
             '}\n'
             '\n'
         )
-        # misc.assert_equal(self, expected_output, real_output)
+        misc.assert_equal(self, expected_output, real_output)
 
         # TODO:
         # with open('out.c', 'w') as file:
