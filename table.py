@@ -32,9 +32,10 @@ class Function(object):
 
 
 class IfStatement(object):
-    def __init__(self, expression_id, if_branch_id):
+    def __init__(self, expression_id, if_branch_id, else_branch_id=None):
         self.expression_id = expression_id
         self.if_branch_id = if_branch_id
+        self.else_branch_id = else_branch_id
 
 
 class VariableDeclarationStatement(object):
@@ -167,13 +168,23 @@ class Table(object):
 
     def _parse_if_statement(self, function, statement, block):
         expression_id = self._parse_expression(statement.condition)
-        block_id = self._parse_block(function, statement.branch_if)
-        block.append(
-            IfStatement(
-                expression_id=expression_id,
-                if_branch_id=block_id,
+        if_block_id = self._parse_block(function, statement.branch_if)
+        if statement.branch_else:
+            else_block_id = self._parse_block(function, statement.branch_else)
+            block.append(
+                IfStatement(
+                    expression_id=expression_id,
+                    if_branch_id=if_block_id,
+                    else_branch_id=else_block_id,
+                )
             )
-        )
+        else:
+            block.append(
+                IfStatement(
+                    expression_id=expression_id,
+                    if_branch_id=if_block_id,
+                )
+            )
 
     def _parse_return_statement(self, function, statement, block):
         expression_id = self._parse_expression(statement.expression)

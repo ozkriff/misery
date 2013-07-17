@@ -170,7 +170,15 @@ class Generator(object):
         self._increnent_indent()
         out += self._generate_block(function, block)
         self._decrenent_indent()
-        out += self._indent() + '}' + '\n'
+        out += self._indent() + '}'
+        if statement.else_branch_id:
+            out += ' else {\n'
+            block = function.block_list[statement.else_branch_id]
+            self._increnent_indent()
+            out += self._generate_block(function, block)
+            self._decrenent_indent()
+            out += self._indent() + '}'
+        out += '\n'
         return out
 
     def _generate_return_statement(self, function, statement):
