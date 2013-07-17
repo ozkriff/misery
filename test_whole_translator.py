@@ -200,6 +200,63 @@ class TestTranslator(unittest.TestCase):
         )
         misc.assert_equal(self, expected_output, real_output)
 
+    def test_fib_1(self):
+        ''' Process fib function. '''
+        input_string = '''
+            func start() {
+                printInteger(fib(10))
+            }
+            func fib(n int) -> int {
+                if isLessInteger(n, 2) {
+                    return n
+                } else {
+                    return plusInteger (
+                        fib(minusInteger(n, 1)),
+                        fib(minusInteger(n, 2)),
+                    )
+                }
+            }
+        '''
+        real_output = translate_mis_to_c(input_string)
+        expected_output = (
+            '\n'
+            'void start(void);\n'
+            'void fib(int* __result, int n);\n'
+            '\n'
+            'void start(void) {\n'
+            '  int tmp_0;\n'
+            '  int tmp_1;\n'
+            '\n'
+            '  fib(&tmp_1, 10);\n'
+            '  printInteger(&tmp_0, tmp_1);\n'
+            '}\n'
+            '\n'
+            'void fib(int* __result, int n) {\n'
+            '  int tmp_0;\n'
+            '  int tmp_1;\n'
+            '  int tmp_2;\n'
+            '  int tmp_3;\n'
+            '  int tmp_4;\n'
+            '  int tmp_5;\n'
+            '\n'
+            '  isLessInteger(&tmp_0, n, 2);\n'
+            '  if (tmp_0) {\n'
+            '    *__result = n;\n'
+            '    return;\n'
+            '  } else {\n'
+            '    minusInteger(&tmp_3, n, 1);\n'
+            '    fib(&tmp_2, tmp_3);\n'
+            '    minusInteger(&tmp_5, n, 2);\n'
+            '    fib(&tmp_4, tmp_5);\n'
+            '    plusInteger(&tmp_1, tmp_2, tmp_4);\n'
+            '    *__result = tmp_1;\n'
+            '    return;\n'
+            '  }\n'
+            '}\n'
+            '\n'
+        )
+        misc.assert_equal(self, expected_output, real_output)
+
     def test_factorial_1(self):
         ''' Process factorial function. '''
         input_string = '''
