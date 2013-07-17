@@ -161,6 +161,43 @@ class TestTranslator(unittest.TestCase):
         misc.assert_equal(self, expected_output, real_output)
 
     # TODO: fix it
+    def DISBLED_test_some_bug_1(self):
+        ''' Process factorial function. '''
+        input_string = '''
+            func start() {
+                printInteger(fac())
+                fac()
+            }
+            func fac() -> int {
+                return 1
+            }
+        '''
+        real_output = compile(input_string)
+        expected_output = (
+            '\n'
+            'void start(void);\n'
+            'void fac(int* __result, int n);\n'
+            '\n'
+            'void start(void) {\n'
+            '  int tmp_0;\n'
+            '  int tmp_1;\n'
+            '  int tmp_2;\n'
+            '\n'
+            '  fac(&tmp_1);\n'
+            '  printInteger(&tmp_0, tmp_1);\n'
+            '  fac(&tmp_2);\n'
+            '}\n'
+            '\n'
+            'void fac(int* __result) {\n'
+            '\n'
+            '  *__result = 1;\n'
+            '  return;\n'
+            '}\n'
+            '\n'
+        )
+        misc.assert_equal(self, expected_output, real_output)
+
+    # TODO: fix it
     def DISABLED_test_factorial_1(self):
         ''' Process factorial function. '''
         input_string = '''
