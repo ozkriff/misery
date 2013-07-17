@@ -52,8 +52,6 @@ class Generator(object):
         self._indent_level -= 1
 
     def _generate_function_parameters(self, parameter_list):
-        if len(parameter_list) == 0:
-            return 'void'
         out = ''
         is_first = True
         for parameter in parameter_list:
@@ -68,8 +66,12 @@ class Generator(object):
         out = ''
         out += 'void ' + name + '('
         if interface.return_type:
-            out += interface.return_type.value + '* __result, '
-        out += self._generate_function_parameters(interface.parameter_list)
+            out += interface.return_type.value + '* __result'
+        if len(interface.parameter_list) != 0:
+            out += ', '
+            out += self._generate_function_parameters(interface.parameter_list)
+        elif not interface.return_type:
+            out += 'void'
         out += ')'
         return out
 
