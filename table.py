@@ -235,29 +235,23 @@ class Table(object):
 class IdentifierTable(object):
 
     def append_standart_functions(self, identifier_list):
+        std_interface = ast.FunctionInterface(
+            parameter_list=[
+                ast.Parameter(name='a', type=ast.Identifier('int')),
+                ast.Parameter(name='b', type=ast.Identifier('int')),
+            ],
+        )
         identifier_list['printInteger'] = ast.FunctionInterface(
             parameter_list=[
                 ast.Parameter(name='n', type=ast.Identifier('int')),
             ],
         )
-        identifier_list['isEqualInteger'] = ast.FunctionInterface(
-            parameter_list=[
-                ast.Parameter(name='a', type=ast.Identifier('int')),
-                ast.Parameter(name='b', type=ast.Identifier('int')),
-            ],
-        )
-        identifier_list['minusInteger'] = ast.FunctionInterface(
-            parameter_list=[
-                ast.Parameter(name='a', type=ast.Identifier('int')),
-                ast.Parameter(name='b', type=ast.Identifier('int')),
-            ],
-        )
-        identifier_list['multiplyInteger'] = ast.FunctionInterface(
-            parameter_list=[
-                ast.Parameter(name='a', type=ast.Identifier('int')),
-                ast.Parameter(name='b', type=ast.Identifier('int')),
-            ],
-        )
+        identifier_list['isEqualInteger'] = std_interface
+        identifier_list['isLessInteger'] = std_interface
+        identifier_list['isGreaterInteger'] = std_interface
+        identifier_list['minusInteger'] = std_interface
+        identifier_list['plusInteger'] = std_interface
+        identifier_list['multiplyInteger'] = std_interface
 
     def __init__(self, ast_):
         identifier_list = {}
