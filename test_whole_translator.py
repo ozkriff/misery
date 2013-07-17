@@ -308,6 +308,6 @@ class TestTranslator(unittest.TestCase):
         )
         misc.assert_equal(self, expected_output, real_output)
 
-        # TODO:
+        # TODO: try to compile (and run?)
         # with open('out.c', 'w') as file:
         #     file.write(get_generator(input_string).generate_full())
