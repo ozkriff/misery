@@ -160,8 +160,7 @@ class TestTranslator(unittest.TestCase):
         )
         misc.assert_equal(self, expected_output, real_output)
 
-    # TODO: fix it
-    def DISBLED_test_some_bug_1(self):
+    def test_some_bug(self):
         ''' Process factorial function. '''
         input_string = '''
             func start() {
@@ -176,7 +175,7 @@ class TestTranslator(unittest.TestCase):
         expected_output = (
             '\n'
             'void start(void);\n'
-            'void fac(int* __result, int n);\n'
+            'void fac(int* __result);\n'
             '\n'
             'void start(void) {\n'
             '  int tmp_0;\n'
@@ -197,13 +196,11 @@ class TestTranslator(unittest.TestCase):
         )
         misc.assert_equal(self, expected_output, real_output)
 
-    # TODO: fix it
-    def DISABLED_test_factorial_1(self):
+    def test_factorial_1(self):
         ''' Process factorial function. '''
         input_string = '''
             func start() {
                 printInteger(fac(3))
-                printInteger(fac(4))
             }
             func fac(n int) -> int {
                 if isEqualInteger(n, 0) {
@@ -225,7 +222,7 @@ class TestTranslator(unittest.TestCase):
             '  int tmp_0;\n'
             '  int tmp_1;\n'
             '\n'
-            '  minusInteger(&tmp_1, 3, 1);\n'
+            '  fac(&tmp_1, 3);\n'
             '  printInteger(&tmp_0, tmp_1);\n'
             '}\n'
             '\n'

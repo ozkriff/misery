@@ -79,9 +79,8 @@ class Generator(object):
         out = ''
         for argument in expression.argument_id_list:
             if isinstance(argument, table.LinkToFunctionCall):
-                last_declaration = self._table.declaration_list[-1]
                 out += self._generate_expression(
-                    function, last_declaration.expression_list[argument.id])
+                    function, function.expression_list[argument.id])
         return out
 
     def _generate_argument(self, function, argument):
