@@ -107,7 +107,6 @@ class Table(object):
         assert isinstance(identidier_node, ast.Identifier)
         # TODO: find this identifier
         return LinkToParameter(name=identidier_node.value)
-        # return None
 
     def _parse_function_call(self, function_call_node):
         assert isinstance(function_call_node, ast.FunctionCall)
