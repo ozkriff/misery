@@ -1,3 +1,9 @@
+# html coverage
+htmlcov
+
+# python ply debug info
+parser.out
+
 parsetab.py
 .coverage
 *.pyc
