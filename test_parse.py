@@ -90,12 +90,12 @@ class TestParser(unittest.TestCase):
 
     def test_struct_type_declaration(self):
         ''' Parse struct type declaration. '''
-        input_string = '''
-            MyStruct := type struct {
-                field1: Int
-                field2: Float
-            }
-        '''
+        input_string = (
+            'MyStruct := type struct {\n'
+            '  field1: Int\n'
+            '  field2: Float\n'
+            '}\n'
+        )
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
             declaration_sequence=[
