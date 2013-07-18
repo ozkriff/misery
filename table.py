@@ -246,6 +246,7 @@ class IdentifierTable(object):
 
     def append_standart_functions(self, identifier_list):
         std_interface = ast.FunctionInterface(
+            return_type=ast.Identifier('int'),
             parameter_list=[
                 ast.Parameter(name='a', type=ast.Identifier('int')),
                 ast.Parameter(name='b', type=ast.Identifier('int')),
