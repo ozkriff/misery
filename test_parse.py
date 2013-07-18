@@ -92,8 +92,8 @@ class TestParser(unittest.TestCase):
         ''' Parse struct type declaration. '''
         input_string = '''
             type MyStruct struct {
-                field1 Int
-                field2 Float
+                field1: Int
+                field2: Float
             }
         '''
         real_ast = self._parse(input_string)
@@ -134,7 +134,7 @@ class TestParser(unittest.TestCase):
 
     def test_const_declaration(self):
         ''' Parse constant declaration. '''
-        input_string = 'const importantIdentifier Integer = 10'
+        input_string = 'const importantIdentifier:Integer = 10'
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
             declaration_sequence=[
@@ -182,7 +182,7 @@ class TestParser(unittest.TestCase):
 
     def test_simple_func_with_parameter(self):
         ''' Parse function that takes one parameter. '''
-        input_string = 'func testfunc(par ParType) {}'
+        input_string = 'func testfunc(par:ParType) {}'
         real_ast = self._parse(input_string)
         interface = ast.FunctionInterface(
             parameter_list=[
@@ -205,7 +205,7 @@ class TestParser(unittest.TestCase):
 
     def test_simple_func_with_2_parameters(self):
         ''' Parse function that takes two parameters. '''
-        input_string = 'func testfunc(par1 ParType, par2 ParType) {}'
+        input_string = 'func testfunc(par1:ParType par2:ParType) {}'
         real_ast = self._parse(input_string)
         interface = ast.FunctionInterface(
             parameter_list=[
@@ -252,7 +252,7 @@ class TestParser(unittest.TestCase):
 
     def test_var_declaration_without_initialization(self):
         ''' Parse variable declaration statement. '''
-        input_string = 'func fname() { var testVar Integer }'
+        input_string = 'func fname() { var testVar:Integer }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         var = ast.VariableDeclaration(
@@ -264,7 +264,7 @@ class TestParser(unittest.TestCase):
 
     def test_var_declaration_with_type_and_initialization(self):
         ''' Parse variable declaration statement with initiaization. '''
-        input_string = 'func fname() { var testVar Integer = 666 }'
+        input_string = 'func fname() { var testVar:Integer = 666 }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         var = ast.VariableDeclaration(
@@ -291,7 +291,7 @@ class TestParser(unittest.TestCase):
 
     def test_var_declaration_with_ctor(self):
         ''' Parse variable declaration statement with constructor call. '''
-        input_string = 'func fname() { var p Parser() }'
+        input_string = 'func fname() { var p:Parser() }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         var = ast.VariableDeclaration(
@@ -306,7 +306,7 @@ class TestParser(unittest.TestCase):
         ''' Parse variable declaration statement with
             complex initiaization.
         '''
-        input_string = 'func fname() { var v2 Int = plus(1, 2) }'
+        input_string = 'func fname() { var v2:Int = plus(1 2) }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         var = ast.VariableDeclaration(
@@ -324,7 +324,7 @@ class TestParser(unittest.TestCase):
         ''' Parse variable declaration statement with
             constructor call with arguments.
         '''
-        input_string = 'func fname() { var p Parser(lexer, 1) }'
+        input_string = 'func fname() { var p:Parser(lexer 1) }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(

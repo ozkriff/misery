@@ -30,7 +30,8 @@ tokens = [
     'RPAREN',
     'LCURLY',
     'RCURLY',
-    'COMMA',
+    # 'COMMA',
+    'COLON',
     'ARROW',
     # 'DOT',
 ] + list(reserved.values())
@@ -59,7 +60,8 @@ def make_lexer():
     t_RPAREN = r'\)'
     t_LCURLY = r'\{'
     t_RCURLY = r'\}'
-    t_COMMA = r','
+    # t_COMMA = r','
+    t_COLON = r':'
     # t_DOT = r'\.'
 
     # TODO: really convert here?
@@ -180,9 +182,9 @@ def make_parser():
 
     # TODO: join with variable declaration
     def p_const_declaration(p):
-        'declaration : CONST IDENTIFIER type ASSIGN expression'
+        'declaration : CONST IDENTIFIER COLON type ASSIGN expression'
         p[0] = ast.ConstDeclaration(
-            name=p[2], type=p[3], expression=p[5])
+            name=p[2], type=p[4], expression=p[6])
 
     # TODO: ?
     def p_type_identifier(p):
@@ -203,34 +205,21 @@ def make_parser():
         p[0] = p[1]
 
     def p_field(p):
-        'field : IDENTIFIER type'
-        p[0] = ast.Field(name=p[1], type=p[2])
+        'field : IDENTIFIER COLON type'
+        p[0] = ast.Field(name=p[1], type=p[3])
 
-    # wo_tc - without trailing comma
     def p_parameter_list_1(p):
         'parameter_list :'
         p[0] = []
 
     def p_parameter_list_2(p):
-        'parameter_list : parameter_list_wo_tc'
+        'parameter_list : parameter_list parameter'
+        p[1].append(p[2])
         p[0] = p[1]
-
-    def p_parameter_list_3(p):
-        'parameter_list : parameter_list_wo_tc COMMA'
-        p[0] = p[1]
-
-    def p_parameter_list_wo_tc_1(p):
-        'parameter_list_wo_tc : parameter_list_wo_tc COMMA parameter'
-        p[1].append(p[3])
-        p[0] = p[1]
-
-    def p_parameter_list_wo_tc_2(p):
-        'parameter_list_wo_tc : parameter'
-        p[0] = [p[1]]
 
     def p_parameter(p):
-        'parameter : IDENTIFIER type'
-        p[0] = ast.Parameter(name=p[1], type=p[2])
+        'parameter : IDENTIFIER COLON type'
+        p[0] = ast.Parameter(name=p[1], type=p[3])
 
     def p_statement_sequence_empty(p):
         'statement_sequence :'
@@ -254,18 +243,18 @@ def make_parser():
         p[0] = ast.VariableDeclaration(name=p[2], expression=p[4])
 
     def p_statement_variable_declaration_with_type_and_init(p):
-        'statement : VAR IDENTIFIER type ASSIGN expression'
+        'statement : VAR IDENTIFIER COLON type ASSIGN expression'
         p[0] = ast.VariableDeclaration(
-            name=p[2], type=p[3], expression=p[5])
+            name=p[2], type=p[4], expression=p[6])
 
     def p_statement_variable_declaration_constructor(p):
-        'statement : VAR IDENTIFIER type LPAREN expression_list RPAREN'
+        'statement : VAR IDENTIFIER COLON type LPAREN expression_list RPAREN'
         p[0] = ast.VariableDeclaration(
-            name=p[2], type=p[3], constructor_argument_list=p[5])
+            name=p[2], type=p[4], constructor_argument_list=p[6])
 
     def p_statement_variable_declaration(p):
-        'statement : VAR IDENTIFIER type'
-        p[0] = ast.VariableDeclaration(name=p[2], type=p[3])
+        'statement : VAR IDENTIFIER COLON type'
+        p[0] = ast.VariableDeclaration(name=p[2], type=p[4])
 
     def p_statement_if(p):
         'statement : IF expression block'
@@ -280,20 +269,8 @@ def make_parser():
         p[0] = []
 
     def p_expression_list_2(p):
-        'expression_list : expression_list_wo_tc'
-        p[0] = p[1]
-
-    def p_expression_list_3(p):
-        'expression_list : expression_list_wo_tc COMMA'
-        p[0] = p[1]
-
-    def p_expression_list_wo_tc_1(p):
-        'expression_list_wo_tc : expression'
-        p[0] = [p[1]]
-
-    def p_expression_list_wo_tc_2(p):
-        'expression_list_wo_tc : expression_list_wo_tc COMMA expression'
-        p[1].append(p[3])
+        'expression_list : expression_list expression'
+        p[1].append(p[2])
         p[0] = p[1]
 
     def p_function_call(p):

@@ -35,7 +35,7 @@ class TestTranslator(unittest.TestCase):
     def test_simple_func_1(self):
         input_string = '''
             func start() {
-                printInteger(minusInteger(666, 99))
+                printInteger(minusInteger(666 99))
             }
         '''
         real_output = translate_mis_to_c(input_string)
@@ -60,7 +60,7 @@ class TestTranslator(unittest.TestCase):
                 return 99
             }
             func start() {
-                printInteger(minusInteger(666, someNumber()))
+                printInteger(minusInteger(666 someNumber()))
             }
         '''
         real_output = translate_mis_to_c(input_string)
@@ -91,11 +91,11 @@ class TestTranslator(unittest.TestCase):
     def test_simple_func_3(self):
         input_string = '''
             func someNumber() -> int {
-                return minusInteger(100, 1)
+                return minusInteger(100 1)
             }
             func start() {
                 printInteger(
-                    minusInteger(666, someNumber()),
+                    minusInteger(666 someNumber())
                 )
             }
         '''
@@ -128,12 +128,12 @@ class TestTranslator(unittest.TestCase):
 
     def test_simple_func_4(self):
         input_string = '''
-            func someNumber(xxx int) -> int {
-                return minusInteger(100, xxx)
+            func someNumber(xxx:int) -> int {
+                return minusInteger(100 xxx)
             }
             func start() {
                 printInteger(
-                    minusInteger(666, someNumber(1)),
+                    minusInteger(666 someNumber(1))
                 )
             }
         '''
@@ -206,13 +206,13 @@ class TestTranslator(unittest.TestCase):
             func start() {
                 printInteger(fib(10))
             }
-            func fib(n int) -> int {
-                if isLessInteger(n, 2) {
+            func fib(n:int) -> int {
+                if isLessInteger(n 2) {
                     return n
                 } else {
                     return plusInteger (
-                        fib(minusInteger(n, 1)),
-                        fib(minusInteger(n, 2)),
+                        fib(minusInteger(n 1))
+                        fib(minusInteger(n 2))
                     )
                 }
             }
@@ -263,13 +263,13 @@ class TestTranslator(unittest.TestCase):
             func start() {
                 printInteger(fac(3))
             }
-            func fac(n int) -> int {
-                if isEqualInteger(n, 0) {
+            func fac(n:int) -> int {
+                if isEqualInteger(n 0) {
                     return 1
                 }
                 return multiplyInteger(
-                    fac(minusInteger(n, 1)),
-                    n,
+                    fac(minusInteger(n 1))
+                    n
                 )
             }
         '''
