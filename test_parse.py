@@ -252,25 +252,32 @@ class TestParser(unittest.TestCase):
 
     def test_var_declaration_without_initialization(self):
         ''' Parse variable declaration statement. '''
-        input_string = 'fname := func () { testVar := Integer }'
+        input_string = 'fname := func () { testVar := Integer() }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         var = ast.VariableDeclaration(
             name='testVar',
-            type=ast.Identifier('Integer'),
+            expression=ast.FunctionCall(
+                expression=ast.Identifier('Integer'),
+                argument_list=[],
+            )
         )
         expected_ast.declaration_sequence[0].body.append(var)
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_declaration_with_type_and_initialization(self):
         ''' Parse variable declaration statement with initiaization. '''
-        input_string = 'fname := func () { testVar:Integer := 666 }'
+        input_string = 'fname := func () { testVar := Integer(666) }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         var = ast.VariableDeclaration(
             name='testVar',
-            type=ast.Identifier('Integer'),
-            expression=ast.Number(666),
+            expression=ast.FunctionCall(
+                expression=ast.Identifier('Integer'),
+                argument_list=[
+                    ast.Number(666),
+                ],
+            ),
         )
         expected_ast.declaration_sequence[0].body.append(var)
         misc.assert_equal(self, expected_ast, real_ast)
@@ -296,8 +303,10 @@ class TestParser(unittest.TestCase):
         expected_ast = copy.deepcopy(self._std_module)
         var = ast.VariableDeclaration(
             name='p',
-            type=ast.Identifier('Parser'),
-            constructor_argument_list=[],
+            expression=ast.FunctionCall(
+                expression=ast.Identifier('Parser'),
+                argument_list=[],
+            ),
         )
         expected_ast.declaration_sequence[0].body.append(var)
         misc.assert_equal(self, expected_ast, real_ast)
@@ -306,7 +315,7 @@ class TestParser(unittest.TestCase):
         ''' Parse variable declaration statement with
             complex initiaization.
         '''
-        input_string = 'fname := func () { v2:Int := plus(1 2) }'
+        input_string = 'fname := func () { v2 := plus(1 2) }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         var = ast.VariableDeclaration(
@@ -315,7 +324,6 @@ class TestParser(unittest.TestCase):
                 expression=ast.Identifier('plus'),
                 argument_list=[ast.Number(1), ast.Number(2)],
             ),
-            type=ast.Identifier('Int'),
         )
         expected_ast.declaration_sequence[0].body.append(var)
         misc.assert_equal(self, expected_ast, real_ast)
@@ -330,11 +338,13 @@ class TestParser(unittest.TestCase):
         expected_ast.declaration_sequence[0].body.append(
             ast.VariableDeclaration(
                 name='p',
-                type=ast.Identifier('Parser'),
-                constructor_argument_list=[
-                    ast.Identifier('lexer'),
-                    ast.Number(1),
-                ],
+                expression=ast.FunctionCall(
+                    expression=ast.Identifier('Parser'),
+                    argument_list=[
+                        ast.Identifier('lexer'),
+                        ast.Number(1),
+                    ],
+                ),
             )
         )
         misc.assert_equal(self, expected_ast, real_ast)

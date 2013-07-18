@@ -12,7 +12,6 @@ reserved = {
     'if': 'IF',
     'else': 'ELSE',
     'import': 'IMPORT',
-    'var': 'VAR',
     'const': 'CONST',
     'type': 'TYPE',
     'struct': 'STRUCT',
@@ -25,7 +24,7 @@ tokens = [
     'IDENTIFIER',
     'STRING',
     'NUMBER',
-    'ASSIGN',
+    # 'ASSIGN',
     'COLONASSIGN',
     'LPAREN',
     'RPAREN',
@@ -56,7 +55,7 @@ def find_column(input, lexpos):
 def make_lexer():
 
     t_ARROW = r'->'
-    t_ASSIGN = r'='
+    # t_ASSIGN = r'='
     t_COLONASSIGN = r':='
     t_LPAREN = r'\('
     t_RPAREN = r'\)'
@@ -243,20 +242,6 @@ def make_parser():
     def p_statement_variable_declaration_with_init(p):
         'statement : IDENTIFIER COLONASSIGN expression'
         p[0] = ast.VariableDeclaration(name=p[1], expression=p[3])
-
-    def p_statement_variable_declaration_with_type_and_init(p):
-        'statement : IDENTIFIER COLON type COLONASSIGN expression'
-        p[0] = ast.VariableDeclaration(
-            name=p[1], type=p[3], expression=p[5])
-
-    def p_statement_variable_declaration_constructor(p):
-        'statement : IDENTIFIER COLONASSIGN type LPAREN expression_list RPAREN'
-        p[0] = ast.VariableDeclaration(
-            name=p[1], type=p[3], constructor_argument_list=p[5])
-
-    def p_statement_variable_declaration(p):
-        'statement : IDENTIFIER COLONASSIGN type'
-        p[0] = ast.VariableDeclaration(name=p[1], type=p[3])
 
     def p_statement_if(p):
         'statement : IF expression block'
