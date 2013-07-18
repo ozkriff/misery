@@ -34,7 +34,7 @@ class TestTranslator(unittest.TestCase):
 
     def test_simple_func_1(self):
         input_string = '''
-            func start() {
+            start := func () {
                 printInteger(minusInteger(666 99))
             }
         '''
@@ -56,10 +56,10 @@ class TestTranslator(unittest.TestCase):
 
     def test_simple_func_2(self):
         input_string = '''
-            func someNumber() -> int {
+            someNumber := func () -> int {
                 return 99
             }
-            func start() {
+            start := func () {
                 printInteger(minusInteger(666 someNumber()))
             }
         '''
@@ -90,10 +90,10 @@ class TestTranslator(unittest.TestCase):
 
     def test_simple_func_3(self):
         input_string = '''
-            func someNumber() -> int {
+            someNumber := func () -> int {
                 return minusInteger(100 1)
             }
-            func start() {
+            start := func () {
                 printInteger(
                     minusInteger(666 someNumber())
                 )
@@ -128,10 +128,10 @@ class TestTranslator(unittest.TestCase):
 
     def test_simple_func_4(self):
         input_string = '''
-            func someNumber(xxx:int) -> int {
+            someNumber := func (xxx:int) -> int {
                 return minusInteger(100 xxx)
             }
-            func start() {
+            start := func () {
                 printInteger(
                     minusInteger(666 someNumber(1))
                 )
@@ -167,11 +167,11 @@ class TestTranslator(unittest.TestCase):
     def test_some_bug(self):
         ''' Process factorial function. '''
         input_string = '''
-            func start() {
+            start := func () {
                 printInteger(fac())
                 fac()
             }
-            func fac() -> int {
+            fac := func () -> int {
                 return 1
             }
         '''
@@ -203,10 +203,10 @@ class TestTranslator(unittest.TestCase):
     def test_fib_1(self):
         ''' Process fib function. '''
         input_string = '''
-            func start() {
+            start := func () {
                 printInteger(fib(10))
             }
-            func fib(n:int) -> int {
+            fib := func (n:int) -> int {
                 if isLessInteger(n 2) {
                     return n
                 } else {
@@ -260,10 +260,10 @@ class TestTranslator(unittest.TestCase):
     def test_factorial_1(self):
         ''' Process factorial function. '''
         input_string = '''
-            func start() {
+            start := func () {
                 printInteger(fac(3))
             }
-            func fac(n:int) -> int {
+            fac := func (n:int) -> int {
                 if isEqualInteger(n 0) {
                     return 1
                 }

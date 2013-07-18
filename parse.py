@@ -26,6 +26,7 @@ tokens = [
     'STRING',
     'NUMBER',
     'ASSIGN',
+    'COLONASSIGN',
     'LPAREN',
     'RPAREN',
     'LCURLY',
@@ -56,6 +57,7 @@ def make_lexer():
 
     t_ARROW = r'->'
     t_ASSIGN = r'='
+    t_COLONASSIGN = r':='
     t_LPAREN = r'\('
     t_RPAREN = r'\)'
     t_LCURLY = r'\{'
@@ -172,17 +174,17 @@ def make_parser():
         p[0] = ast.FunctionInterface(parameter_list=p[2])
 
     def p_function_declaration(p):
-        'declaration : FUNC IDENTIFIER function_interface block'
+        'declaration : IDENTIFIER COLONASSIGN FUNC function_interface block'
         p[0] = ast.FunctionDeclaration(
-            name=p[2], interface=p[3], body=p[4])
+            name=p[1], interface=p[4], body=p[5])
 
     def p_type_declaration(p):
-        'declaration : TYPE IDENTIFIER type'
-        p[0] = ast.TypeDeclaration(name=p[2], type=p[3])
+        'declaration : IDENTIFIER COLONASSIGN TYPE type'
+        p[0] = ast.TypeDeclaration(name=p[1], type=p[4])
 
     # TODO: join with variable declaration
     def p_const_declaration(p):
-        'declaration : CONST IDENTIFIER COLON type ASSIGN expression'
+        'declaration : CONST IDENTIFIER COLON type COLONASSIGN expression'
         p[0] = ast.ConstDeclaration(
             name=p[2], type=p[4], expression=p[6])
 
@@ -239,22 +241,22 @@ def make_parser():
         p[0] = p[1]
 
     def p_statement_variable_declaration_with_init(p):
-        'statement : VAR IDENTIFIER ASSIGN expression'
-        p[0] = ast.VariableDeclaration(name=p[2], expression=p[4])
+        'statement : IDENTIFIER COLONASSIGN expression'
+        p[0] = ast.VariableDeclaration(name=p[1], expression=p[3])
 
     def p_statement_variable_declaration_with_type_and_init(p):
-        'statement : VAR IDENTIFIER COLON type ASSIGN expression'
+        'statement : IDENTIFIER COLON type COLONASSIGN expression'
         p[0] = ast.VariableDeclaration(
-            name=p[2], type=p[4], expression=p[6])
+            name=p[1], type=p[3], expression=p[5])
 
     def p_statement_variable_declaration_constructor(p):
-        'statement : VAR IDENTIFIER COLON type LPAREN expression_list RPAREN'
+        'statement : IDENTIFIER COLONASSIGN type LPAREN expression_list RPAREN'
         p[0] = ast.VariableDeclaration(
-            name=p[2], type=p[4], constructor_argument_list=p[6])
+            name=p[1], type=p[3], constructor_argument_list=p[5])
 
     def p_statement_variable_declaration(p):
-        'statement : VAR IDENTIFIER COLON type'
-        p[0] = ast.VariableDeclaration(name=p[2], type=p[4])
+        'statement : IDENTIFIER COLONASSIGN type'
+        p[0] = ast.VariableDeclaration(name=p[1], type=p[3])
 
     def p_statement_if(p):
         'statement : IF expression block'
