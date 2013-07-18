@@ -20,9 +20,13 @@ class Constant(object):
 
 class Function(object):
     def __init__(
-            self, name, interface,
-            block_list, constant_list,
-            variable_list, expression_list):
+            self,
+            name,
+            interface,
+            block_list,
+            constant_list,
+            variable_list,
+            expression_list):
         self.name = name
         self.interface = interface
         self.block_list = block_list
