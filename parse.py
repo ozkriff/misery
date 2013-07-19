@@ -181,7 +181,6 @@ def make_parser():
         'declaration : IDENTIFIER COLONASSIGN TYPE type'
         p[0] = ast.TypeDeclaration(name=p[1], type=p[4])
 
-    # TODO: join with variable declaration
     def p_const_declaration(p):
         'declaration : CONST IDENTIFIER COLON type COLONASSIGN expression'
         p[0] = ast.ConstDeclaration(
