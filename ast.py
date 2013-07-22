@@ -100,6 +100,12 @@ class If(object):
         self.branch_else = branch_else
 
 
+class SetStatement(object):
+    def __init__(self, name, expression):
+        self.name = name
+        self.expression = expression
+
+
 class Return(object):
     def __init__(self, expression=None):
         self.expression = expression
