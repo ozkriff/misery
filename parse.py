@@ -12,14 +12,11 @@ reserved = {
     'if': 'IF',
     'else': 'ELSE',
     'import': 'IMPORT',
-    # 'const': 'CONST',
+    'const': 'CONST',
     'type': 'TYPE',
     'struct': 'STRUCT',
     # 'for': 'FOR',
     'return': 'RETURN',
-    'let': 'LET',
-    'var': 'VAR',
-    # 'set': 'SET',
 }
 
 
@@ -28,6 +25,7 @@ tokens = [
     'STRING',
     'NUMBER',
     # 'ASSIGN',
+    'COLONASSIGN',
     'LPAREN',
     'RPAREN',
     'LCURLY',
@@ -58,6 +56,7 @@ def make_lexer():
 
     t_ARROW = r'->'
     # t_ASSIGN = r'='
+    t_COLONASSIGN = r':='
     t_LPAREN = r'\('
     t_RPAREN = r'\)'
     t_LCURLY = r'\{'
@@ -174,18 +173,18 @@ def make_parser():
         p[0] = ast.FunctionInterface(parameter_list=p[2])
 
     def p_function_declaration(p):
-        'declaration : LET IDENTIFIER FUNC function_interface block'
+        'declaration : IDENTIFIER COLONASSIGN FUNC function_interface block'
         p[0] = ast.FunctionDeclaration(
-            name=p[2], interface=p[4], body=p[5])
+            name=p[1], interface=p[4], body=p[5])
 
     def p_type_declaration(p):
-        'declaration : LET IDENTIFIER TYPE type'
-        p[0] = ast.TypeDeclaration(name=p[2], type=p[4])
+        'declaration : IDENTIFIER COLONASSIGN TYPE type'
+        p[0] = ast.TypeDeclaration(name=p[1], type=p[4])
 
-    # def p_const_declaration(p):
-    #     'declaration : CONST IDENTIFIER COLON type COLONASSIGN expression'
-    #     p[0] = ast.ConstDeclaration(
-    #         name=p[2], type=p[4], expression=p[6])
+    def p_const_declaration(p):
+        'declaration : CONST IDENTIFIER COLON type COLONASSIGN expression'
+        p[0] = ast.ConstDeclaration(
+            name=p[2], type=p[4], expression=p[6])
 
     # TODO: ?
     def p_type_identifier(p):
@@ -239,9 +238,9 @@ def make_parser():
         'statement : function_call'
         p[0] = p[1]
 
-    def p_statement_variable_declaration(p):
-        'statement : VAR IDENTIFIER expression'
-        p[0] = ast.VariableDeclaration(name=p[2], expression=p[3])
+    def p_statement_variable_declaration_with_init(p):
+        'statement : IDENTIFIER COLONASSIGN expression'
+        p[0] = ast.VariableDeclaration(name=p[1], expression=p[3])
 
     def p_statement_if(p):
         'statement : IF expression block'
