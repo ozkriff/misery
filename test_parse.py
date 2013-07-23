@@ -376,28 +376,6 @@ class TestParser(unittest.TestCase):
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
-    def test_set_statement(self):
-        ''' Parse set statement. '''
-        input_string = (
-            'let fname func () {\n'
-            '  var a 1\n'
-            '  set a 2\n'
-            '}'
-        )
-        real_ast = self._parse(input_string)
-        expected_ast = copy.deepcopy(self._std_module)
-        expected_ast.declaration_sequence[0].body = [
-            ast.VariableDeclaration(
-                name='a',
-                expression=ast.Number(1),
-            ),
-            ast.SetStatement(
-                name='a',
-                expression=ast.Number(2),
-            ),
-        ]
-        misc.assert_equal(self, expected_ast, real_ast)
-
     def test_nested_func_call_1(self):
         ''' Parse nested function call. '''
         input_string = 'let fname func () { a()() }'

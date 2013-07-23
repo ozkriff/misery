@@ -19,7 +19,7 @@ reserved = {
     'return': 'RETURN',
     'let': 'LET',
     'var': 'VAR',
-    'set': 'SET',
+    # 'set': 'SET',
 }
 
 
@@ -242,10 +242,6 @@ def make_parser():
     def p_statement_variable_declaration(p):
         'statement : VAR IDENTIFIER expression'
         p[0] = ast.VariableDeclaration(name=p[2], expression=p[3])
-
-    def p_statement_set(p):
-        'statement : SET IDENTIFIER expression'
-        p[0] = ast.SetStatement(name=p[2], expression=p[3])
 
     def p_statement_if(p):
         'statement : IF expression block'
