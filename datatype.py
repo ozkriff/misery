@@ -31,7 +31,7 @@ def mark_out_datatypes(ast_):
         elif isinstance(expression, ast.FunctionCall):
             return get_function_call_expression_datatype(block, expression)
         else:
-            raise Exception('Not Implemented')
+            raise Exception('Not Implemented: ' + str(type(expression)))
 
     def mark_out_variable_declaration_statement(
             block, variable_declaration_statement):
@@ -46,7 +46,7 @@ def mark_out_datatypes(ast_):
         if isinstance(statement, ast.VariableDeclaration):
             mark_out_variable_declaration_statement(block, statement)
         else:
-            raise Exception('Not Implemented')
+            raise Exception('Not Implemented: ' + str(type(statement)))
 
     def mark_out_function_declaration(function_declaration):
         function = function_declaration
@@ -58,7 +58,7 @@ def mark_out_datatypes(ast_):
         if isinstance(declaration, ast.FunctionDeclaration):
             mark_out_function_declaration(declaration)
         else:
-            raise Exception('Not Implemented')
+            raise Exception('Not Implemented: ' + str(type(declaration)))
 
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
