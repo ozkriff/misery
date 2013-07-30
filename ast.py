@@ -16,9 +16,9 @@ class Module(object):
 
 
 class TypeDeclaration(object):
-    def __init__(self, name, type):
+    def __init__(self, name, datatype):
         self.name = name
-        self.type = type
+        self.datatype = datatype
 
 
 class Identifier(object):
@@ -33,15 +33,15 @@ class TypeStruct(object):
 
 
 class Field(object):
-    def __init__(self, name, type):
+    def __init__(self, name, datatype):
         self.name = name
-        self.type = type
+        self.datatype = datatype
 
 
 class ConstDeclaration(object):
-    def __init__(self, name, type, expression):
+    def __init__(self, name, datatype, expression):
         self.name = name
-        self.type = type
+        self.datatype = datatype
         self.expression = expression
 
 
@@ -69,9 +69,9 @@ class FunctionInterface(object):
 
 
 class Parameter(object):
-    def __init__(self, name, type):
+    def __init__(self, name, datatype):
         self.name = name
-        self.type = type
+        self.datatype = datatype
 
 
 class FunctionCall(object):
@@ -84,13 +84,14 @@ class VariableDeclaration(object):
     def __init__(
             self,
             name,
-            type=None,
             expression=None,
-            constructor_argument_list=None):
+            constructor_argument_list=None,
+            datatype=None,
+    ):
         self.name = name
-        self.type = type
         self.expression = expression
         self.constructor_argument_list = constructor_argument_list
+        self.datatype = datatype
 
 
 class If(object):
@@ -103,5 +104,6 @@ class If(object):
 class Return(object):
     def __init__(self, expression=None):
         self.expression = expression
+
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:

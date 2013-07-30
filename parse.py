@@ -179,12 +179,12 @@ def make_parser():
 
     def p_type_declaration(p):
         'declaration : IDENTIFIER COLONASSIGN TYPE type'
-        p[0] = ast.TypeDeclaration(name=p[1], type=p[4])
+        p[0] = ast.TypeDeclaration(name=p[1], datatype=p[4])
 
     def p_const_declaration(p):
         'declaration : CONST IDENTIFIER COLON type COLONASSIGN expression'
         p[0] = ast.ConstDeclaration(
-            name=p[2], type=p[4], expression=p[6])
+            name=p[2], datatype=p[4], expression=p[6])
 
     # TODO: ?
     def p_type_identifier(p):
@@ -206,7 +206,7 @@ def make_parser():
 
     def p_field(p):
         'field : IDENTIFIER COLON type'
-        p[0] = ast.Field(name=p[1], type=p[3])
+        p[0] = ast.Field(name=p[1], datatype=p[3])
 
     def p_parameter_list_1(p):
         'parameter_list :'
@@ -219,7 +219,7 @@ def make_parser():
 
     def p_parameter(p):
         'parameter : IDENTIFIER COLON type'
-        p[0] = ast.Parameter(name=p[1], type=p[3])
+        p[0] = ast.Parameter(name=p[1], datatype=p[3])
 
     def p_statement_sequence_empty(p):
         'statement_sequence :'

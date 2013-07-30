@@ -22,7 +22,7 @@ class TestTable(unittest.TestCase):
                         ast.VariableDeclaration(
                             expression=ast.Number(1),
                             name='a',
-                            type=ast.Identifier('int'),
+                            datatype=ast.Identifier('int'),
                         ),
                     ]
                 ),
@@ -63,11 +63,11 @@ class TestTable(unittest.TestCase):
                 parameter_list=[],
             ),
             constant_list=[
-                table.Constant(type='int', value=1),
-                table.Constant(type='int', value=2),
+                table.Constant(datatype='int', value=1),
+                table.Constant(datatype='int', value=2),
             ],
             variable_list=[
-                table.Variable(type='int', name='tmp_0'),
+                table.Variable(datatype='int', name='tmp_0'),
             ],
             block_list=[
                 [
@@ -128,8 +128,8 @@ class TestTable(unittest.TestCase):
             ),
             constant_list=[],
             variable_list=[
-                table.Variable(type='int', name='tmp_0'),
-                table.Variable(type='int', name='tmp_1'),
+                table.Variable(datatype='int', name='tmp_0'),
+                table.Variable(datatype='int', name='tmp_1'),
             ],
             block_list=[
                 [
@@ -198,8 +198,8 @@ class TestTable(unittest.TestCase):
             ),
             constant_list=[],
             variable_list=[
-                table.Variable(type='int', name='tmp_0'),
-                table.Variable(type='int', name='tmp_1'),
+                table.Variable(datatype='int', name='tmp_0'),
+                table.Variable(datatype='int', name='tmp_1'),
             ],
             block_list=[
                 [
@@ -304,7 +304,7 @@ class TestTable(unittest.TestCase):
                 parameter_list=[],
             ),
             constant_list=[
-                table.Constant(type="int", value=0)
+                table.Constant(datatype="int", value=0)
             ],
             variable_list=[],
             block_list=[

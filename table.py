@@ -7,15 +7,15 @@ import ast
 
 
 class Variable(object):
-    def __init__(self, name, type):
+    def __init__(self, name, datatype):
         self.name = name
-        self.type = type
+        self.datatype = datatype
 
 
 class Constant(object):
-    def __init__(self, value, type):
+    def __init__(self, value, datatype):
         self.value = value
-        self.type = type
+        self.datatype = datatype
 
 
 class Function(object):
@@ -99,7 +99,7 @@ class Table(object):
     def _parse_number(self, number):
         assert isinstance(number, ast.Number)
         self.declaration_list[-1].constant_list.append(
-            Constant(type='int', value=number.value))
+            Constant(datatype='int', value=number.value))
         return LinkToNumberConstant(
             id=len(self.declaration_list[-1].constant_list) - 1)
 
@@ -112,10 +112,10 @@ class Table(object):
         assert isinstance(function_call_node, ast.FunctionCall)
         last_declaration = self.declaration_list[-1]
         varname = 'tmp_' + str(len(last_declaration.variable_list))
-        # TODO: get type from some global symtable
+        # TODO: get datatype from some global symtable
         return_type = 'int'
         last_declaration.variable_list.append(
-            Variable(name=varname, type=return_type))
+            Variable(name=varname, datatype=return_type))
         result_id = LinkToVariable(
             id=len(last_declaration.variable_list) - 1)
         argument_id_list = []
@@ -153,7 +153,7 @@ class Table(object):
         function.variable_list.append(
             Variable(
                 name=statement.name,
-                type=statement.type.value,
+                datatype=statement.datatype.value,
             )
         )
         block.append(
@@ -251,13 +251,13 @@ class IdentifierTable(object):
         std_interface = ast.FunctionInterface(
             return_type=ast.Identifier('int'),
             parameter_list=[
-                ast.Parameter(name='a', type=ast.Identifier('int')),
-                ast.Parameter(name='b', type=ast.Identifier('int')),
+                ast.Parameter(name='a', datatype=ast.Identifier('int')),
+                ast.Parameter(name='b', datatype=ast.Identifier('int')),
             ],
         )
         identifier_list['printInteger'] = ast.FunctionInterface(
             parameter_list=[
-                ast.Parameter(name='n', type=ast.Identifier('int')),
+                ast.Parameter(name='n', datatype=ast.Identifier('int')),
             ],
         )
         identifier_list['isEqualInteger'] = std_interface

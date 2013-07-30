@@ -71,7 +71,7 @@ class Generator(object):
                 is_first = False
             else:
                 out += ', '
-            out += parameter.type.value + ' ' + parameter.name
+            out += parameter.datatype.value + ' ' + parameter.name
         return out
 
     def _generate_function_header(self, name, interface):
@@ -217,7 +217,7 @@ class Generator(object):
         out = ''
         for variable in function.variable_list:
             out += self._indent()
-            out += variable.type + ' ' + variable.name
+            out += variable.datatype + ' ' + variable.name
             out += ';' + '\n'
         return out
 

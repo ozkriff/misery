@@ -82,7 +82,7 @@ class TestParser(unittest.TestCase):
             declaration_sequence=[
                 ast.TypeDeclaration(
                     name='MyInteger',
-                    type=ast.Identifier('Integer'),
+                    datatype=ast.Identifier('Integer'),
                 )
             ]
         )
@@ -101,15 +101,15 @@ class TestParser(unittest.TestCase):
             declaration_sequence=[
                 ast.TypeDeclaration(
                     name='MyStruct',
-                    type=ast.TypeStruct(
+                    datatype=ast.TypeStruct(
                         value=[
                             ast.Field(
                                 name='field1',
-                                type=ast.Identifier('Int'),
+                                datatype=ast.Identifier('Int'),
                             ),
                             ast.Field(
                                 name='field2',
-                                type=ast.Identifier('Float'),
+                                datatype=ast.Identifier('Float'),
                             )
                         ]
                     )
@@ -126,7 +126,7 @@ class TestParser(unittest.TestCase):
             declaration_sequence=[
                 ast.TypeDeclaration(
                     name='MyInteger',
-                    type=ast.Identifier('Integer'),
+                    datatype=ast.Identifier('Integer'),
                 )
             ]
         )
@@ -140,7 +140,7 @@ class TestParser(unittest.TestCase):
             declaration_sequence=[
                 ast.ConstDeclaration(
                     name='importantIdentifier',
-                    type=ast.Identifier('Integer'),
+                    datatype=ast.Identifier('Integer'),
                     expression=ast.Number(10),
                 )
             ]
@@ -188,7 +188,7 @@ class TestParser(unittest.TestCase):
             parameter_list=[
                 ast.Parameter(
                     name='par',
-                    type=ast.Identifier('ParType')
+                    datatype=ast.Identifier('ParType')
                 )
             ],
         )
@@ -211,11 +211,11 @@ class TestParser(unittest.TestCase):
             parameter_list=[
                 ast.Parameter(
                     name='par1',
-                    type=ast.Identifier('ParType'),
+                    datatype=ast.Identifier('ParType'),
                 ),
                 ast.Parameter(
                     name='par2',
-                    type=ast.Identifier('ParType'),
+                    datatype=ast.Identifier('ParType'),
                 )
             ]
         )

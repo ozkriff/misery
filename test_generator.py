@@ -66,11 +66,11 @@ class TestGenerator(unittest.TestCase):
                         parameter_list=[
                             ast.Parameter(
                                 name='a',
-                                type=ast.Identifier('int')
+                                datatype=ast.Identifier('int')
                             ),
                             ast.Parameter(
                                 name='b',
-                                type=ast.Identifier('int')
+                                datatype=ast.Identifier('int')
                             ),
                         ],
                         return_type=ast.Identifier('int'),
@@ -105,8 +105,8 @@ class TestGenerator(unittest.TestCase):
             ),
             constant_list=[],
             variable_list=[
-                table.Variable(type='int', name='tmp_0'),
-                table.Variable(type='int', name='tmp_1'),
+                table.Variable(datatype='int', name='tmp_0'),
+                table.Variable(datatype='int', name='tmp_1'),
             ],
             block_list=[
                 [
@@ -175,7 +175,7 @@ class TestGenerator(unittest.TestCase):
                 parameter_list=[],
             ),
             constant_list=[
-                table.Constant(type="int", value=1),
+                table.Constant(datatype="int", value=1),
             ],
             variable_list=[],
             block_list=[
@@ -218,7 +218,7 @@ class TestGenerator(unittest.TestCase):
             ),
             constant_list=[],
             variable_list=[
-                table.Variable(type='int', name='tmp_0'),
+                table.Variable(datatype='int', name='tmp_0'),
             ],
             block_list=[
                 [
