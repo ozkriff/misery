@@ -5,13 +5,13 @@
 ''' Test 'datatype' module. '''
 
 
-import unittest
-import misc
+from unittest import TestCase
+from misc import assert_equal
 import ast
-import datatype
+from datatype import mark_out_datatypes, SimpleDataType
 
 
-class TestSetTypeMarks(unittest.TestCase):
+class TestMarkOutDatatypes(TestCase):
 
     def test_simple_function_declaration(self):
         input_ast = ast.Module(
@@ -32,9 +32,9 @@ class TestSetTypeMarks(unittest.TestCase):
                 )
             ]
         )
-        datatype.set_datatype_marks(input_ast)
+        mark_out_datatypes(input_ast)
         real_output = input_ast
-        misc.assert_equal(self, expected_output, real_output)
+        assert_equal(self, expected_output, real_output)
 
     def test_simple_integer_variable_declaration(self):
         input_ast = ast.Module(
@@ -60,15 +60,15 @@ class TestSetTypeMarks(unittest.TestCase):
                         ast.VariableDeclaration(
                             name='testVar',
                             expression=ast.Number(666),
-                            datatype=datatype.SimpleDataType('int'),
+                            datatype=SimpleDataType('int'),
                         ),
                     ],
                 )
             ]
         )
-        datatype.set_datatype_marks(input_ast)
+        mark_out_datatypes(input_ast)
         real_output = input_ast
-        misc.assert_equal(self, expected_output, real_output)
+        assert_equal(self, expected_output, real_output)
 
     def test_integer_variable_declaration_with_plus_integer(self):
         input_ast = ast.Module(
@@ -106,15 +106,15 @@ class TestSetTypeMarks(unittest.TestCase):
                                     ast.Number(2),
                                 ],
                             ),
-                            datatype=datatype.SimpleDataType('int'),
+                            datatype=SimpleDataType('int'),
                         ),
                     ],
                 )
             ]
         )
-        datatype.set_datatype_marks(input_ast)
+        mark_out_datatypes(input_ast)
         real_output = input_ast
-        misc.assert_equal(self, expected_output, real_output)
+        assert_equal(self, expected_output, real_output)
 
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:

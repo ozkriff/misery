@@ -16,52 +16,47 @@ class SimpleDataType(object):
         self.name = name
 
 
-def set_datatype_marks(ast_):
+def mark_out_datatypes(ast_):
+    ''' Mark out 'datatype' fields to ast nodes. '''
 
     function = None
 
-    def _x_function_call_expression(block, function_call_expression):
-        return SimpleDataType('int')  # TODO: get real type
+    def get_function_call_expression_datatype(block, function_call_expression):
+        # TODO: find this function and get real type
+        return SimpleDataType('int')
 
-    def _x_expression(block, expression):
+    def get_expression_datatype(block, expression):
         if isinstance(expression, ast.Number):
             return SimpleDataType('int')
         elif isinstance(expression, ast.FunctionCall):
-            return _x_function_call_expression(block, expression)
+            return get_function_call_expression_datatype(block, expression)
         else:
             raise Exception('Not Implemented')
 
-    def _x_variable_declaration_statement(
-            block,
-            variable_declaration_statement,
-    ):
-        datatype = _x_expression(
-            block,
-            variable_declaration_statement.expression,
-        )
+    def mark_out_variable_declaration_statement(
+            block, variable_declaration_statement):
+        datatype = get_expression_datatype(
+            block, variable_declaration_statement.expression)
         variable_declaration_statement.datatype = datatype
 
-    def _x_statement(block, statement):
+    def mark_out_statement(block, statement):
         ''' block - current parsed block
             statement - current parsed statement in this block
         '''
-        # print '>>> _x_statement: statement: ', pretty_print(statement)
         if isinstance(statement, ast.VariableDeclaration):
-            _x_variable_declaration_statement(block, statement)
+            mark_out_variable_declaration_statement(block, statement)
         else:
             raise Exception('Not Implemented')
 
-    def _x_function_declaration(function_declaration):
-        # print '>>> _x_function_declaration: function_declaration: ',
-        # pretty_print(function_declaration)
+    def mark_out_function_declaration(function_declaration):
         function = function_declaration
         block = function_declaration.body
         for statement in block:
-            _x_statement(block, statement)
+            mark_out_statement(block, statement)
 
     for declaration in ast_.declaration_sequence:
         if isinstance(declaration, ast.FunctionDeclaration):
-            _x_function_declaration(declaration)
+            mark_out_function_declaration(declaration)
         else:
             raise Exception('Not Implemented')
 
