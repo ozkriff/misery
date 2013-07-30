@@ -11,28 +11,6 @@ import table
 class TestTable(unittest.TestCase):
     ''' Test 'Table' class. '''
 
-    def test_1(self):
-        ''' Just generate some tables. '''
-        ast_ = ast.Module(
-            declaration_sequence=[
-                ast.FunctionDeclaration(
-                    name='f1',
-                    interface=ast.FunctionInterface(parameter_list=[]),
-                    body=[
-                        ast.VariableDeclaration(
-                            expression=ast.Number(1),
-                            name='a',
-                            datatype=ast.Identifier('int'),
-                        ),
-                    ]
-                ),
-            ]
-        )
-        table.Table.from_ast(ast_)
-        # expected_tables = []
-        # misc.assert_is_part_of(self, expected_tables, real_tables)
-        # print('\n' + my_pretty_print(t))
-
     def test_generate_function_call(self):
         ''' Generate table with simple function call. '''
         ast_ = ast.Module(
