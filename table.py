@@ -142,7 +142,6 @@ class Table(object):
             argument_id_list.append(id)
         # TODO: parse function_call_node.expression!
         assert isinstance(function_call_node.expression, ast.Identifier)
-        # function_name = function_call_node.expression.value
         function_name = function_call_node.expression.name
         last_declaration.expression_list.append(
             FunctionCallExpression(
