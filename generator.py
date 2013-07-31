@@ -141,7 +141,7 @@ class Generator(object):
             raise Exception("Not Implemented")
         return out
 
-    def _generate_variable_declaration_statement(self, function, statement):
+    def _generate_assign_statement(self, function, statement):
         out = ''
         if isinstance(statement.expression_id, table.LinkToNumberConstant):
             out += self._indent()
@@ -163,6 +163,11 @@ class Generator(object):
         else:
             raise Exception(
                 "Not Implemented" + str(type(statement.expression_id)))
+        return out
+
+    def _generate_variable_declaration_statement(self, function, statement):
+        out = ''
+        out += self._generate_assign_statement(function, statement)
         return out
 
     def _generate_function_call_statement(self, function, statement):
@@ -207,7 +212,9 @@ class Generator(object):
 
     def _generate_statement(self, function, statement):
         out = ''
-        if isinstance(statement, table.VariableDeclarationStatement):
+        if isinstance(statement, table.AssignStatement):
+            out += self._generate_assign_statement(function, statement)
+        elif isinstance(statement, table.VariableDeclarationStatement):
             out += self._generate_variable_declaration_statement(
                 function, statement)
         elif isinstance(statement, table.FunctionCallStatement):

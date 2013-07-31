@@ -39,6 +39,10 @@ def mark_out_datatypes(ast_):
             block, variable_declaration_statement.expression)
         variable_declaration_statement.datatype = datatype
 
+    def mark_out_assign_statement(block, assign_statement):
+        datatype = get_expression_datatype(block, assign_statement.expression)
+        assign_statement.datatype = datatype
+
     def mark_out_statement(block, statement):
         ''' block - current parsed block
             statement - current parsed statement in this block
@@ -50,6 +54,8 @@ def mark_out_datatypes(ast_):
         )
         if isinstance(statement, ast.VariableDeclaration):
             mark_out_variable_declaration_statement(block, statement)
+        elif isinstance(statement, ast.Assign):
+            mark_out_assign_statement(block, statement)
         elif isinstance(statement, ignored_statement_type_tuple):
             pass  # do nothing for this statements
         else:

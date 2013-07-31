@@ -49,6 +49,12 @@ class VariableDeclarationStatement(object):
         self.expression_id = expression_id
 
 
+class AssignStatement(object):
+    def __init__(self, variable_id, expression_id):
+        self.variable_id = variable_id
+        self.expression_id = expression_id
+
+
 class ReturnStatement(object):
     def __init__(self, expression_id):
         self.expression_id = expression_id
@@ -171,6 +177,23 @@ class Table(object):
             )
         )
 
+    def _find_variable_id_by_name(self, function, variable_name):
+        for id, variable in enumerate(function.variable_list):
+            if variable.name == variable_name:
+                return id
+        raise Exception('bad variable name: ' + str(variable_name))
+
+    def _parse_assign_statement(self, function, statement, block):
+        assert(statement.datatype is not None)
+        variable_id = self._find_variable_id_by_name(function, statement.name)
+        expression_id = self._parse_expression(statement.expression)
+        block.append(
+            AssignStatement(
+                variable_id=variable_id,
+                expression_id=expression_id,
+            )
+        )
+
     def _parse_function_call_statement(self, function, statement, block):
         expression_id = self._parse_expression(statement)
         block.append(
@@ -206,6 +229,8 @@ class Table(object):
         if isinstance(statement, ast.VariableDeclaration):
             self._parse_variable_declaration_statement(
                 function, statement, block)
+        elif isinstance(statement, ast.Assign):
+            self._parse_assign_statement(function, statement, block)
         elif isinstance(statement, ast.FunctionCall):
             self._parse_function_call_statement(function, statement, block)
         elif isinstance(statement, ast.If):

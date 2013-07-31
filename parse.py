@@ -24,7 +24,7 @@ tokens = [
     'IDENTIFIER',
     'STRING',
     'NUMBER',
-    # 'ASSIGN',
+    'ASSIGN',
     'COLONASSIGN',
     'LPAREN',
     'RPAREN',
@@ -55,7 +55,7 @@ def find_column(input, lexpos):
 def make_lexer():
 
     t_ARROW = r'->'
-    # t_ASSIGN = r'='
+    t_ASSIGN = r'='
     t_COLONASSIGN = r':='
     t_LPAREN = r'\('
     t_RPAREN = r'\)'
@@ -241,6 +241,10 @@ def make_parser():
     def p_statement_variable_declaration_with_init(p):
         'statement : IDENTIFIER COLONASSIGN expression'
         p[0] = ast.VariableDeclaration(name=p[1], expression=p[3])
+
+    def p_statement_assignment(p):
+        'statement : IDENTIFIER ASSIGN expression'
+        p[0] = ast.Assign(name=p[1], expression=p[3])
 
     def p_statement_if(p):
         'statement : IF expression block'

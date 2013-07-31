@@ -92,6 +92,18 @@ class VariableDeclaration(object):
         self.datatype = datatype
 
 
+class Assign(object):
+    def __init__(
+            self,
+            name,
+            expression=None,
+            datatype=None,
+    ):
+        self.name = name
+        self.expression = expression
+        self.datatype = datatype
+
+
 class If(object):
     def __init__(self, condition, branch_if, branch_else=None):
         self.condition = condition
