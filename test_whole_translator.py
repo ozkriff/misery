@@ -31,6 +31,13 @@ def translate_mis_to_c(input_string):
     return real_output
 
 
+# TODO: try to compile and run
+def translate_mis_to_c_and_write_to_file(input_string, filename='out.c'):
+    ''' Translate to full C version and write to file. '''
+    with open(filename, 'w') as file:
+        file.write(get_generator(input_string).generate_full())
+
+
 class TestTranslator(unittest.TestCase):
 
     def test_var_declaration_with_integer_literal(self):
@@ -397,7 +404,3 @@ class TestTranslator(unittest.TestCase):
             '\n'
         )
         misc.assert_equal(self, expected_output, real_output)
-
-        # TODO: try to compile (and run?)
-        # with open('out.c', 'w') as file:
-        #     file.write(get_generator(input_string).generate_full())
