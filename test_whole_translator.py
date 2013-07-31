@@ -404,3 +404,5 @@ class TestTranslator(unittest.TestCase):
             '\n'
         )
         misc.assert_equal(self, expected_output, real_output)
+
+# vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
