@@ -10,16 +10,17 @@ import misc
 import generator
 import table
 import parse
+import datatype
 
 
 def get_generator(input_string):
+    ast_ = parse.make_parser().parse(
+        input_string,
+        lexer=parse.make_lexer(),
+    )
+    datatype.mark_out_datatypes(ast_)
     generator_ = generator.Generator(
-        table=table.Table.from_ast(
-            ast_=parse.make_parser().parse(
-                input_string,
-                lexer=parse.make_lexer(),
-            )
-        )
+        table=table.Table.from_ast(ast_=ast_)
     )
     return generator_
 
@@ -31,6 +32,50 @@ def translate_mis_to_c(input_string):
 
 
 class TestTranslator(unittest.TestCase):
+
+    def test_var_declaration_with_integer_literal(self):
+        input_string = 'start := func () { testVar := 1 }\n'
+        real_output = translate_mis_to_c(input_string)
+        expected_output = (
+            '\n'
+            'void start(void);\n'
+            '\n'
+            'void start(void) {\n'
+            '  int testVar;\n'
+            '\n'
+            '  testVar = 1;\n'
+            '}\n'
+            '\n'
+        )
+        misc.assert_equal(self, expected_output, real_output)
+
+    def test_var_declaration_with_function_call_returning_integer(self):
+        input_string = (
+            'someNumber := func () -> int { return 99 }\n'
+            'start := func () { testVar := someNumber() }\n'
+        )
+        real_output = translate_mis_to_c(input_string)
+        expected_output = (
+            '\n'
+            'void someNumber(int* __result);\n'
+            'void start(void);\n'
+            '\n'
+            'void someNumber(int* __result) {\n'
+            '\n'
+            '  *__result = 99;\n'
+            '  return;\n'
+            '}\n'
+            '\n'
+            'void start(void) {\n'
+            '  int tmp_0;\n'
+            '  int testVar;\n'
+            '\n'
+            '  someNumber(&tmp_0);\n'
+            '  testVar = tmp_0;\n'
+            '}\n'
+            '\n'
+        )
+        misc.assert_equal(self, expected_output, real_output)
 
     def test_simple_func_1(self):
         input_string = (

@@ -22,8 +22,8 @@ class TypeDeclaration(object):
 
 
 class Identifier(object):
-    def __init__(self, value):
-        self.value = value
+    def __init__(self, name):
+        self.name = name
 
 
 # TODO: value -> field_list ?

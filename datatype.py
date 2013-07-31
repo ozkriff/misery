@@ -43,8 +43,15 @@ def mark_out_datatypes(ast_):
         ''' block - current parsed block
             statement - current parsed statement in this block
         '''
+        ignored_statement_type_tuple = (
+            ast.FunctionCall,
+            ast.Return,
+            ast.If,
+        )
         if isinstance(statement, ast.VariableDeclaration):
             mark_out_variable_declaration_statement(block, statement)
+        elif isinstance(statement, ignored_statement_type_tuple):
+            pass  # do nothing for this statements
         else:
             raise Exception('Not Implemented: ' + str(type(statement)))
 

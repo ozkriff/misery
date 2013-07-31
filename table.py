@@ -4,6 +4,7 @@
 
 import copy
 import ast
+import datatype
 
 
 class Variable(object):
@@ -99,21 +100,26 @@ class Table(object):
     def _parse_number(self, number):
         assert isinstance(number, ast.Number)
         self.declaration_list[-1].constant_list.append(
-            Constant(datatype='int', value=number.value))
+            Constant(
+                datatype=datatype.SimpleDataType('int'),
+                value=number.value,
+            ),
+        )
         return LinkToNumberConstant(
             id=len(self.declaration_list[-1].constant_list) - 1)
 
     def _parse_identifier(self, identidier_node):
         assert isinstance(identidier_node, ast.Identifier)
         # TODO: find this identifier
-        return LinkToParameter(name=identidier_node.value)
+        return LinkToParameter(name=identidier_node.name)
 
     def _parse_function_call(self, function_call_node):
         assert isinstance(function_call_node, ast.FunctionCall)
         last_declaration = self.declaration_list[-1]
         varname = 'tmp_' + str(len(last_declaration.variable_list))
         # TODO: get datatype from some global symtable
-        return_type = 'int'
+        # return_type = 'int'
+        return_type = datatype.SimpleDataType(name='int')
         last_declaration.variable_list.append(
             Variable(name=varname, datatype=return_type))
         result_id = LinkToVariable(
@@ -124,7 +130,8 @@ class Table(object):
             argument_id_list.append(id)
         # TODO: parse function_call_node.expression!
         assert isinstance(function_call_node.expression, ast.Identifier)
-        function_name = function_call_node.expression.value
+        # function_name = function_call_node.expression.value
+        function_name = function_call_node.expression.name
         last_declaration.expression_list.append(
             FunctionCallExpression(
                 name=function_name,
@@ -149,11 +156,12 @@ class Table(object):
 
     def _parse_variable_declaration_statement(
             self, function, statement, block):
+        assert(statement.datatype is not None)
         expression_id = self._parse_expression(statement.expression)
         function.variable_list.append(
             Variable(
                 name=statement.name,
-                datatype=statement.datatype.value,
+                datatype=statement.datatype,
             )
         )
         block.append(

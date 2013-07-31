@@ -6,6 +6,7 @@ import unittest
 import ast
 import misc
 import table
+import datatype
 
 
 class TestTable(unittest.TestCase):
@@ -41,11 +42,20 @@ class TestTable(unittest.TestCase):
                 parameter_list=[],
             ),
             constant_list=[
-                table.Constant(datatype='int', value=1),
-                table.Constant(datatype='int', value=2),
+                table.Constant(
+                    datatype=datatype.SimpleDataType('int'),
+                    value=1,
+                ),
+                table.Constant(
+                    datatype=datatype.SimpleDataType('int'),
+                    value=2,
+                ),
             ],
             variable_list=[
-                table.Variable(datatype='int', name='tmp_0'),
+                table.Variable(
+                    datatype=datatype.SimpleDataType('int'),
+                    name='tmp_0',
+                ),
             ],
             block_list=[
                 [
@@ -106,8 +116,14 @@ class TestTable(unittest.TestCase):
             ),
             constant_list=[],
             variable_list=[
-                table.Variable(datatype='int', name='tmp_0'),
-                table.Variable(datatype='int', name='tmp_1'),
+                table.Variable(
+                    datatype=datatype.SimpleDataType('int'),
+                    name='tmp_0',
+                ),
+                table.Variable(
+                    datatype=datatype.SimpleDataType('int'),
+                    name='tmp_1',
+                ),
             ],
             block_list=[
                 [
@@ -176,8 +192,14 @@ class TestTable(unittest.TestCase):
             ),
             constant_list=[],
             variable_list=[
-                table.Variable(datatype='int', name='tmp_0'),
-                table.Variable(datatype='int', name='tmp_1'),
+                table.Variable(
+                    datatype=datatype.SimpleDataType('int'),
+                    name='tmp_0',
+                ),
+                table.Variable(
+                    datatype=datatype.SimpleDataType('int'),
+                    name='tmp_1',
+                ),
             ],
             block_list=[
                 [
@@ -282,7 +304,10 @@ class TestTable(unittest.TestCase):
                 parameter_list=[],
             ),
             constant_list=[
-                table.Constant(datatype="int", value=0)
+                table.Constant(
+                    datatype=datatype.SimpleDataType('int'),
+                    value=0,
+                )
             ],
             variable_list=[],
             block_list=[

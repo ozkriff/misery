@@ -10,6 +10,7 @@ import ast
 import misc
 import generator
 import table
+import datatype
 
 
 class TestGenerator(unittest.TestCase):
@@ -66,14 +67,14 @@ class TestGenerator(unittest.TestCase):
                         parameter_list=[
                             ast.Parameter(
                                 name='a',
-                                datatype=ast.Identifier('int')
+                                datatype=datatype.SimpleDataType('int')
                             ),
                             ast.Parameter(
                                 name='b',
-                                datatype=ast.Identifier('int')
+                                datatype=datatype.SimpleDataType('int')
                             ),
                         ],
-                        return_type=ast.Identifier('int'),
+                        return_type=datatype.SimpleDataType('int'),
                     ),
                     body=[]
                 ),
@@ -105,8 +106,14 @@ class TestGenerator(unittest.TestCase):
             ),
             constant_list=[],
             variable_list=[
-                table.Variable(datatype='int', name='tmp_0'),
-                table.Variable(datatype='int', name='tmp_1'),
+                table.Variable(
+                    datatype=datatype.SimpleDataType('int'),
+                    name='tmp_0',
+                ),
+                table.Variable(
+                    datatype=datatype.SimpleDataType('int'),
+                    name='tmp_1',
+                ),
             ],
             block_list=[
                 [
@@ -175,7 +182,10 @@ class TestGenerator(unittest.TestCase):
                 parameter_list=[],
             ),
             constant_list=[
-                table.Constant(datatype="int", value=1),
+                table.Constant(
+                    datatype=datatype.SimpleDataType('int'),
+                    value=1,
+                ),
             ],
             variable_list=[],
             block_list=[
@@ -218,7 +228,10 @@ class TestGenerator(unittest.TestCase):
             ),
             constant_list=[],
             variable_list=[
-                table.Variable(datatype='int', name='tmp_0'),
+                table.Variable(
+                    datatype=datatype.SimpleDataType('int'),
+                    name='tmp_0',
+                ),
             ],
             block_list=[
                 [

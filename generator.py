@@ -71,14 +71,14 @@ class Generator(object):
                 is_first = False
             else:
                 out += ', '
-            out += parameter.datatype.value + ' ' + parameter.name
+            out += parameter.datatype.name + ' ' + parameter.name
         return out
 
     def _generate_function_header(self, name, interface):
         out = ''
         out += 'void ' + name + '('
         if interface.return_type:
-            out += interface.return_type.value + '* __result'
+            out += interface.return_type.name + '* __result'
         if len(interface.parameter_list) != 0:
             out += ', '
             out += self._generate_function_parameters(interface.parameter_list)
@@ -143,13 +143,26 @@ class Generator(object):
 
     def _generate_variable_declaration_statement(self, function, statement):
         out = ''
-        expression = function.expression_list[statement.expression_id.id]
-        out += self._generate_expression(function, expression)
-        expression_id = statement.expression_id.id
-        result_id = function.expression_list[expression_id].result_id.id
-        out += self._indent()
-        out += function.variable_list[statement.variable_id].name
-        out += ' = ' + function.variable_list[result_id].name + ';\n'
+        if isinstance(statement.expression_id, table.LinkToNumberConstant):
+            out += self._indent()
+            out += function.variable_list[statement.variable_id].name
+            out += ' = '
+            expression_id = statement.expression_id.id
+            out += str(function.constant_list[expression_id].value)
+            out += ';\n'
+        elif isinstance(statement.expression_id, table.LinkToFunctionCall):
+            expression = function.expression_list[statement.expression_id.id]
+            out += self._generate_expression(function, expression)
+            expression_id = statement.expression_id.id
+            result_id = function.expression_list[expression_id].result_id.id
+            out += self._indent()
+            out += function.variable_list[statement.variable_id].name
+            out += ' = '
+            out += function.variable_list[result_id].name
+            out += ';\n'
+        else:
+            raise Exception(
+                "Not Implemented" + str(type(statement.expression_id)))
         return out
 
     def _generate_function_call_statement(self, function, statement):
@@ -217,7 +230,9 @@ class Generator(object):
         out = ''
         for variable in function.variable_list:
             out += self._indent()
-            out += variable.datatype + ' ' + variable.name
+            out += variable.datatype.name
+            out += ' '
+            out += variable.name
             out += ';' + '\n'
         return out
 

@@ -189,7 +189,7 @@ def make_parser():
     # TODO: ?
     def p_type_identifier(p):
         'type : IDENTIFIER'
-        p[0] = ast.Identifier(value=p[1])
+        p[0] = ast.Identifier(name=p[1])
 
     def p_type_struct(p):
         'type : STRUCT LCURLY field_list RCURLY'
@@ -269,7 +269,7 @@ def make_parser():
 
     def p_expression_identifier(p):
         'expression : IDENTIFIER'
-        p[0] = ast.Identifier(value=p[1])
+        p[0] = ast.Identifier(name=p[1])
 
     def p_expression_number(p):
         'expression : NUMBER'
