@@ -16,7 +16,7 @@ class SimpleDataType(object):
         self.name = name
 
 
-def mark_out_datatypes(ast_):
+def _mark_out_datatypes(ast_):
     ''' Mark out 'datatype' fields to ast nodes. '''
 
     function = None
@@ -73,6 +73,17 @@ def mark_out_datatypes(ast_):
             mark_out_function_declaration(declaration)
         else:
             raise Exception('Not Implemented: ' + str(type(declaration)))
+
+
+def mark_out_datatypes(ast_, do_copy=True):
+    ''' Mark out 'datatype' fields to ast nodes. '''
+    if do_copy:
+        import copy
+        ast2_ = copy.deepcopy(ast_)
+    else:
+        ast2_ = ast_
+    _mark_out_datatypes(ast2_)
+    return ast2_
 
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:

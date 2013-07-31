@@ -14,13 +14,15 @@ import datatype
 
 
 def get_generator(input_string):
-    ast_ = parse.make_parser().parse(
-        input_string,
-        lexer=parse.make_lexer(),
-    )
-    datatype.mark_out_datatypes(ast_)
     generator_ = generator.Generator(
-        table=table.Table.from_ast(ast_=ast_)
+        table=table.Table.from_ast(
+            ast_=datatype.mark_out_datatypes(
+                parse.make_parser().parse(
+                    input_string,
+                    lexer=parse.make_lexer(),
+                )
+            )
+        )
     )
     return generator_
 

@@ -32,8 +32,7 @@ class TestMarkOutDatatypes(TestCase):
                 )
             ]
         )
-        mark_out_datatypes(input_ast)
-        real_output = input_ast
+        real_output = mark_out_datatypes(input_ast)
         assert_equal(self, expected_output, real_output)
 
     def test_simple_integer_variable_declaration(self):
@@ -66,8 +65,7 @@ class TestMarkOutDatatypes(TestCase):
                 )
             ]
         )
-        mark_out_datatypes(input_ast)
-        real_output = input_ast
+        real_output = mark_out_datatypes(input_ast)
         assert_equal(self, expected_output, real_output)
 
     def test_integer_variable_declaration_with_plus_integer(self):
@@ -112,8 +110,7 @@ class TestMarkOutDatatypes(TestCase):
                 )
             ]
         )
-        mark_out_datatypes(input_ast)
-        real_output = input_ast
+        real_output = mark_out_datatypes(input_ast)
         assert_equal(self, expected_output, real_output)
 
 
