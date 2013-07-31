@@ -43,17 +43,17 @@ class TestTable(unittest.TestCase):
             ),
             constant_list=[
                 table.Constant(
-                    datatype=datatype.SimpleDataType('int'),
+                    datatype=datatype.SimpleDataType('Int'),
                     value=1,
                 ),
                 table.Constant(
-                    datatype=datatype.SimpleDataType('int'),
+                    datatype=datatype.SimpleDataType('Int'),
                     value=2,
                 ),
             ],
             variable_list=[
                 table.Variable(
-                    datatype=datatype.SimpleDataType('int'),
+                    datatype=datatype.SimpleDataType('Int'),
                     name='tmp_0',
                 ),
             ],
@@ -120,11 +120,11 @@ class TestTable(unittest.TestCase):
             ),
             constant_list=[
                 table.Constant(
-                    datatype=datatype.SimpleDataType('int'),
+                    datatype=datatype.SimpleDataType('Int'),
                     value=1,
                 ),
                 table.Constant(
-                    datatype=datatype.SimpleDataType('int'),
+                    datatype=datatype.SimpleDataType('Int'),
                     value=2,
                 ),
             ],
@@ -206,21 +206,21 @@ class TestTable(unittest.TestCase):
             ),
             constant_list=[
                 table.Constant(
-                    datatype=datatype.SimpleDataType('int'),
+                    datatype=datatype.SimpleDataType('Int'),
                     value=0,
                 ),
                 table.Constant(
-                    datatype=datatype.SimpleDataType('int'),
+                    datatype=datatype.SimpleDataType('Int'),
                     value=1,
                 ),
                 table.Constant(
-                    datatype=datatype.SimpleDataType('int'),
+                    datatype=datatype.SimpleDataType('Int'),
                     value=666,
                 ),
             ],
             variable_list=[
                 table.Variable(
-                    datatype=datatype.SimpleDataType('int'),
+                    datatype=datatype.SimpleDataType('Int'),
                     name='tmp_0',
                 ),
             ],
@@ -333,7 +333,7 @@ class TestTable(unittest.TestCase):
             ),
             constant_list=[
                 table.Constant(
-                    datatype=datatype.SimpleDataType('int'),
+                    datatype=datatype.SimpleDataType('Int'),
                     value=0,
                 )
             ],

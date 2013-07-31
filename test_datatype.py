@@ -60,7 +60,7 @@ class TestMarkOutDatatypes(TestCase):
                         ast.VariableDeclaration(
                             name='testVar',
                             expression=ast.Number(666),
-                            datatype=SimpleDataType('int'),
+                            datatype=SimpleDataType('Int'),
                         ),
                     ],
                 )
@@ -106,7 +106,7 @@ class TestMarkOutDatatypes(TestCase):
                                     ast.Number(2),
                                 ],
                             ),
-                            datatype=SimpleDataType('int'),
+                            datatype=SimpleDataType('Int'),
                         ),
                     ],
                 )

@@ -23,11 +23,11 @@ def mark_out_datatypes(ast_):
 
     def get_function_call_expression_datatype(block, function_call_expression):
         # TODO: find this function and get real type
-        return SimpleDataType('int')
+        return SimpleDataType('Int')
 
     def get_expression_datatype(block, expression):
         if isinstance(expression, ast.Number):
-            return SimpleDataType('int')
+            return SimpleDataType('Int')
         elif isinstance(expression, ast.FunctionCall):
             return get_function_call_expression_datatype(block, expression)
         else:

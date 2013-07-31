@@ -113,7 +113,7 @@ class Table(object):
         assert isinstance(number, ast.Number)
         self.declaration_list[-1].constant_list.append(
             Constant(
-                datatype=datatype.SimpleDataType('int'),
+                datatype=datatype.SimpleDataType('Int'),
                 value=number.value,
             ),
         )
@@ -294,15 +294,15 @@ class IdentifierTable(object):
 
     def append_standart_functions(self, identifier_list):
         std_interface = ast.FunctionInterface(
-            return_type=datatype.SimpleDataType('int'),
+            return_type=datatype.SimpleDataType('Int'),
             parameter_list=[
                 ast.Parameter(
                     name='a',
-                    datatype=datatype.SimpleDataType('int'),
+                    datatype=datatype.SimpleDataType('Int'),
                 ),
                 ast.Parameter(
                     name='b',
-                    datatype=datatype.SimpleDataType('int'),
+                    datatype=datatype.SimpleDataType('Int'),
                 ),
             ],
         )
@@ -310,7 +310,7 @@ class IdentifierTable(object):
             parameter_list=[
                 ast.Parameter(
                     name='n',
-                    datatype=datatype.SimpleDataType('int'),
+                    datatype=datatype.SimpleDataType('Int'),
                 ),
             ],
         )

@@ -50,7 +50,7 @@ class TestGenerator(unittest.TestCase):
             'void main(void);\n'
             '\n'
             'void main(void) {\n'
-            '  int tmp_0;\n'
+            '  Int tmp_0;\n'
             '\n'
             '  isLessInteger(&tmp_0, 1, 2);\n'
             '  printInteger(tmp_0);\n'
@@ -69,14 +69,14 @@ class TestGenerator(unittest.TestCase):
                         parameter_list=[
                             ast.Parameter(
                                 name='a',
-                                datatype=datatype.SimpleDataType('int')
+                                datatype=datatype.SimpleDataType('Int')
                             ),
                             ast.Parameter(
                                 name='b',
-                                datatype=datatype.SimpleDataType('int')
+                                datatype=datatype.SimpleDataType('Int')
                             ),
                         ],
-                        return_type=datatype.SimpleDataType('int'),
+                        return_type=datatype.SimpleDataType('Int'),
                     ),
                     body=[]
                 ),
@@ -89,9 +89,9 @@ class TestGenerator(unittest.TestCase):
         real_output = gen.generate()
         expected_output = (
             '\n'
-            'void f1(int* __result, int a, int b);\n'
+            'void f1(Int* __result, Int a, Int b);\n'
             '\n'
-            'void f1(int* __result, int a, int b) {\n'
+            'void f1(Int* __result, Int a, Int b) {\n'
             '\n'
             '}\n'
             '\n'
@@ -109,11 +109,11 @@ class TestGenerator(unittest.TestCase):
             constant_list=[],
             variable_list=[
                 table.Variable(
-                    datatype=datatype.SimpleDataType('int'),
+                    datatype=datatype.SimpleDataType('Int'),
                     name='tmp_0',
                 ),
                 table.Variable(
-                    datatype=datatype.SimpleDataType('int'),
+                    datatype=datatype.SimpleDataType('Int'),
                     name='tmp_1',
                 ),
             ],
@@ -162,8 +162,8 @@ class TestGenerator(unittest.TestCase):
             'void main(void);\n'
             '\n'
             'void main(void) {\n'
-            '  int tmp_0;\n'
-            '  int tmp_1;\n'
+            '  Int tmp_0;\n'
+            '  Int tmp_1;\n'
             '\n'
             '  f1(&tmp_0);\n'
             '  if (tmp_0) {\n'
@@ -185,7 +185,7 @@ class TestGenerator(unittest.TestCase):
             ),
             constant_list=[
                 table.Constant(
-                    datatype=datatype.SimpleDataType('int'),
+                    datatype=datatype.SimpleDataType('Int'),
                     value=1,
                 ),
             ],
@@ -231,7 +231,7 @@ class TestGenerator(unittest.TestCase):
             constant_list=[],
             variable_list=[
                 table.Variable(
-                    datatype=datatype.SimpleDataType('int'),
+                    datatype=datatype.SimpleDataType('Int'),
                     name='tmp_0',
                 ),
             ],
@@ -262,7 +262,7 @@ class TestGenerator(unittest.TestCase):
             'void main(void);\n'
             '\n'
             'void main(void) {\n'
-            '  int tmp_0;\n'
+            '  Int tmp_0;\n'
             '\n'
             '  f(&tmp_0);\n'
             '  *__result = tmp_0;\n'
