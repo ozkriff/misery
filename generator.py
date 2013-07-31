@@ -10,8 +10,7 @@ class Generator(object):
     prefix = (
         '#include <stdio.h>\n'
         '\n'
-        '/* void printInteger(int n) {*/\n'
-        'void printInteger(int* __result, int n) {\n'
+        'void printInteger(int n) {\n'
         '  printf("INTEGER: %d\\n", n);\n'
         '}\n'
         '\n'
