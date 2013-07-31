@@ -85,12 +85,10 @@ class VariableDeclaration(object):
             self,
             name,
             expression=None,
-            constructor_argument_list=None,
             datatype=None,
     ):
         self.name = name
         self.expression = expression
-        self.constructor_argument_list = constructor_argument_list
         self.datatype = datatype
 
 
