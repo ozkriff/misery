@@ -199,6 +199,27 @@ class Generator(object):
         out += '\n'
         return out
 
+    def _generate_for_statement(self, function, statement):
+        out = ''
+        expression = function.expression_list[statement.expression_id.id]
+        assert isinstance(expression, table.FunctionCallExpression)
+        out += self._indent() + 'while (1) {\n'
+        self._increnent_indent()
+        out += self._generate_expression(function, expression)
+        variable_name = function.variable_list[expression.result_id.id].name
+        out += self._indent() + 'if (' + '!' + variable_name + ') {\n'
+        self._increnent_indent()
+        out += self._indent() + 'break;\n'
+        self._decrenent_indent()
+        out += self._indent() + '}'
+        out += '\n'
+        block = function.block_list[statement.branch_id]
+        out += self._generate_block(function, block)
+        self._decrenent_indent()
+        out += self._indent() + '}'
+        out += '\n'
+        return out
+
     def _generate_return_statement(self, function, statement):
         out = ''
         if isinstance(statement.expression_id, table.LinkToFunctionCall):
@@ -221,6 +242,8 @@ class Generator(object):
             out += self._generate_function_call_statement(function, statement)
         elif isinstance(statement, table.IfStatement):
             out += self._generate_if_statement(function, statement)
+        elif isinstance(statement, table.ForStatement):
+            out += self._generate_for_statement(function, statement)
         elif isinstance(statement, table.ReturnStatement):
             out += self._generate_return_statement(function, statement)
         else:

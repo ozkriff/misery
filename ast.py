@@ -111,6 +111,12 @@ class If(object):
         self.branch_else = branch_else
 
 
+class For(object):
+    def __init__(self, condition, branch):
+        self.condition = condition
+        self.branch = branch
+
+
 class Return(object):
     def __init__(self, expression=None):
         self.expression = expression

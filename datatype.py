@@ -51,6 +51,7 @@ def mark_out_datatypes(ast_):
             ast.FunctionCall,
             ast.Return,
             ast.If,
+            ast.For,
         )
         if isinstance(statement, ast.VariableDeclaration):
             mark_out_variable_declaration_statement(block, statement)

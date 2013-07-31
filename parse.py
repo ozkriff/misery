@@ -15,7 +15,7 @@ reserved = {
     'const': 'CONST',
     'type': 'TYPE',
     'struct': 'STRUCT',
-    # 'for': 'FOR',
+    'for': 'FOR',
     'return': 'RETURN',
 }
 
@@ -249,6 +249,10 @@ def make_parser():
     def p_statement_if(p):
         'statement : IF expression block'
         p[0] = ast.If(condition=p[2], branch_if=p[3])
+
+    def p_statement_for(p):
+        'statement : FOR expression block'
+        p[0] = ast.For(condition=p[2], branch=p[3])
 
     def p_statement_if_else(p):
         'statement : IF expression block ELSE block'

@@ -66,6 +66,42 @@ class TestTranslator(unittest.TestCase):
         )
         misc.assert_equal(self, expected_output, real_output)
 
+    def test_simple_loop_from_1_to_5(self):
+        input_string = (
+            'start := func () {\n'
+            '  i := 0\n'
+            '  for isLessInteger(i 5) {'
+            '    printInteger(i)\n'
+            '    i = plusInteger(i 1)\n'
+            '  }'
+            '}\n'
+        )
+        real_output = translate_mis_to_c(input_string)
+        expected_output = (
+            '\n'
+            'void start(void);\n'
+            '\n'
+            'void start(void) {\n'
+            '  int i;\n'
+            '  int tmp_1;\n'
+            '  int tmp_2;\n'
+            '  int tmp_3;\n'
+            '\n'
+            '  i = 0;\n'
+            '  while (1) {\n'
+            '    isLessInteger(&tmp_1, i, 5);\n'
+            '    if (!tmp_1) {\n'
+            '      break;\n'
+            '    }\n'
+            '    printInteger(&tmp_2, i);\n'
+            '    plusInteger(&tmp_3, i, 1);\n'
+            '    i = tmp_3;\n'
+            '  }\n'
+            '}\n'
+            '\n'
+        )
+        misc.assert_equal(self, expected_output, real_output)
+
     def test_var_declaration_with_function_call_returning_integer(self):
         input_string = (
             'someNumber := func () -> int { return 99 }\n'

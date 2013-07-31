@@ -43,6 +43,12 @@ class IfStatement(object):
         self.else_branch_id = else_branch_id
 
 
+class ForStatement(object):
+    def __init__(self, expression_id, branch_id):
+        self.expression_id = expression_id
+        self.branch_id = branch_id
+
+
 class VariableDeclarationStatement(object):
     def __init__(self, variable_id, expression_id):
         self.variable_id = variable_id
@@ -184,7 +190,6 @@ class Table(object):
         raise Exception('bad variable name: ' + str(variable_name))
 
     def _parse_assign_statement(self, function, statement, block):
-        assert(statement.datatype is not None)
         variable_id = self._find_variable_id_by_name(function, statement.name)
         expression_id = self._parse_expression(statement.expression)
         block.append(
@@ -219,6 +224,16 @@ class Table(object):
                 )
             )
 
+    def _parse_for_statement(self, function, statement, block):
+        expression_id = self._parse_expression(statement.condition)
+        block_id = self._parse_block(function, statement.branch)
+        block.append(
+            ForStatement(
+                expression_id=expression_id,
+                branch_id=block_id,
+            )
+        )
+
     def _parse_return_statement(self, function, statement, block):
         expression_id = self._parse_expression(statement.expression)
         block.append(
@@ -235,6 +250,8 @@ class Table(object):
             self._parse_function_call_statement(function, statement, block)
         elif isinstance(statement, ast.If):
             self._parse_if_statement(function, statement, block)
+        elif isinstance(statement, ast.For):
+            self._parse_for_statement(function, statement, block)
         elif isinstance(statement, ast.Return):
             self._parse_return_statement(function, statement, block)
         else:
