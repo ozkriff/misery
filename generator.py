@@ -113,11 +113,16 @@ class Generator(object):
     def _generate_function_call_expression_arguments(
             self, function, expression):
         out = ''
-        # out var. passed by pointer
-        # TODO: check in symtable if there are any return value
-        out += '&' + function.variable_list[expression.result_id.id].name
+        is_first = True
+        if expression.result_id is not None:
+            # output argument passed by pointer
+            out += '&' + function.variable_list[expression.result_id.id].name
+            is_first = False
         for argument in expression.argument_id_list:
-            out += ', ' + self._generate_argument(function, argument)
+            if not is_first:
+                out += ', '
+                is_first = False
+            out += self._generate_argument(function, argument)
         return out
 
     def _generate_function_call_expression(self, function, expression):

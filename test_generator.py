@@ -26,11 +26,14 @@ class TestGenerator(unittest.TestCase):
                     interface=ast.FunctionInterface(parameter_list=[]),
                     body=[
                         ast.FunctionCall(
-                            expression=ast.Identifier('a'),
+                            expression=ast.Identifier('printInteger'),
                             argument_list=[
                                 ast.FunctionCall(
-                                    expression=ast.Identifier('b'),
-                                    argument_list=[]
+                                    expression=ast.Identifier('isLessInteger'),
+                                    argument_list=[
+                                        ast.Number(1),
+                                        ast.Number(2),
+                                    ]
                                 ),
                             ]
                         ),
@@ -48,10 +51,9 @@ class TestGenerator(unittest.TestCase):
             '\n'
             'void main(void) {\n'
             '  int tmp_0;\n'
-            '  int tmp_1;\n'
             '\n'
-            '  b(&tmp_1);\n'
-            '  a(&tmp_0, tmp_1);\n'
+            '  isLessInteger(&tmp_0, 1, 2);\n'
+            '  printInteger(tmp_0);\n'
             '}\n'
             '\n'
         )

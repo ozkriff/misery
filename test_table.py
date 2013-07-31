@@ -22,7 +22,7 @@ class TestTable(unittest.TestCase):
                         parameter_list=[]),
                     body=[
                         ast.FunctionCall(
-                            expression=ast.Identifier('plus'),
+                            expression=ast.Identifier('plusInteger'),
                             argument_list=[
                                 ast.Number(1),
                                 ast.Number(2),
@@ -66,7 +66,7 @@ class TestTable(unittest.TestCase):
             expression_list=[
                 table.FunctionCallExpression(
                     result_id=table.LinkToVariable(id=0),
-                    name='plus',
+                    name='plusInteger',
                     argument_id_list=[
                         table.LinkToNumberConstant(id=0),
                         table.LinkToNumberConstant(id=1),
@@ -94,12 +94,16 @@ class TestTable(unittest.TestCase):
                         parameter_list=[]),
                     body=[
                         ast.FunctionCall(
-                            expression=ast.Identifier('f1'),
-                            argument_list=[],
+                            expression=ast.Identifier('printInteger'),
+                            argument_list=[
+                                ast.Number(1),
+                            ],
                         ),
                         ast.FunctionCall(
-                            expression=ast.Identifier('f2'),
-                            argument_list=[],
+                            expression=ast.Identifier('printInteger'),
+                            argument_list=[
+                                ast.Number(2),
+                            ],
                         ),
                     ]
                 )
@@ -114,17 +118,17 @@ class TestTable(unittest.TestCase):
                 return_type=None,
                 parameter_list=[],
             ),
-            constant_list=[],
-            variable_list=[
-                table.Variable(
+            constant_list=[
+                table.Constant(
                     datatype=datatype.SimpleDataType('int'),
-                    name='tmp_0',
+                    value=1,
                 ),
-                table.Variable(
+                table.Constant(
                     datatype=datatype.SimpleDataType('int'),
-                    name='tmp_1',
+                    value=2,
                 ),
             ],
+            variable_list=[],
             block_list=[
                 [
                     table.FunctionCallStatement(
@@ -135,14 +139,18 @@ class TestTable(unittest.TestCase):
             ],
             expression_list=[
                 table.FunctionCallExpression(
-                    result_id=table.LinkToVariable(id=0),
-                    name='f1',
-                    argument_id_list=[],
+                    result_id=None,
+                    name='printInteger',
+                    argument_id_list=[
+                        table.LinkToNumberConstant(id=0),
+                    ],
                 ),
                 table.FunctionCallExpression(
-                    result_id=table.LinkToVariable(id=1),
-                    name='f2',
-                    argument_id_list=[],
+                    result_id=None,
+                    name='printInteger',
+                    argument_id_list=[
+                        table.LinkToNumberConstant(id=1),
+                    ],
                 ),
             ],
         )
@@ -163,17 +171,23 @@ class TestTable(unittest.TestCase):
                 ast.FunctionDeclaration(
                     name='main',
                     interface=ast.FunctionInterface(
-                        parameter_list=[]),
+                        parameter_list=[],
+                    ),
                     body=[
                         ast.If(
                             condition=ast.FunctionCall(
-                                expression=ast.Identifier('f1'),
-                                argument_list=[],
+                                expression=ast.Identifier('isLessInteger'),
+                                argument_list=[
+                                    ast.Number(0),
+                                    ast.Number(1),
+                                ],
                             ),
                             branch_if=[
                                 ast.FunctionCall(
-                                    expression=ast.Identifier('f2'),
-                                    argument_list=[],
+                                    expression=ast.Identifier('printInteger'),
+                                    argument_list=[
+                                        ast.Number(666),
+                                    ],
                                 ),
                             ],
                         ),
@@ -190,15 +204,24 @@ class TestTable(unittest.TestCase):
                 return_type=None,
                 parameter_list=[],
             ),
-            constant_list=[],
+            constant_list=[
+                table.Constant(
+                    datatype=datatype.SimpleDataType('int'),
+                    value=0,
+                ),
+                table.Constant(
+                    datatype=datatype.SimpleDataType('int'),
+                    value=1,
+                ),
+                table.Constant(
+                    datatype=datatype.SimpleDataType('int'),
+                    value=666,
+                ),
+            ],
             variable_list=[
                 table.Variable(
                     datatype=datatype.SimpleDataType('int'),
                     name='tmp_0',
-                ),
-                table.Variable(
-                    datatype=datatype.SimpleDataType('int'),
-                    name='tmp_1',
                 ),
             ],
             block_list=[
@@ -216,13 +239,18 @@ class TestTable(unittest.TestCase):
             expression_list=[
                 table.FunctionCallExpression(
                     result_id=table.LinkToVariable(id=0),
-                    name='f1',
-                    argument_id_list=[],
+                    name='isLessInteger',
+                    argument_id_list=[
+                        table.LinkToNumberConstant(id=0),
+                        table.LinkToNumberConstant(id=1),
+                    ],
                 ),
                 table.FunctionCallExpression(
-                    result_id=table.LinkToVariable(id=1),
-                    name='f2',
-                    argument_id_list=[],
+                    result_id=None,
+                    name='printInteger',
+                    argument_id_list=[
+                        table.LinkToNumberConstant(id=2),
+                    ],
                 ),
             ],
         )
@@ -231,7 +259,7 @@ class TestTable(unittest.TestCase):
             identifier_list={
                 'main': ast.FunctionInterface(parameter_list=[]),
             },
-            import_list=[],
+            import_list=None,
         )
 
         misc.assert_is_part_of(self, expected_output, real_output)
