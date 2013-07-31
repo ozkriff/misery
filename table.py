@@ -207,22 +207,16 @@ class Table(object):
     def _parse_if_statement(self, function, statement, block):
         expression_id = self._parse_expression(statement.condition)
         if_block_id = self._parse_block(function, statement.branch_if)
+        else_block_id = None  # optional branch
         if statement.branch_else:
             else_block_id = self._parse_block(function, statement.branch_else)
-            block.append(
-                IfStatement(
-                    expression_id=expression_id,
-                    if_branch_id=if_block_id,
-                    else_branch_id=else_block_id,
-                )
+        block.append(
+            IfStatement(
+                expression_id=expression_id,
+                if_branch_id=if_block_id,
+                else_branch_id=else_block_id,
             )
-        else:
-            block.append(
-                IfStatement(
-                    expression_id=expression_id,
-                    if_branch_id=if_block_id,
-                )
-            )
+        )
 
     def _parse_for_statement(self, function, statement, block):
         expression_id = self._parse_expression(statement.condition)
