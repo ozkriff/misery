@@ -11,9 +11,14 @@ class Generator(object):
         '#include <stdio.h>\n'
         '\n'
         'typedef int Int;\n'
+        'typedef char* String;\n'
         '\n'
         'void printInteger(Int n) {\n'
         '  printf("INTEGER: %d\\n", n);\n'
+        '}\n'
+        '\n'
+        'void printString(String s) {\n'
+        '  printf("STRING: %s\\n", s);\n'
         '}\n'
         '\n'
         'void isLessInteger(Int* __result, Int a, Int b) {\n'
@@ -100,6 +105,8 @@ class Generator(object):
         out = ''
         if isinstance(argument, table.LinkToNumberConstant):
             out += str(function.constant_list[argument.id].value)
+        elif isinstance(argument, table.LinkToStringConstant):
+            out += '\"' + str(function.constant_list[argument.id].value) + '\"'
         elif isinstance(argument, table.LinkToFunctionCall):
             result_id = function.expression_list[argument.id].result_id.id
             out += str(function.variable_list[result_id].name)

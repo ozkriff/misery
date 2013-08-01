@@ -83,6 +83,11 @@ class LinkToNumberConstant(object):
         self.id = id
 
 
+class LinkToStringConstant(object):
+    def __init__(self, id):
+        self.id = id
+
+
 class LinkToVariable(object):
     def __init__(self, id):
         self.id = id
@@ -119,6 +124,19 @@ class Table(object):
         )
         return LinkToNumberConstant(
             id=len(self.declaration_list[-1].constant_list) - 1)
+
+    def _parse_string(self, string):
+        assert isinstance(string, ast.String)
+        last_declaration = self.declaration_list[-1]
+        last_declaration.constant_list.append(
+            Constant(
+                datatype=datatype.SimpleDataType('String'),
+                value=string.value,
+            ),
+        )
+        return LinkToStringConstant(
+            id=len(last_declaration.constant_list) - 1
+        )
 
     def _parse_identifier(self, identidier_node):
         assert isinstance(identidier_node, ast.Identifier)
@@ -160,6 +178,8 @@ class Table(object):
             return self._parse_function_call(expression)
         elif isinstance(expression, ast.Number):
             return self._parse_number(expression)
+        elif isinstance(expression, ast.String):
+            return self._parse_string(expression)
         elif isinstance(expression, ast.Identifier):
             return self._parse_identifier(expression)
         elif expression is None:
@@ -303,6 +323,14 @@ class IdentifierTable(object):
                 ast.Parameter(
                     name='b',
                     datatype=datatype.SimpleDataType('Int'),
+                ),
+            ],
+        )
+        identifier_list['printString'] = ast.FunctionInterface(
+            parameter_list=[
+                ast.Parameter(
+                    name='s',
+                    datatype=datatype.SimpleDataType('String'),
                 ),
             ],
         )
