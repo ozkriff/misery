@@ -225,6 +225,19 @@ class TestIsPartOf(unittest.TestCase):
             [1, 2, 3],
         ))
 
+    def test_list_8(self):
+        ''' Compare strings list with something. '''
+        self.assertTrue(misc.is_part_of(
+            ['1', '2', '3'],
+            ['1', 'hi!', '2', 123, '3'],
+        ))
+
+    def test_list_9(self):
+        self.assertTrue(misc.is_part_of(
+            [1, None, 2, 3],
+            [1, None, 2, None, 3],
+        ))
+
     def test_map_1(self):
         self.assertTrue(misc.is_part_of({}, {}))
 
@@ -240,6 +253,18 @@ class TestIsPartOf(unittest.TestCase):
     def test_map_5(self):
         self.assertTrue(misc.is_part_of(
             {'key1': {'key2': 2}},
+            {'key1': {'key2': 2, 'key3': 3}},
+        ))
+
+    def test_map_6(self):
+        self.assertFalse(misc.is_part_of(
+            {'key1': {'key2': 2}, 'key3': 3},
+            {'key1': {'key2': 2, 'key3': 3}},
+        ))
+
+    def test_map_7(self):
+        self.assertFalse(misc.is_part_of(
+            {'key1': {'key2': 2, 'key3': 3, 'key4': 4}},
             {'key1': {'key2': 2, 'key3': 3}},
         ))
 
@@ -265,6 +290,15 @@ class TestIsPartOf(unittest.TestCase):
         b.someField = [1, 2, 3, 4]
         b.someField2 = 1
         self.assertTrue(misc.is_part_of(a, b))
+
+    def test_object_4(self):
+        a = self.SimpleObject()
+        a.x = self.SimpleObject()
+        a.x.someField = 1
+        b = self.SimpleObject()
+        b.x = self.SimpleObject()
+        b.x.someField = 2
+        self.assertFalse(misc.is_part_of(a, b))
 
 
 class TestFlattenTree(unittest.TestCase):
