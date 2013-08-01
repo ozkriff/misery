@@ -163,6 +163,33 @@ class TestTranslator(unittest.TestCase):
         )
         misc.assert_equal(self, expected_output, real_output)
 
+    def test_nested_func_calls_with_strings(self):
+        input_string = (
+            'someString := func () -> String { return "hi" }\n'
+            'start := func () { printString(someString()) }\n'
+        )
+        real_output = translate_mis_to_c(input_string)
+        expected_output = (
+            '\n'
+            'void someString(String* __result);\n'
+            'void start(void);\n'
+            '\n'
+            'void someString(String* __result) {\n'
+            '\n'
+            '  *__result = "hi";\n'
+            '  return;\n'
+            '}\n'
+            '\n'
+            'void start(void) {\n'
+            '  String tmp_0;\n'
+            '\n'
+            '  someString(&tmp_0);\n'
+            '  printString(tmp_0);\n'
+            '}\n'
+            '\n'
+        )
+        misc.assert_equal(self, expected_output, real_output)
+
     def test_var_declaration_with_function_call_returning_integer(self):
         input_string = (
             'someNumber := func () -> Int { return 99 }\n'
