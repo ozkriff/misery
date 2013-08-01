@@ -6,6 +6,9 @@ Asbtract Syntax Tree
 '''
 
 
+import datatype
+
+
 class Module(object):
     def __init__(self, import_list=None, declaration_sequence=None):
         assert import_list is None or isinstance(import_list, list)
@@ -120,6 +123,54 @@ class For(object):
 class Return(object):
     def __init__(self, expression=None):
         self.expression = expression
+
+
+class IdentifierTable(object):
+
+    def append_standart_functions(self, identifier_list):
+        std_interface = FunctionInterface(
+            return_type=datatype.SimpleDataType('Int'),
+            parameter_list=[
+                Parameter(
+                    name='a',
+                    datatype=datatype.SimpleDataType('Int'),
+                ),
+                Parameter(
+                    name='b',
+                    datatype=datatype.SimpleDataType('Int'),
+                ),
+            ],
+        )
+        identifier_list['printString'] = FunctionInterface(
+            parameter_list=[
+                Parameter(
+                    name='s',
+                    datatype=datatype.SimpleDataType('String'),
+                ),
+            ],
+        )
+        identifier_list['printInteger'] = FunctionInterface(
+            parameter_list=[
+                Parameter(
+                    name='n',
+                    datatype=datatype.SimpleDataType('Int'),
+                ),
+            ],
+        )
+        identifier_list['isEqualInteger'] = std_interface
+        identifier_list['isLessInteger'] = std_interface
+        identifier_list['isGreaterInteger'] = std_interface
+        identifier_list['minusInteger'] = std_interface
+        identifier_list['plusInteger'] = std_interface
+        identifier_list['multiplyInteger'] = std_interface
+
+    def __init__(self, ast_):
+        identifier_list = {}
+        for declaration in ast_.declaration_sequence:
+            if isinstance(declaration, FunctionDeclaration):
+                identifier_list[declaration.name] = declaration.interface
+        self.append_standart_functions(identifier_list)
+        self.identifier_list = identifier_list
 
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:

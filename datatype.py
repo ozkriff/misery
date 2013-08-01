@@ -9,7 +9,6 @@ Data types.
 
 import misc
 import ast
-import table
 
 
 class SimpleDataType(object):
@@ -93,7 +92,7 @@ def mark_out_datatypes(ast_, do_copy=True):
         ast2_ = copy.deepcopy(ast_)
     else:
         ast2_ = ast_
-    ast2_.identifier_list = table.IdentifierTable(ast2_).identifier_list
+    ast2_.identifier_list = ast.IdentifierTable(ast2_).identifier_list
     _mark_out_datatypes(ast2_)
     return ast2_
 

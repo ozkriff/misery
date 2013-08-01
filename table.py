@@ -296,7 +296,7 @@ class Table(object):
     def from_ast(cls, ast_):
         new_table = Table(
             declaration_list=[],
-            identifier_list=IdentifierTable(ast_).identifier_list,
+            identifier_list=ast.IdentifierTable(ast_).identifier_list,
             import_list=copy.deepcopy(ast_.import_list),
         )
         # fill declaration_list...
@@ -309,53 +309,5 @@ class Table(object):
                 raise Exception('Not Implemented')
         return new_table
 
-
-# TODO: Move to some other file (closer to AST)
-class IdentifierTable(object):
-
-    def append_standart_functions(self, identifier_list):
-        std_interface = ast.FunctionInterface(
-            return_type=datatype.SimpleDataType('Int'),
-            parameter_list=[
-                ast.Parameter(
-                    name='a',
-                    datatype=datatype.SimpleDataType('Int'),
-                ),
-                ast.Parameter(
-                    name='b',
-                    datatype=datatype.SimpleDataType('Int'),
-                ),
-            ],
-        )
-        identifier_list['printString'] = ast.FunctionInterface(
-            parameter_list=[
-                ast.Parameter(
-                    name='s',
-                    datatype=datatype.SimpleDataType('String'),
-                ),
-            ],
-        )
-        identifier_list['printInteger'] = ast.FunctionInterface(
-            parameter_list=[
-                ast.Parameter(
-                    name='n',
-                    datatype=datatype.SimpleDataType('Int'),
-                ),
-            ],
-        )
-        identifier_list['isEqualInteger'] = std_interface
-        identifier_list['isLessInteger'] = std_interface
-        identifier_list['isGreaterInteger'] = std_interface
-        identifier_list['minusInteger'] = std_interface
-        identifier_list['plusInteger'] = std_interface
-        identifier_list['multiplyInteger'] = std_interface
-
-    def __init__(self, ast_):
-        identifier_list = {}
-        for declaration in ast_.declaration_sequence:
-            if isinstance(declaration, ast.FunctionDeclaration):
-                identifier_list[declaration.name] = declaration.interface
-        self.append_standart_functions(identifier_list)
-        self.identifier_list = identifier_list
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
