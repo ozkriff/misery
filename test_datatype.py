@@ -6,7 +6,7 @@
 
 
 from unittest import TestCase
-from misc import assert_equal
+from misc import assert_is_part_of
 import ast
 from datatype import mark_out_datatypes, SimpleDataType
 
@@ -33,7 +33,7 @@ class TestMarkOutDatatypes(TestCase):
             ]
         )
         real_output = mark_out_datatypes(input_ast)
-        assert_equal(self, expected_output, real_output)
+        assert_is_part_of(self, expected_output, real_output)
 
     def test_simple_integer_variable_declaration(self):
         input_ast = ast.Module(
@@ -66,7 +66,7 @@ class TestMarkOutDatatypes(TestCase):
             ]
         )
         real_output = mark_out_datatypes(input_ast)
-        assert_equal(self, expected_output, real_output)
+        assert_is_part_of(self, expected_output, real_output)
 
     def test_integer_variable_declaration_with_plus_integer(self):
         input_ast = ast.Module(
@@ -111,7 +111,7 @@ class TestMarkOutDatatypes(TestCase):
             ]
         )
         real_output = mark_out_datatypes(input_ast)
-        assert_equal(self, expected_output, real_output)
+        assert_is_part_of(self, expected_output, real_output)
 
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:

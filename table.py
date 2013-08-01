@@ -310,6 +310,7 @@ class Table(object):
         return new_table
 
 
+# TODO: Move to some other file (closer to AST)
 class IdentifierTable(object):
 
     def append_standart_functions(self, identifier_list):

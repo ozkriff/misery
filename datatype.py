@@ -9,6 +9,7 @@ Data types.
 
 import misc
 import ast
+import table
 
 
 class SimpleDataType(object):
@@ -22,8 +23,16 @@ def _mark_out_datatypes(ast_):
     function = None
 
     def get_function_call_expression_datatype(block, function_call_expression):
-        # TODO: find this function and get real type
-        return SimpleDataType('Int')
+        function_name = function_call_expression.expression.name
+        if function_name not in ast_.identifier_list:
+            raise Exception('no function: \'' + function_name + '\'')
+        return_type_name = ast_.identifier_list[function_name].return_type.name
+        if return_type_name == 'Int':
+            return SimpleDataType('Int')
+        elif return_type_name == 'String':
+            return SimpleDataType('String')
+        else:
+            raise Exception('Not Implemented: ' + str(return_type_name))
 
     def get_expression_datatype(block, expression):
         if isinstance(expression, ast.Number):
@@ -84,6 +93,7 @@ def mark_out_datatypes(ast_, do_copy=True):
         ast2_ = copy.deepcopy(ast_)
     else:
         ast2_ = ast_
+    ast2_.identifier_list = table.IdentifierTable(ast2_).identifier_list
     _mark_out_datatypes(ast2_)
     return ast2_
 
