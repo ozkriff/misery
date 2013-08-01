@@ -161,7 +161,16 @@ class Generator(object):
             out += function.variable_list[statement.variable_id].name
             out += ' = '
             expression_id = statement.expression_id.id
-            out += str(function.constant_list[expression_id].value)
+            constant = function.constant_list[expression_id]
+            out += str(constant.value)
+            out += ';\n'
+        elif isinstance(statement.expression_id, table.LinkToStringConstant):
+            out += self._indent()
+            out += function.variable_list[statement.variable_id].name
+            out += ' = '
+            expression_id = statement.expression_id.id
+            constant = function.constant_list[expression_id]
+            out += '\"' + str(constant.value) + '\"'
             out += ';\n'
         elif isinstance(statement.expression_id, table.LinkToFunctionCall):
             expression = function.expression_list[statement.expression_id.id]

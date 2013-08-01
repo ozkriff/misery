@@ -28,6 +28,8 @@ def _mark_out_datatypes(ast_):
     def get_expression_datatype(block, expression):
         if isinstance(expression, ast.Number):
             return SimpleDataType('Int')
+        if isinstance(expression, ast.String):
+            return SimpleDataType('String')
         elif isinstance(expression, ast.FunctionCall):
             return get_function_call_expression_datatype(block, expression)
         else:
