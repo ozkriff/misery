@@ -296,7 +296,7 @@ class Table(object):
     def from_ast(cls, ast_):
         new_table = Table(
             declaration_list=[],
-            identifier_list=ast.IdentifierTable(ast_).identifier_list,
+            identifier_list=ast.identifier_table(ast_),
             import_list=copy.deepcopy(ast_.import_list),
         )
         # fill declaration_list...

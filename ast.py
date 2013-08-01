@@ -125,9 +125,11 @@ class Return(object):
         self.expression = expression
 
 
-class IdentifierTable(object):
+def identifier_table(ast_):
+    ''' Build simple identifier table. '''
 
-    def append_standart_functions(self, identifier_list):
+    def standart_functions():
+        identifier_list = {}
         std_interface = FunctionInterface(
             return_type=datatype.SimpleDataType('Int'),
             parameter_list=[
@@ -163,14 +165,14 @@ class IdentifierTable(object):
         identifier_list['minusInteger'] = std_interface
         identifier_list['plusInteger'] = std_interface
         identifier_list['multiplyInteger'] = std_interface
+        return identifier_list
 
-    def __init__(self, ast_):
-        identifier_list = {}
-        for declaration in ast_.declaration_sequence:
-            if isinstance(declaration, FunctionDeclaration):
-                identifier_list[declaration.name] = declaration.interface
-        self.append_standart_functions(identifier_list)
-        self.identifier_list = identifier_list
+    identifier_list = {}
+    for declaration in ast_.declaration_sequence:
+        if isinstance(declaration, FunctionDeclaration):
+            identifier_list[declaration.name] = declaration.interface
+    identifier_list.update(standart_functions())
+    return identifier_list
 
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
