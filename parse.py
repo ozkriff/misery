@@ -181,7 +181,6 @@ def make_parser():
         p[0] = ast.ConstDeclaration(
             name=p[2], datatype=p[4], expression=p[6])
 
-    # TODO: ?
     def p_type_identifier(p):
         'type : IDENTIFIER'
         p[0] = ast.Identifier(name=p[1])
