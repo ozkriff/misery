@@ -64,12 +64,7 @@ def make_lexer():
     # t_COMMA = r','
     t_COLON = r':'
     # t_DOT = r'\.'
-
-    # TODO: really convert here?
-    def t_STRING(t):
-        r'"[^"]*"'
-        t.value = t.value[1:-1]
-        return t
+    t_STRING = r'"[^"]*"'
 
     def t_IDENTIFIER(t):
         r'[a-zA-Z_][a-zA-Z0-9_]*'
@@ -273,7 +268,10 @@ def make_parser():
 
     def p_expression_string(p):
         'expression : STRING'
-        p[0] = ast.String(value=p[1])
+        value = p[1]
+        assert value[0] == '\"' and value[-1] == '\"'
+        value = value[1:-1]  # remove quotation marks
+        p[0] = ast.String(value=value)
 
     def p_expression_identifier(p):
         'expression : IDENTIFIER'
