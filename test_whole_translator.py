@@ -89,6 +89,28 @@ class TestTranslator(unittest.TestCase):
         )
         misc.assert_equal(self, expected_output, real_output)
 
+    def test_print_string_var(self):
+        input_string = (
+            'start := func () {\n'
+            '  testVar := "print this to console, please"\n'
+            '  printString(testVar)\n'
+            '}\n'
+        )
+        real_output = translate_mis_to_c(input_string)
+        expected_output = (
+            '\n'
+            'void start(void);\n'
+            '\n'
+            'void start(void) {\n'
+            '  String testVar;\n'
+            '\n'
+            '  testVar = "print this to console, please";\n'
+            '  printString(testVar);\n'
+            '}\n'
+            '\n'
+        )
+        misc.assert_equal(self, expected_output, real_output)
+
     def test_basic_assignment_of_integer_literal(self):
         input_string = 'start := func () { testVar := 1 testVar = 2 }\n'
         real_output = translate_mis_to_c(input_string)
