@@ -72,7 +72,6 @@ class TestTranslator(unittest.TestCase):
             '\n'
         )
         misc.assert_equal(self, expected_output, real_output)
-        translate_mis_to_c_and_write_to_file(input_string)
 
     def test_basic_assignment_of_integer_literal(self):
         input_string = 'start := func () { testVar := 1 testVar = 2 }\n'
