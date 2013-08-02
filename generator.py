@@ -301,6 +301,20 @@ class Generator(object):
         out += '}\n'
         return out
 
+    def _generate_struct(self, struct):
+        out = ''
+        out += 'typedef struct {\n'
+        self._increnent_indent()
+        for field_name in struct.field_list:
+            out += self._indent()
+            field_data_type = struct.field_list[field_name].name
+            out += field_data_type + ' ' + field_name + ';\n'
+        self._decrenent_indent()
+        out += '} '
+        out += struct.name
+        out += ';\n'
+        return out
+
     def _generate_forward_declarations(self):
         out = ''
         for declaration in self._table.declaration_list:
@@ -322,6 +336,8 @@ class Generator(object):
         out = ''
         if isinstance(declaration, table.Function):
             out += self._generate_function(declaration)
+        elif isinstance(declaration, table.Struct):
+            out += self._generate_struct(declaration)
         else:
             raise Exception("Not Implemented")
         return out

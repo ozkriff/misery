@@ -18,12 +18,6 @@ class Module(object):
         self.declaration_sequence = declaration_sequence
 
 
-class TypeDeclaration(object):
-    def __init__(self, name, datatype):
-        self.name = name
-        self.datatype = datatype
-
-
 class Identifier(object):
     def __init__(self, name):
         self.name = name
@@ -46,6 +40,12 @@ class ConstDeclaration(object):
         self.name = name
         self.datatype = datatype
         self.expression = expression
+
+
+class StructDeclaration(object):
+    def __init__(self, name, field_list):
+        self.name = name
+        self.field_list = field_list
 
 
 class Number(object):

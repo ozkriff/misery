@@ -36,6 +36,12 @@ class Function(object):
         self.expression_list = expression_list
 
 
+class Struct(object):
+    def __init__(self, name, field_list):
+        self.name = name
+        self.field_list = field_list
+
+
 class IfStatement(object):
     def __init__(self, expression_id, if_branch_id, else_branch_id=None):
         self.expression_id = expression_id
@@ -292,6 +298,14 @@ class Table(object):
         self.declaration_list.append(function)
         self._parse_block(function, declaration.body)
 
+    def _parse_struct_declaration(self, declaration):
+        def _parse_field_list(struct, field_list):
+            for field in field_list:
+                struct.field_list[field.name] = field.datatype
+        struct = Struct(name=declaration.name, field_list={})
+        self.declaration_list.append(struct)
+        _parse_field_list(struct, declaration.field_list)
+
     @classmethod
     def from_ast(cls, ast_):
         new_table = Table(
@@ -303,8 +317,8 @@ class Table(object):
         for declaration in ast_.declaration_sequence:
             if isinstance(declaration, ast.FunctionDeclaration):
                 new_table._parse_function_declaration(declaration)
-            elif isinstance(declaration, ast.TypeDeclaration):
-                raise Exception('Not Implemented')
+            elif isinstance(declaration, ast.StructDeclaration):
+                new_table._parse_struct_declaration(declaration)
             else:
                 raise Exception('Not Implemented')
         return new_table

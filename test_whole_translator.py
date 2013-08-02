@@ -58,6 +58,25 @@ class TestTranslator(unittest.TestCase):
         )
         misc.assert_equal(self, expected_output, real_output)
 
+    def test_struct(self):
+        input_string = (
+            'MyStruct := struct {\n'
+            '  field1: Int\n'
+            '  field2: Int\n'
+            '}\n'
+        )
+        real_output = translate_mis_to_c(input_string)
+        expected_output = (
+            '\n'
+            '\n'
+            'typedef struct {\n'
+            '  Int field2;\n'
+            '  Int field1;\n'
+            '} MyStruct;\n'
+            '\n'
+        )
+        misc.assert_equal(self, expected_output, real_output)
+
     def test_var_declaration_with_string_literal(self):
         input_string = 'start := func () { testVar := "some string" }\n'
         real_output = translate_mis_to_c(input_string)

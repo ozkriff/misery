@@ -81,6 +81,8 @@ def _mark_out_datatypes(ast_):
     for declaration in ast_.declaration_sequence:
         if isinstance(declaration, ast.FunctionDeclaration):
             mark_out_function_declaration(declaration)
+        elif isinstance(declaration, ast.StructDeclaration):
+            pass
         else:
             raise Exception('Not Implemented: ' + str(type(declaration)))
 

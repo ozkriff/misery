@@ -77,7 +77,7 @@ class TestParser(unittest.TestCase):
     def test_struct_type_declaration(self):
         ''' Parse struct type declaration. '''
         input_string = (
-            'MyStruct := type struct {\n'
+            'MyStruct := struct {\n'
             '  field1: Int\n'
             '  field2: Float\n'
             '}\n'
@@ -85,20 +85,18 @@ class TestParser(unittest.TestCase):
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
             declaration_sequence=[
-                ast.TypeDeclaration(
+                ast.StructDeclaration(
                     name='MyStruct',
-                    datatype=ast.TypeStruct(
-                        value=[
-                            ast.Field(
-                                name='field1',
-                                datatype=ast.Identifier('Int'),
-                            ),
-                            ast.Field(
-                                name='field2',
-                                datatype=ast.Identifier('Float'),
-                            )
-                        ]
-                    )
+                    field_list=[
+                        ast.Field(
+                            name='field1',
+                            datatype=ast.Identifier('Int'),
+                        ),
+                        ast.Field(
+                            name='field2',
+                            datatype=ast.Identifier('Float'),
+                        )
+                    ]
                 )
             ]
         )

@@ -13,7 +13,6 @@ reserved = {
     'else': 'ELSE',
     'import': 'IMPORT',
     'const': 'CONST',
-    'type': 'TYPE',
     'struct': 'STRUCT',
     'for': 'FOR',
     'return': 'RETURN',
@@ -172,9 +171,9 @@ def make_parser():
         p[0] = ast.FunctionDeclaration(
             name=p[1], interface=p[4], body=p[5])
 
-    def p_type_declaration(p):
-        'declaration : IDENTIFIER COLONASSIGN TYPE type'
-        p[0] = ast.TypeDeclaration(name=p[1], datatype=p[4])
+    def p_struct_declaration(p):
+        'declaration : IDENTIFIER COLONASSIGN STRUCT LCURLY field_list RCURLY'
+        p[0] = ast.StructDeclaration(name=p[1], field_list=p[5])
 
     def p_const_declaration(p):
         'declaration : CONST IDENTIFIER COLON type COLONASSIGN expression'
@@ -184,10 +183,6 @@ def make_parser():
     def p_type_identifier(p):
         'type : IDENTIFIER'
         p[0] = ast.Identifier(name=p[1])
-
-    def p_type_struct(p):
-        'type : STRUCT LCURLY field_list RCURLY'
-        p[0] = ast.TypeStruct(value=p[3])
 
     def p_field_list_1(p):
         'field_list : field'
