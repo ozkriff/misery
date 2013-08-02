@@ -64,15 +64,27 @@ class TestTranslator(unittest.TestCase):
             '  field1: Int\n'
             '  field2: Int\n'
             '}\n'
+            'start := func () {\n'
+            '  t := MyStruct()\n'
+            '}\n'
         )
         real_output = translate_mis_to_c(input_string)
         expected_output = (
             '\n'
+            'void start(void);\n'
             '\n'
             'typedef struct {\n'
             '  Int field2;\n'
             '  Int field1;\n'
             '} MyStruct;\n'
+            '\n'
+            'void start(void) {\n'
+            '  MyStruct tmp_0;\n'
+            '  MyStruct t;\n'
+            '\n'
+            '  MyStruct(&tmp_0);\n'
+            '  t = tmp_0;\n'
+            '}\n'
             '\n'
         )
         misc.assert_equal(self, expected_output, real_output)

@@ -25,13 +25,7 @@ def _mark_out_datatypes(ast_):
         function_name = function_call_expression.expression.name
         if function_name not in ast_.identifier_list:
             raise Exception('no function: \'' + function_name + '\'')
-        return_type_name = ast_.identifier_list[function_name].return_type.name
-        if return_type_name == 'Int':
-            return SimpleDataType('Int')
-        elif return_type_name == 'String':
-            return SimpleDataType('String')
-        else:
-            raise Exception('Not Implemented: ' + str(return_type_name))
+        return ast_.identifier_list[function_name].return_type
 
     def get_expression_datatype(block, expression):
         if isinstance(expression, ast.Number):

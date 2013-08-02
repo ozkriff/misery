@@ -171,6 +171,13 @@ def identifier_table(ast_):
     for declaration in ast_.declaration_sequence:
         if isinstance(declaration, FunctionDeclaration):
             identifier_list[declaration.name] = declaration.interface
+    for declaration in ast_.declaration_sequence:
+        if isinstance(declaration, StructDeclaration):
+            # create constructor
+            identifier_list[declaration.name] = FunctionInterface(
+                return_type=datatype.SimpleDataType(declaration.name),
+                parameter_list=[],
+            )
     identifier_list.update(standart_functions())
     return identifier_list
 
