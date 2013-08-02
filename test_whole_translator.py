@@ -71,6 +71,7 @@ class TestTranslator(unittest.TestCase):
         real_output = translate_mis_to_c(input_string)
         expected_output = (
             '\n'
+            'typedef struct MyStruct MyStruct;\n'
             'void start(void);\n'
             '\n'
             'typedef struct {\n'
