@@ -113,5 +113,30 @@ class TestMarkOutDatatypes(TestCase):
         real_output = mark_out_datatypes(input_ast)
         assert_is_part_of(self, expected_output, real_output)
 
+    def test_bad_func_error(self):
+        input_ast = ast.Module(
+            declaration_sequence=[
+                ast.FunctionDeclaration(
+                    name='start',
+                    interface=ast.FunctionInterface(parameter_list=[]),
+                    body=[
+                        ast.VariableDeclaration(
+                            name='testVar',
+                            expression=ast.FunctionCall(
+                                expression=ast.Identifier('badFuncName'),
+                                argument_list=[],
+                            ),
+                        ),
+                    ],
+                )
+            ]
+        )
+        self.assertRaisesRegexp(
+            Exception,
+            'no function: \'badFuncName\'',
+            mark_out_datatypes,
+            input_ast,
+        )
+
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
