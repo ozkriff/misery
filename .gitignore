@@ -1,5 +1,6 @@
 # html coverage
 htmlcov
+htmlcov_*
 
 # python ply debug info
 parser.out
