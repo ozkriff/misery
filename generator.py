@@ -322,6 +322,12 @@ class Generator(object):
                 out += self._generate_function_header(
                     declaration.name, declaration.interface)
                 out += ';\n'
+            elif isinstance(declaration, table.Struct):
+                out += 'typedef struct '
+                out += declaration.name
+                out += ' '
+                out += declaration.name
+                out += ';\n'
         return out
 
     def _generate_imports(self):
