@@ -23,6 +23,11 @@ class Identifier(object):
         self.name = name
 
 
+class QualifiedIdentifier(object):
+    def __init__(self, identifier_list):
+        self.identifier_list = identifier_list
+
+
 # TODO: value -> field_list ?
 class TypeStruct(object):
     def __init__(self, value):

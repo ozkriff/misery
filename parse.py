@@ -32,7 +32,7 @@ tokens = [
     # 'COMMA',
     'COLON',
     'ARROW',
-    # 'DOT',
+    'DOT',
 ] + list(reserved.values())
 
 
@@ -62,7 +62,7 @@ def make_lexer():
     t_RCURLY = r'\}'
     # t_COMMA = r','
     t_COLON = r':'
-    # t_DOT = r'\.'
+    t_DOT = r'\.'
     t_STRING = r'"[^"]*"'
 
     def t_IDENTIFIER(t):
@@ -108,15 +108,20 @@ def make_parser():
         'module : import_list declaration_sequence'
         p[0] = ast.Module(import_list=p[1], declaration_sequence=p[2])
 
-    # def p_qualifiedIdentifier(p):
-    #     'qualifiedIdentifier : IDENTIFIER'
-    #     p[0] = p[1]
-    #     p[0] = {'_type': 'qualifiedIdentifier', 'identifiers': []}
+    def p_qualified_identifier_simple(p):
+        'qualifiedIdentifier : IDENTIFIER'
+        p[0] = p[1]
+        p[0] = ast.Identifier(name=p[1])
 
-    # def p_qualifiedIdentifier_2(p):
-    #     'qualifiedIdentifier : qualifiedIdentifier DOT IDENTIFIER'
-    #     p[1]['identifiers'].amy_pretty_printend(p[3])
-    #     p[0] = p[1]
+    def p_qualified_identifier_complex(p):
+        'qualifiedIdentifier : qualifiedIdentifier DOT IDENTIFIER'
+        if isinstance(p[1], ast.Identifier):
+            p[1] = ast.QualifiedIdentifier(identifier_list=[p[1].name, p[3]])
+        elif isinstance(p[1], ast.QualifiedIdentifier):
+            p[1].identifier_list.append(p[3])
+        else:
+            raise Exception('parser internal error: bad qualifier type')
+        p[0] = p[1]
 
     def p_import_list_empty(p):
         'import_list :'
@@ -268,8 +273,8 @@ def make_parser():
         p[0] = ast.String(value=value)
 
     def p_expression_identifier(p):
-        'expression : IDENTIFIER'
-        p[0] = ast.Identifier(name=p[1])
+        'expression : qualifiedIdentifier'
+        p[0] = p[1]
 
     def p_expression_number(p):
         'expression : NUMBER'
