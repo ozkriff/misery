@@ -74,20 +74,6 @@ class TestParser(unittest.TestCase):
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
-    def test_simple_type_declaration(self):
-        ''' Parse type simple declaration. '''
-        input_string = 'MyInteger := type Integer'
-        real_ast = self._parse(input_string)
-        expected_ast = ast.Module(
-            declaration_sequence=[
-                ast.TypeDeclaration(
-                    name='MyInteger',
-                    datatype=ast.Identifier('Integer'),
-                )
-            ]
-        )
-        misc.assert_equal(self, expected_ast, real_ast)
-
     def test_struct_type_declaration(self):
         ''' Parse struct type declaration. '''
         input_string = (
@@ -113,20 +99,6 @@ class TestParser(unittest.TestCase):
                             )
                         ]
                     )
-                )
-            ]
-        )
-        misc.assert_equal(self, expected_ast, real_ast)
-
-    def test_type_alias(self):
-        ''' Parse alias type declaration. '''
-        input_string = 'MyInteger := type Integer'
-        real_ast = self._parse(input_string)
-        expected_ast = ast.Module(
-            declaration_sequence=[
-                ast.TypeDeclaration(
-                    name='MyInteger',
-                    datatype=ast.Identifier('Integer'),
                 )
             ]
         )
