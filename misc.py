@@ -111,14 +111,14 @@ def diff(expected, real):
     return '\n'.join(unified_diff)
 
 
-def assert_equal(test_case, expected_ast, real_ast):
+def assert_equal(test_case, expected, real):
     ''' Wraps around test_case.assertEqual and misc.diff(). '''
-    # print('\n' + pretty_print(expected_ast))
-    difference = diff(expected_ast, real_ast)
+    # print('\n' + pretty_print(expected))
+    difference = diff(expected, real)
     if difference:
         test_case.fail('\n' + difference)
     # else:
-    #     test_case.assertEqual(expected_ast, real_ast)
+    #     test_case.assertEqual(expected, real)
 
 
 def assert_is_part_of(test_case, expected, real):
