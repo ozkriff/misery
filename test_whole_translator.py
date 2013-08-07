@@ -90,6 +90,53 @@ class TestTranslator(unittest.TestCase):
         )
         misc.assert_equal(self, expected_output, real_output)
 
+    def test_struct_as_func_argument(self):
+        input_string = (
+            'MyStruct := struct {\n'
+            '  field1: Int\n'
+            '  field2: Int\n'
+            '}\n'
+            'someFunc := func (x:MyStruct) -> MyStruct{\n'
+            '  return x'
+            '}\n'
+            'start := func () {\n'
+            '  t := MyStruct()\n'
+            '  t2 := someFunc(t)\n'
+            '}\n'
+        )
+        real_output = translate_mis_to_c(input_string)
+        expected_output = (
+            '\n'
+            'typedef struct MyStruct MyStruct;\n'
+            'void someFunc(MyStruct* __result, MyStruct x);\n'
+            'void start(void);\n'
+            '\n'
+            'typedef struct {\n'
+            '  Int field2;\n'
+            '  Int field1;\n'
+            '} MyStruct;\n'
+            '\n'
+            'void someFunc(MyStruct* __result, MyStruct x) {\n'
+            '\n'
+            '  *__result = x;\n'
+            '  return;\n'
+            '}\n'
+            '\n'
+            'void start(void) {\n'
+            '  MyStruct tmp_0;\n'
+            '  MyStruct t;\n'
+            '  MyStruct tmp_2;\n'
+            '  MyStruct t2;\n'
+            '\n'
+            '  MyStruct(&tmp_0);\n'
+            '  t = tmp_0;\n'
+            '  someFunc(&tmp_2, t);\n'
+            '  t2 = tmp_2;\n'
+            '}\n'
+            '\n'
+        )
+        misc.assert_equal(self, expected_output, real_output)
+
     def test_var_declaration_with_string_literal(self):
         input_string = 'start := func () { testVar := "some string" }\n'
         real_output = translate_mis_to_c(input_string)
