@@ -123,8 +123,11 @@ def assert_equal(test_case, expected_ast, real_ast):
 
 def assert_is_part_of(test_case, expected, real):
     if not is_part_of(expected, real):
-        # TODO: Need more info. Print detailed report
-        test_case.fail('Not part of')
+        # test_case.fail('Not part of')
+        # TODO: Remove some details from BIG diffs!
+        difference = diff(expected, real)
+        if difference:
+            test_case.fail('Not part of:\n' + difference)
 
 
 def flatten_tree(tree):
