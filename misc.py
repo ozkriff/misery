@@ -165,11 +165,7 @@ def is_part_of(expected, real):
             elif not is_part_of(expected[key], real[key]):
                 return False
         return True
-    elif isinstance(expected, str):
-        return expected == real
-    elif isinstance(expected, int):
-        return expected == real
-    elif isinstance(expected, float):
+    elif isinstance(expected, (str, int, float)):
         return expected == real
     elif expected is None:
         return real is None
