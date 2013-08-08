@@ -86,16 +86,20 @@ def make_lexer():
 
     def t_error(t):
         column = find_column(t.lexer.lexdata, t.lexpos)
-        errormsg = (
-            'filename:[%(lineno)d:%(column)d: '
-            'Lexer error: Illegal character...'
+        message = (
+            '\n' +
+            (
+                'filename:[%(lineno)d:%(column)d: '
+                'Lexer error: Illegal character...'
+            ) % {
+                'lineno': t.lineno - 1,
+                'column': column - 1,
+            } +
+            '\n' +
+            '  ' + t.lexer.lexdata.split('\n')[t.lineno - 1] + '\n' +
+            '  ' + (' ' * (column)) + '^' + '\n'
         )
-        print(errormsg % {
-            'lineno': t.lineno - 1,
-            'column': column - 1,
-        })
-        print('  ' + t.lexer.lexdata.split('\n')[t.lineno - 1])
-        print('  ' + (' ' * (column - 1)) + '^')
+        raise Exception(message)
         t.lexer.skip(1)
 
     # Build the lexer from my environment and return it
@@ -285,19 +289,27 @@ def make_parser():
         p[0] = p[1]
 
     def p_error(p):
+        from pprint import pformat
         toklen = len(str(p.value))
         column = find_column(p.lexer.lexdata, p.lexpos)
-        errmsg = (
-            'filename:%(lineno)d:%(column)d: '
-            'Parser error: unexpected token '
+        message = (
+            '\n' +
+            (
+                'filename:%(lineno)d:%(column)d: '
+                'Parser error: unexpected token '
+            ) % {
+                'lineno': p.lineno - 1,
+                'column': column - 1,
+            } +
+            '\n' +
+            '\n' +
+            # TODO: replace by misc.pretty_print
+            str(pformat(vars(p))) + '\n' +
+            '\n' +
+            '  ' + p.lexer.lexdata.split('\n')[p.lineno - 1] + '\n' +
+            '  ' + (' ' * column) + ('^' * toklen) + '\n'
         )
-        print(errmsg % {
-            'lineno': p.lineno - 1,
-            'column': column - 1,
-        })
-        print(vars(p))
-        print('  ' + p.lexer.lexdata.split('\n')[p.lineno - 1])
-        print('  ' + (' ' * column) + ('^' * toklen))
+        raise Exception(message)
 
     # TODO: python3 reports some warning about unclosed file here
     parser = ply.yacc.yacc()
