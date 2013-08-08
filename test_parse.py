@@ -408,6 +408,34 @@ class TestParser(unittest.TestCase):
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
+    def test_qualified_identifier_1(self):
+        ''' Parse qualified identifier. '''
+        input_string = 'fname := func () { a.b() }'
+        real_ast = self._parse(input_string)
+        expected_ast = copy.deepcopy(self._std_module)
+        expected_ast.declaration_sequence[0].body.append(
+            ast.FunctionCall(
+                expression=ast.QualifiedIdentifier(identifier_list=['a', 'b']),
+                argument_list=[],
+            ),
+        )
+        misc.assert_equal(self, expected_ast, real_ast)
+
+    def test_qualified_identifier_2(self):
+        ''' Parse longer qualified identifier. '''
+        input_string = 'fname := func () { a.b.c() }'
+        real_ast = self._parse(input_string)
+        expected_ast = copy.deepcopy(self._std_module)
+        expected_ast.declaration_sequence[0].body.append(
+            ast.FunctionCall(
+                expression=ast.QualifiedIdentifier(
+                    identifier_list=['a', 'b', 'c'],
+                ),
+                argument_list=[],
+            ),
+        )
+        misc.assert_equal(self, expected_ast, real_ast)
+
     def test_lex_error(self):
         ''' Check lexer error reporting. '''
         input_string = 'start := <'
