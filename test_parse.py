@@ -22,7 +22,7 @@ class TestParser(unittest.TestCase):
     _std_module = ast.Module(
         declaration_sequence=[
             ast.FunctionDeclaration(
-                name='fname',
+                name='start',
                 interface=ast.FunctionInterface(parameter_list=[]),
                 body=[],
             )
@@ -202,7 +202,7 @@ class TestParser(unittest.TestCase):
 
     def test_func_body_2_empty_blocks(self):
         ''' Parse fnction with empty blocks. '''
-        input_string = 'fname := func () { {} {} }'
+        input_string = 'start := func () { {} {} }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body = [[], []]
@@ -210,7 +210,7 @@ class TestParser(unittest.TestCase):
 
     def test_simple_func_call(self):
         ''' Parse simple function call. '''
-        input_string = 'fname := func () { fname2() }'
+        input_string = 'start := func () { fname2() }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         funccall = ast.FunctionCall(
@@ -222,7 +222,7 @@ class TestParser(unittest.TestCase):
 
     def test_var_declaration_without_initialization(self):
         ''' Parse variable declaration statement. '''
-        input_string = 'fname := func () { testVar := Integer() }'
+        input_string = 'start := func () { testVar := Integer() }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         var = ast.VariableDeclaration(
@@ -237,7 +237,7 @@ class TestParser(unittest.TestCase):
 
     def test_var_declaration_with_type_and_initialization(self):
         ''' Parse variable declaration statement with initiaization. '''
-        input_string = 'fname := func () { testVar := Integer(666) }'
+        input_string = 'start := func () { testVar := Integer(666) }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         var = ast.VariableDeclaration(
@@ -256,7 +256,7 @@ class TestParser(unittest.TestCase):
         ''' Parse variable declaration statement with
             initiaization and without explicit  type.
         '''
-        input_string = 'fname := func () { testVar := 666 }'
+        input_string = 'start := func () { testVar := 666 }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         var = ast.VariableDeclaration(
@@ -268,7 +268,7 @@ class TestParser(unittest.TestCase):
 
     def test_var_declaration_with_ctor(self):
         ''' Parse variable declaration statement with constructor call. '''
-        input_string = 'fname := func () { p := Parser() }'
+        input_string = 'start := func () { p := Parser() }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         var = ast.VariableDeclaration(
@@ -285,7 +285,7 @@ class TestParser(unittest.TestCase):
         ''' Parse variable declaration statement with
             complex initiaization.
         '''
-        input_string = 'fname := func () { v2 := plus(1 2) }'
+        input_string = 'start := func () { v2 := plus(1 2) }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         var = ast.VariableDeclaration(
@@ -302,7 +302,7 @@ class TestParser(unittest.TestCase):
         ''' Parse variable declaration statement with
             constructor call with arguments.
         '''
-        input_string = 'fname := func () { p := Parser(lexer 1) }'
+        input_string = 'start := func () { p := Parser(lexer 1) }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
@@ -321,7 +321,7 @@ class TestParser(unittest.TestCase):
 
     def test_simple_if(self):
         ''' Parse if statement. '''
-        input_string = 'fname := func () { if 1 {} }'
+        input_string = 'start := func () { if 1 {} }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
@@ -334,7 +334,7 @@ class TestParser(unittest.TestCase):
 
     def test_simple_if_else(self):
         ''' Parse if-else statement. '''
-        input_string = 'fname := func () { if 1 {} else {} }'
+        input_string = 'start := func () { if 1 {} else {} }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
@@ -348,7 +348,7 @@ class TestParser(unittest.TestCase):
 
     def test_nested_func_call_1(self):
         ''' Parse nested function call. '''
-        input_string = 'fname := func () { a()() }'
+        input_string = 'start := func () { a()() }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
@@ -364,7 +364,7 @@ class TestParser(unittest.TestCase):
 
     def test_simple_return_1(self):
         ''' Parse return statement with integer. '''
-        input_string = 'fname := func () { return 1 }'
+        input_string = 'start := func () { return 1 }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
@@ -374,7 +374,7 @@ class TestParser(unittest.TestCase):
 
     def test_simple_return_2(self):
         ''' Parse return statement without any value. '''
-        input_string = 'fname := func () { return }'
+        input_string = 'start := func () { return }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
@@ -384,7 +384,7 @@ class TestParser(unittest.TestCase):
 
     def test_simple_return_3(self):
         ''' Parse return statement with function call. '''
-        input_string = 'fname := func () { return x() }'
+        input_string = 'start := func () { return x() }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
@@ -399,7 +399,7 @@ class TestParser(unittest.TestCase):
 
     def test_string(self):
         ''' Parse anythong with string. '''
-        input_string = 'fname := func () { return "hi" }'
+        input_string = 'start := func () { return "hi" }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
@@ -410,7 +410,7 @@ class TestParser(unittest.TestCase):
 
     def test_qualified_identifier_1(self):
         ''' Parse qualified identifier. '''
-        input_string = 'fname := func () { a.b() }'
+        input_string = 'start := func () { a.b() }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
@@ -423,7 +423,7 @@ class TestParser(unittest.TestCase):
 
     def test_qualified_identifier_2(self):
         ''' Parse longer qualified identifier. '''
-        input_string = 'fname := func () { a.b.c() }'
+        input_string = 'start := func () { a.b.c() }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         expected_ast.declaration_sequence[0].body.append(
