@@ -408,6 +408,26 @@ class TestParser(unittest.TestCase):
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
+    def test_lex_error(self):
+        ''' Check lexer error reporting. '''
+        input_string = 'start := <'
+        self.assertRaisesRegexp(
+            Exception,
+            'Lexer error: Illegal character',  # TODO: more details
+            self._parse,
+            input_string,
+        )
+
+    def test_parse_error(self):
+        ''' Check parser error reporting. '''
+        input_string = 'start := func 666 () {}'
+        self.assertRaisesRegexp(
+            Exception,
+            'Parser error: unexpected token',  # TODO: more details
+            self._parse,
+            input_string,
+        )
+
 
 class TestFindColumn(unittest.TestCase):
     ''' Test parse.find_column() function. '''
