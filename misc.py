@@ -113,7 +113,6 @@ def diff(expected, real):
 
 def assert_equal(test_case, expected, real):
     ''' Wraps around test_case.assertEqual and misc.diff(). '''
-    # print('\n' + pretty_print(expected))
     difference = diff(expected, real)
     if difference:
         test_case.fail('\n' + difference)
