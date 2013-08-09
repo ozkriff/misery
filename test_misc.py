@@ -168,30 +168,31 @@ class TestPrettyPrinter(unittest.TestCase):
         self.assertEqual(expected_output, real_output)
 
 
+class TestCaseMock:
+
+    def __init__(self):
+        self.is_ok = True
+
+    def assertEqual(self, expected, real):
+        return expected == real
+
+    def fail(self, diff):
+        if diff:
+            self.is_ok = False
+
+
 class TestAssertEqual(unittest.TestCase):
     ''' Test misc.assert_equal function. '''
 
-    class TestCaseMock:
-
-        def __init__(self):
-            self.is_ok = True
-
-        def assertEqual(self, expected, real):
-            return expected == real
-
-        def fail(self, diff):
-            if diff:
-                self.is_ok = False
-
     def test_failed(self):
         ''' Test failed. '''
-        mock = self.TestCaseMock()
+        mock = TestCaseMock()
         misc.assert_equal(mock, 1, 2)
         self.assertEqual(mock.is_ok, False)
 
     def test_passed(self):
         ''' Test failed. '''
-        mock = self.TestCaseMock()
+        mock = TestCaseMock()
         misc.assert_equal(mock, 1, 1)
         self.assertEqual(mock.is_ok, True)
 
