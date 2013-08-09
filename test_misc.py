@@ -197,6 +197,16 @@ class TestAssertEqual(unittest.TestCase):
         self.assertEqual(mock.is_ok, True)
 
 
+class TestAssertIsPartOf(unittest.TestCase):
+    ''' Test misc.assert_is_part_of function. '''
+
+    def test_failed(self):
+        ''' Test failed. '''
+        mock = TestCaseMock()
+        misc.assert_is_part_of(mock, 1, 2)
+        self.assertEqual(mock.is_ok, False)
+
+
 class TestIsPartOf(unittest.TestCase):
 
     def test_same_numbers(self):
