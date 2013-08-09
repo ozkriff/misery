@@ -44,6 +44,11 @@ def check_translation(test_case, input_string, expected_output):
     ''' Small helper function. '''
     real_output = translate_mis_to_c(input_string)
     misc.assert_equal(test_case, expected_output, real_output)
+    # translate_mis_to_c_and_write_to_file(
+    #     input_string=input_string,
+    #     filename = misc.get_caller_func_name()[5:] + '_out.c',
+    # )
+    # try_to_compile_and_run_file()
 
 
 class TestTranslator(unittest.TestCase):

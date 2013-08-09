@@ -180,4 +180,13 @@ def is_part_of(expected, real):
         return True
 
 
+def get_caller_func_name():
+    import inspect
+    classstack = inspect.stack()
+    assert len(classstack) >= 2
+    caller_func = classstack[2]
+    caller_func_name = caller_func[3]
+    return caller_func_name
+
+
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:

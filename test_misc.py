@@ -301,6 +301,15 @@ class TestIsPartOf(unittest.TestCase):
         self.assertFalse(misc.is_part_of(a, b))
 
 
+class TestGetCallerFuncName(unittest.TestCase):
+
+    def test_1(self):
+        def helper_func():
+            self.assertEqual('test_1', misc.get_caller_func_name())
+
+        helper_func()
+
+
 class TestFlattenTree(unittest.TestCase):
     ''' TestSuite for misc.flatten_tree() function. '''
 
