@@ -11,6 +11,7 @@ import generator
 import table
 import parse
 import datatype
+import textwrap
 
 
 def get_generator(input_string):
@@ -42,8 +43,8 @@ def translate_mis_to_c_and_write_to_file(input_string, filename='out.c'):
 
 def check_translation(test_case, input_string, expected_output):
     ''' Small helper function. '''
-    real_output = translate_mis_to_c(input_string)
-    misc.assert_equal(test_case, expected_output, real_output)
+    real_output = translate_mis_to_c(textwrap.dedent(input_string))
+    misc.assert_equal(test_case, textwrap.dedent(expected_output), real_output)
     # translate_mis_to_c_and_write_to_file(
     #     input_string=input_string,
     #     filename = misc.get_caller_func_name()[5:] + '_out.c',
@@ -56,580 +57,582 @@ class TestTranslator(unittest.TestCase):
     def test_var_declaration_with_integer_literal(self):
         check_translation(
             test_case=self,
-            input_string=(
-                'start := func () { testVar := 1 }\n'
-            ),
-            expected_output=(
-                '\n'
-                'void start(void);\n'
-                '\n'
-                'void start(void) {\n'
-                '  Int testVar;\n'
-                '\n'
-                '  testVar = 1;\n'
-                '}\n'
-                '\n'
-            ),
+            input_string='''
+                start := func () {
+                  testVar := 1
+                }
+            ''',
+            expected_output='''
+                void start(void);
+
+                void start(void) {
+                  Int testVar;
+
+                  testVar = 1;
+                }
+
+            ''',
         )
 
     def test_struct(self):
         check_translation(
             test_case=self,
-            input_string=(
-                'MyStruct := struct {\n'
-                '  field1: Int\n'
-                '  field2: Int\n'
-                '}\n'
-                'start := func () {\n'
-                '  t := MyStruct()\n'
-                '}\n'
-            ),
-            expected_output=(
-                '\n'
-                'typedef struct MyStruct MyStruct;\n'
-                'void start(void);\n'
-                '\n'
-                'typedef struct {\n'
-                '  Int field2;\n'
-                '  Int field1;\n'
-                '} MyStruct;\n'
-                '\n'
-                'void start(void) {\n'
-                '  MyStruct tmp_0;\n'
-                '  MyStruct t;\n'
-                '\n'
-                '  MyStruct(&tmp_0);\n'
-                '  t = tmp_0;\n'
-                '}\n'
-                '\n'
-            ),
+            input_string='''
+                MyStruct := struct {
+                  field1: Int
+                  field2: Int
+                }
+                start := func () {
+                  t := MyStruct()
+                }
+            ''',
+            expected_output='''
+                typedef struct MyStruct MyStruct;
+                void start(void);
+
+                typedef struct {
+                  Int field2;
+                  Int field1;
+                } MyStruct;
+
+                void start(void) {
+                  MyStruct tmp_0;
+                  MyStruct t;
+
+                  MyStruct(&tmp_0);
+                  t = tmp_0;
+                }
+
+            ''',
         )
 
     def test_struct_as_func_argument(self):
         check_translation(
             test_case=self,
-            input_string=(
-                'MyStruct := struct {\n'
-                '  field1: Int\n'
-                '  field2: Int\n'
-                '}\n'
-                'someFunc := func (x:MyStruct) -> MyStruct{\n'
-                '  return x'
-                '}\n'
-                'start := func () {\n'
-                '  t := MyStruct()\n'
-                '  t2 := someFunc(t)\n'
-                '}\n'
-            ),
-            expected_output=(
-                '\n'
-                'typedef struct MyStruct MyStruct;\n'
-                'void someFunc(MyStruct* __result, MyStruct x);\n'
-                'void start(void);\n'
-                '\n'
-                'typedef struct {\n'
-                '  Int field2;\n'
-                '  Int field1;\n'
-                '} MyStruct;\n'
-                '\n'
-                'void someFunc(MyStruct* __result, MyStruct x) {\n'
-                '\n'
-                '  *__result = x;\n'
-                '  return;\n'
-                '}\n'
-                '\n'
-                'void start(void) {\n'
-                '  MyStruct tmp_0;\n'
-                '  MyStruct t;\n'
-                '  MyStruct tmp_2;\n'
-                '  MyStruct t2;\n'
-                '\n'
-                '  MyStruct(&tmp_0);\n'
-                '  t = tmp_0;\n'
-                '  someFunc(&tmp_2, t);\n'
-                '  t2 = tmp_2;\n'
-                '}\n'
-                '\n'
-            ),
+            input_string='''
+                MyStruct := struct {
+                  field1: Int
+                  field2: Int
+                }
+                someFunc := func (x:MyStruct) -> MyStruct{
+                  return x
+                }
+                start := func () {
+                  t := MyStruct()
+                  t2 := someFunc(t)
+                }
+            ''',
+            expected_output='''
+                typedef struct MyStruct MyStruct;
+                void someFunc(MyStruct* __result, MyStruct x);
+                void start(void);
+
+                typedef struct {
+                  Int field2;
+                  Int field1;
+                } MyStruct;
+
+                void someFunc(MyStruct* __result, MyStruct x) {
+
+                  *__result = x;
+                  return;
+                }
+
+                void start(void) {
+                  MyStruct tmp_0;
+                  MyStruct t;
+                  MyStruct tmp_2;
+                  MyStruct t2;
+
+                  MyStruct(&tmp_0);
+                  t = tmp_0;
+                  someFunc(&tmp_2, t);
+                  t2 = tmp_2;
+                }
+
+            ''',
         )
 
     def test_var_declaration_with_string_literal(self):
         check_translation(
             test_case=self,
-            input_string=(
-                'start := func () { testVar := "some string" }\n'
-            ),
-            expected_output=(
-                '\n'
-                'void start(void);\n'
-                '\n'
-                'void start(void) {\n'
-                '  String testVar;\n'
-                '\n'
-                '  testVar = "some string";\n'
-                '}\n'
-                '\n'
-            ),
+            input_string='''
+                start := func () {
+                  testVar := "some string"
+                }
+            ''',
+            expected_output='''
+                void start(void);
+
+                void start(void) {
+                  String testVar;
+
+                  testVar = "some string";
+                }
+
+            ''',
         )
 
     def test_print_string_literal(self):
         check_translation(
             test_case=self,
-            input_string=(
-                'start := func () { printString("hello") }\n'
-            ),
-            expected_output=(
-                '\n'
-                'void start(void);\n'
-                '\n'
-                'void start(void) {\n'
-                '\n'
-                '  printString("hello");\n'
-                '}\n'
-                '\n'
-            ),
+            input_string='''
+                start := func () {
+                  printString("hello")
+                }
+            ''',
+            expected_output='''
+                void start(void);
+
+                void start(void) {
+
+                  printString("hello");
+                }
+
+            ''',
         )
 
     def test_print_string_var(self):
         check_translation(
             test_case=self,
-            input_string=(
-                'start := func () {\n'
-                '  testVar := "print this to console, please"\n'
-                '  printString(testVar)\n'
-                '}\n'
-            ),
-            expected_output=(
-                '\n'
-                'void start(void);\n'
-                '\n'
-                'void start(void) {\n'
-                '  String testVar;\n'
-                '\n'
-                '  testVar = "print this to console, please";\n'
-                '  printString(testVar);\n'
-                '}\n'
-                '\n'
-            ),
+            input_string='''
+                start := func () {
+                  testVar := "print this to console, please"
+                  printString(testVar)
+                }
+            ''',
+            expected_output='''
+                void start(void);
+
+                void start(void) {
+                  String testVar;
+
+                  testVar = "print this to console, please";
+                  printString(testVar);
+                }
+
+            ''',
         )
 
     def test_basic_assignment_of_integer_literal(self):
         check_translation(
             test_case=self,
-            input_string=(
-                'start := func () { testVar := 1 testVar = 2 }\n'
-            ),
-            expected_output=(
-                '\n'
-                'void start(void);\n'
-                '\n'
-                'void start(void) {\n'
-                '  Int testVar;\n'
-                '\n'
-                '  testVar = 1;\n'
-                '  testVar = 2;\n'
-                '}\n'
-                '\n'
-            ),
+            input_string='''
+                start := func () {
+                  testVar := 1 testVar = 2
+                }
+            ''',
+            expected_output='''
+                void start(void);
+
+                void start(void) {
+                  Int testVar;
+
+                  testVar = 1;
+                  testVar = 2;
+                }
+
+            ''',
         )
 
     def test_simple_loop_from_1_to_5(self):
         check_translation(
             test_case=self,
-            input_string=(
-                'start := func () {\n'
-                '  i := 0\n'
-                '  for isLessInteger(i 5) {'
-                '    printInteger(i)\n'
-                '    i = plusInteger(i 1)\n'
-                '  }'
-                '}\n'
-            ),
-            expected_output=(
-                '\n'
-                'void start(void);\n'
-                '\n'
-                'void start(void) {\n'
-                '  Int i;\n'
-                '  Int tmp_1;\n'
-                '  Int tmp_2;\n'
-                '\n'
-                '  i = 0;\n'
-                '  while (1) {\n'
-                '    isLessInteger(&tmp_1, i, 5);\n'
-                '    if (!tmp_1) {\n'
-                '      break;\n'
-                '    }\n'
-                '    printInteger(i);\n'
-                '    plusInteger(&tmp_2, i, 1);\n'
-                '    i = tmp_2;\n'
-                '  }\n'
-                '}\n'
-                '\n'
-            ),
+            input_string='''
+                start := func () {
+                  i := 0
+                  for isLessInteger(i 5) {
+                    printInteger(i)
+                    i = plusInteger(i 1)
+                  }
+                }
+            ''',
+            expected_output='''
+                void start(void);
+
+                void start(void) {
+                  Int i;
+                  Int tmp_1;
+                  Int tmp_2;
+
+                  i = 0;
+                  while (1) {
+                    isLessInteger(&tmp_1, i, 5);
+                    if (!tmp_1) {
+                      break;
+                    }
+                    printInteger(i);
+                    plusInteger(&tmp_2, i, 1);
+                    i = tmp_2;
+                  }
+                }
+
+            ''',
         )
 
     def test_var_declaration_with_function_call_returning_string(self):
         check_translation(
             test_case=self,
-            input_string=(
-                'someString := func () -> String { return "hi" }\n'
-                'start := func () { s := someString() printString(s) }\n'
-            ),
-            expected_output=(
-                '\n'
-                'void someString(String* __result);\n'
-                'void start(void);\n'
-                '\n'
-                'void someString(String* __result) {\n'
-                '\n'
-                '  *__result = "hi";\n'
-                '  return;\n'
-                '}\n'
-                '\n'
-                'void start(void) {\n'
-                '  String tmp_0;\n'
-                '  String s;\n'
-                '\n'
-                '  someString(&tmp_0);\n'
-                '  s = tmp_0;\n'
-                '  printString(s);\n'
-                '}\n'
-                '\n'
-            ),
+            input_string='''
+                someString := func () -> String {
+                  return "hi"
+                }
+                start := func () {
+                  s := someString() printString(s)
+                }
+            ''',
+            expected_output='''
+                void someString(String* __result);
+                void start(void);
+
+                void someString(String* __result) {
+
+                  *__result = "hi";
+                  return;
+                }
+
+                void start(void) {
+                  String tmp_0;
+                  String s;
+
+                  someString(&tmp_0);
+                  s = tmp_0;
+                  printString(s);
+                }
+
+            ''',
         )
 
     def test_nested_func_calls_with_strings(self):
         check_translation(
             test_case=self,
-            input_string=(
-                'someString := func () -> String { return "hi" }\n'
-                'start := func () { printString(someString()) }\n'
-            ),
-            expected_output=(
-                '\n'
-                'void someString(String* __result);\n'
-                'void start(void);\n'
-                '\n'
-                'void someString(String* __result) {\n'
-                '\n'
-                '  *__result = "hi";\n'
-                '  return;\n'
-                '}\n'
-                '\n'
-                'void start(void) {\n'
-                '  String tmp_0;\n'
-                '\n'
-                '  someString(&tmp_0);\n'
-                '  printString(tmp_0);\n'
-                '}\n'
-                '\n'
-            ),
+            input_string='''
+                someString := func () -> String {
+                  return "hi"
+                }
+                start := func () {
+                  printString(someString())
+                }
+            ''',
+            expected_output='''
+                void someString(String* __result);
+                void start(void);
+
+                void someString(String* __result) {
+
+                  *__result = "hi";
+                  return;
+                }
+
+                void start(void) {
+                  String tmp_0;
+
+                  someString(&tmp_0);
+                  printString(tmp_0);
+                }
+
+            ''',
         )
 
     def test_var_declaration_with_function_call_returning_integer(self):
         check_translation(
             test_case=self,
-            input_string=(
-                'someNumber := func () -> Int { return 99 }\n'
-                'start := func () { testVar := someNumber() }\n'
-            ),
-            expected_output=(
-                '\n'
-                'void someNumber(Int* __result);\n'
-                'void start(void);\n'
-                '\n'
-                'void someNumber(Int* __result) {\n'
-                '\n'
-                '  *__result = 99;\n'
-                '  return;\n'
-                '}\n'
-                '\n'
-                'void start(void) {\n'
-                '  Int tmp_0;\n'
-                '  Int testVar;\n'
-                '\n'
-                '  someNumber(&tmp_0);\n'
-                '  testVar = tmp_0;\n'
-                '}\n'
-                '\n'
-            ),
+            input_string='''
+                someNumber := func () -> Int {
+                  return 99
+                }
+                start := func () {
+                  testVar := someNumber()
+                }
+            ''',
+            expected_output='''
+                void someNumber(Int* __result);
+                void start(void);
+
+                void someNumber(Int* __result) {
+
+                  *__result = 99;
+                  return;
+                }
+
+                void start(void) {
+                  Int tmp_0;
+                  Int testVar;
+
+                  someNumber(&tmp_0);
+                  testVar = tmp_0;
+                }
+
+            ''',
         )
 
     def test_simple_func_1(self):
         check_translation(
             test_case=self,
-            input_string=(
-                'start := func () {\n'
-                '  printInteger(minusInteger(666 99))\n'
-                '}\n'
-            ),
-            expected_output=(
-                '\n'
-                'void start(void);\n'
-                '\n'
-                'void start(void) {\n'
-                '  Int tmp_0;\n'
-                '\n'
-                '  minusInteger(&tmp_0, 666, 99);\n'
-                '  printInteger(tmp_0);\n'
-                '}\n'
-                '\n'
-            ),
+            input_string='''
+                start := func () {
+                  printInteger(minusInteger(666 99))
+                }
+            ''',
+            expected_output='''
+                void start(void);
+
+                void start(void) {
+                  Int tmp_0;
+
+                  minusInteger(&tmp_0, 666, 99);
+                  printInteger(tmp_0);
+                }
+
+            ''',
         )
 
     def test_simple_func_2(self):
         check_translation(
             test_case=self,
-            input_string=(
-                'someNumber := func () -> Int {\n'
-                '  return 99\n'
-                '}\n'
-                'start := func () {\n'
-                '  printInteger(minusInteger(666 someNumber()))\n'
-                '}\n'
-            ),
-            expected_output=(
-                '\n'
-                'void someNumber(Int* __result);\n'
-                'void start(void);\n'
-                '\n'
-                'void someNumber(Int* __result) {\n'
-                '\n'
-                '  *__result = 99;\n'
-                '  return;\n'
-                '}\n'
-                '\n'
-                'void start(void) {\n'
-                '  Int tmp_0;\n'
-                '  Int tmp_1;\n'
-                '\n'
-                '  someNumber(&tmp_1);\n'
-                '  minusInteger(&tmp_0, 666, tmp_1);\n'
-                '  printInteger(tmp_0);\n'
-                '}\n'
-                '\n'
-            ),
+            input_string='''
+                someNumber := func () -> Int {
+                  return 99
+                }
+                start := func () {
+                  printInteger(minusInteger(666 someNumber()))
+                }
+            ''',
+            expected_output='''
+                void someNumber(Int* __result);
+                void start(void);
+
+                void someNumber(Int* __result) {
+
+                  *__result = 99;
+                  return;
+                }
+
+                void start(void) {
+                  Int tmp_0;
+                  Int tmp_1;
+
+                  someNumber(&tmp_1);
+                  minusInteger(&tmp_0, 666, tmp_1);
+                  printInteger(tmp_0);
+                }
+
+            ''',
         )
 
     def test_simple_func_3(self):
         check_translation(
             test_case=self,
-            input_string=(
-                'someNumber := func () -> Int {\n'
-                '  return minusInteger(100 1)\n'
-                '}\n'
-                'start := func () {\n'
-                '  printInteger(\n'
-                '    minusInteger(666 someNumber())\n'
-                '  )\n'
-                '}\n'
-            ),
-            expected_output=(
-                '\n'
-                'void someNumber(Int* __result);\n'
-                'void start(void);\n'
-                '\n'
-                'void someNumber(Int* __result) {\n'
-                '  Int tmp_0;\n'
-                '\n'
-                '  minusInteger(&tmp_0, 100, 1);\n'
-                '  *__result = tmp_0;\n'
-                '  return;\n'
-                '}\n'
-                '\n'
-                'void start(void) {\n'
-                '  Int tmp_0;\n'
-                '  Int tmp_1;\n'
-                '\n'
-                '  someNumber(&tmp_1);\n'
-                '  minusInteger(&tmp_0, 666, tmp_1);\n'
-                '  printInteger(tmp_0);\n'
-                '}\n'
-                '\n'
-            ),
+            input_string='''
+                someNumber := func () -> Int {
+                  return minusInteger(100 1)
+                }
+                start := func () {
+                  printInteger(
+                    minusInteger(666 someNumber())
+                  )
+                }
+            ''',
+            expected_output='''
+                void someNumber(Int* __result);
+                void start(void);
+
+                void someNumber(Int* __result) {
+                  Int tmp_0;
+
+                  minusInteger(&tmp_0, 100, 1);
+                  *__result = tmp_0;
+                  return;
+                }
+
+                void start(void) {
+                  Int tmp_0;
+                  Int tmp_1;
+
+                  someNumber(&tmp_1);
+                  minusInteger(&tmp_0, 666, tmp_1);
+                  printInteger(tmp_0);
+                }
+
+            ''',
         )
 
     def test_simple_func_4(self):
         check_translation(
             test_case=self,
-            input_string=(
-                'someNumber := func (xxx:Int) -> Int {\n'
-                '  return minusInteger(100 xxx)\n'
-                '}\n'
-                'start := func () {\n'
-                '  printInteger(\n'
-                '    minusInteger(666 someNumber(1))\n'
-                '  )\n'
-                '}\n'
-            ),
-            expected_output=(
-                '\n'
-                'void someNumber(Int* __result, Int xxx);\n'
-                'void start(void);\n'
-                '\n'
-                'void someNumber(Int* __result, Int xxx) {\n'
-                '  Int tmp_0;\n'
-                '\n'
-                '  minusInteger(&tmp_0, 100, xxx);\n'
-                '  *__result = tmp_0;\n'
-                '  return;\n'
-                '}\n'
-                '\n'
-                'void start(void) {\n'
-                '  Int tmp_0;\n'
-                '  Int tmp_1;\n'
-                '\n'
-                '  someNumber(&tmp_1, 1);\n'
-                '  minusInteger(&tmp_0, 666, tmp_1);\n'
-                '  printInteger(tmp_0);\n'
-                '}\n'
-                '\n'
-            ),
+            input_string='''
+                someNumber := func (xxx:Int) -> Int {
+                  return minusInteger(100 xxx)
+                }
+                start := func () {
+                  printInteger(
+                    minusInteger(666 someNumber(1))
+                  )
+                }
+            ''',
+            expected_output='''
+                void someNumber(Int* __result, Int xxx);
+                void start(void);
+
+                void someNumber(Int* __result, Int xxx) {
+                  Int tmp_0;
+
+                  minusInteger(&tmp_0, 100, xxx);
+                  *__result = tmp_0;
+                  return;
+                }
+
+                void start(void) {
+                  Int tmp_0;
+                  Int tmp_1;
+
+                  someNumber(&tmp_1, 1);
+                  minusInteger(&tmp_0, 666, tmp_1);
+                  printInteger(tmp_0);
+                }
+
+            ''',
         )
 
     def test_some_bug(self):
         ''' Process factorial function. '''
         check_translation(
             test_case=self,
-            input_string=(
-                'start := func () {\n'
-                '    printInteger(fac())\n'
-                '    fac()\n'
-                '}\n'
-                'fac := func () -> Int {\n'
-                '    return 1\n'
-                '}\n'
-            ),
-            expected_output=(
-                '\n'
-                'void start(void);\n'
-                'void fac(Int* __result);\n'
-                '\n'
-                'void start(void) {\n'
-                '  Int tmp_0;\n'
-                '  Int tmp_1;\n'
-                '\n'
-                '  fac(&tmp_0);\n'
-                '  printInteger(tmp_0);\n'
-                '  fac(&tmp_1);\n'
-                '}\n'
-                '\n'
-                'void fac(Int* __result) {\n'
-                '\n'
-                '  *__result = 1;\n'
-                '  return;\n'
-                '}\n'
-                '\n'
-            ),
+            input_string='''
+                start := func () {
+                    printInteger(fac())
+                    fac()
+                }
+                fac := func () -> Int {
+                    return 1
+                }
+            ''',
+            expected_output='''
+                void start(void);
+                void fac(Int* __result);
+
+                void start(void) {
+                  Int tmp_0;
+                  Int tmp_1;
+
+                  fac(&tmp_0);
+                  printInteger(tmp_0);
+                  fac(&tmp_1);
+                }
+
+                void fac(Int* __result) {
+
+                  *__result = 1;
+                  return;
+                }
+
+            ''',
         )
 
     def test_fib_1(self):
         ''' Process fib function. '''
         check_translation(
             test_case=self,
-            input_string=(
-                'start := func () {\n'
-                '  printInteger(fib(10))\n'
-                '}\n'
-                'fib := func (n:Int) -> Int {\n'
-                '  if isLessInteger(n 2) {\n'
-                '    return n\n'
-                '  } else {\n'
-                '    return plusInteger (\n'
-                '      fib(minusInteger(n 1))\n'
-                '      fib(minusInteger(n 2))\n'
-                '    )\n'
-                '  }\n'
-                '}\n'
-            ),
-            expected_output=(
-                '\n'
-                'void start(void);\n'
-                'void fib(Int* __result, Int n);\n'
-                '\n'
-                'void start(void) {\n'
-                '  Int tmp_0;\n'
-                '\n'
-                '  fib(&tmp_0, 10);\n'
-                '  printInteger(tmp_0);\n'
-                '}\n'
-                '\n'
-                'void fib(Int* __result, Int n) {\n'
-                '  Int tmp_0;\n'
-                '  Int tmp_1;\n'
-                '  Int tmp_2;\n'
-                '  Int tmp_3;\n'
-                '  Int tmp_4;\n'
-                '  Int tmp_5;\n'
-                '\n'
-                '  isLessInteger(&tmp_0, n, 2);\n'
-                '  if (tmp_0) {\n'
-                '    *__result = n;\n'
-                '    return;\n'
-                '  } else {\n'
-                '    minusInteger(&tmp_3, n, 1);\n'
-                '    fib(&tmp_2, tmp_3);\n'
-                '    minusInteger(&tmp_5, n, 2);\n'
-                '    fib(&tmp_4, tmp_5);\n'
-                '    plusInteger(&tmp_1, tmp_2, tmp_4);\n'
-                '    *__result = tmp_1;\n'
-                '    return;\n'
-                '  }\n'
-                '}\n'
-                '\n'
-            ),
+            input_string='''
+                start := func () {
+                  printInteger(fib(10))
+                }
+                fib := func (n:Int) -> Int {
+                  if isLessInteger(n 2) {
+                    return n
+                  } else {
+                    return plusInteger (
+                      fib(minusInteger(n 1))
+                      fib(minusInteger(n 2))
+                    )
+                  }
+                }
+            ''',
+            expected_output='''
+                void start(void);
+                void fib(Int* __result, Int n);
+
+                void start(void) {
+                  Int tmp_0;
+
+                  fib(&tmp_0, 10);
+                  printInteger(tmp_0);
+                }
+
+                void fib(Int* __result, Int n) {
+                  Int tmp_0;
+                  Int tmp_1;
+                  Int tmp_2;
+                  Int tmp_3;
+                  Int tmp_4;
+                  Int tmp_5;
+
+                  isLessInteger(&tmp_0, n, 2);
+                  if (tmp_0) {
+                    *__result = n;
+                    return;
+                  } else {
+                    minusInteger(&tmp_3, n, 1);
+                    fib(&tmp_2, tmp_3);
+                    minusInteger(&tmp_5, n, 2);
+                    fib(&tmp_4, tmp_5);
+                    plusInteger(&tmp_1, tmp_2, tmp_4);
+                    *__result = tmp_1;
+                    return;
+                  }
+                }
+
+            ''',
         )
 
     def test_factorial_1(self):
         ''' Process factorial function. '''
         check_translation(
             test_case=self,
-            input_string=(
-                'start := func () {\n'
-                '  printInteger(fac(3))\n'
-                '}\n'
-                'fac := func (n:Int) -> Int {\n'
-                '  if isEqualInteger(n 0) {\n'
-                '    return 1\n'
-                '  }\n'
-                '  return multiplyInteger(\n'
-                '    fac(minusInteger(n 1))\n'
-                '    n\n'
-                '  )\n'
-                '}\n'
-            ),
-            expected_output=(
-                '\n'
-                'void start(void);\n'
-                'void fac(Int* __result, Int n);\n'
-                '\n'
-                'void start(void) {\n'
-                '  Int tmp_0;\n'
-                '\n'
-                '  fac(&tmp_0, 3);\n'
-                '  printInteger(tmp_0);\n'
-                '}\n'
-                '\n'
-                'void fac(Int* __result, Int n) {\n'
-                '  Int tmp_0;\n'
-                '  Int tmp_1;\n'
-                '  Int tmp_2;\n'
-                '  Int tmp_3;\n'
-                '\n'
-                '  isEqualInteger(&tmp_0, n, 0);\n'
-                '  if (tmp_0) {\n'
-                '    *__result = 1;\n'
-                '    return;\n'
-                '  }\n'
-                '  minusInteger(&tmp_3, n, 1);\n'
-                '  fac(&tmp_2, tmp_3);\n'
-                '  multiplyInteger(&tmp_1, tmp_2, n);\n'
-                '  *__result = tmp_1;\n'
-                '  return;\n'
-                '}\n'
-                '\n'
-            ),
+            input_string='''
+                start := func () {
+                  printInteger(fac(3))
+                }
+                fac := func (n:Int) -> Int {
+                  if isEqualInteger(n 0) {
+                    return 1
+                  }
+                  return multiplyInteger(
+                    fac(minusInteger(n 1))
+                    n
+                  )
+                }
+            ''',
+            expected_output='''
+                void start(void);
+                void fac(Int* __result, Int n);
+
+                void start(void) {
+                  Int tmp_0;
+
+                  fac(&tmp_0, 3);
+                  printInteger(tmp_0);
+                }
+
+                void fac(Int* __result, Int n) {
+                  Int tmp_0;
+                  Int tmp_1;
+                  Int tmp_2;
+                  Int tmp_3;
+
+                  isEqualInteger(&tmp_0, n, 0);
+                  if (tmp_0) {
+                    *__result = 1;
+                    return;
+                  }
+                  minusInteger(&tmp_3, n, 1);
+                  fac(&tmp_2, tmp_3);
+                  multiplyInteger(&tmp_1, tmp_2, n);
+                  *__result = tmp_1;
+                  return;
+                }
+
+            ''',
         )
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
