@@ -35,6 +35,14 @@ class TestMarkOutDatatypes(TestCase):
         real_output = mark_out_datatypes(input_ast)
         assert_is_part_of(self, expected_output, real_output)
 
+    def test_copy(self):
+        input_ast = ast.Module(
+            declaration_sequence=[],
+        )
+        real_output = mark_out_datatypes(input_ast, do_copy=False)
+        input_ast.declaration_sequence.append(2)
+        self.assertEquals(real_output.declaration_sequence[0], 2)
+
     def test_simple_integer_variable_declaration(self):
         input_ast = ast.Module(
             declaration_sequence=[
