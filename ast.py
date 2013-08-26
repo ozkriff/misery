@@ -58,7 +58,7 @@ class Number(object):
         self.value = value
 
 
-class String():
+class String(object):
     def __init__(self, value):
         self.value = value
 
