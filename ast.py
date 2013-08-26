@@ -85,12 +85,11 @@ class FunctionCall(object):
 
 
 class VariableDeclaration(object):
-    # TODO: use 4s indent
     def __init__(
-            self,
-            name,
-            expression=None,
-            datatype=None,
+        self,
+        name,
+        expression=None,
+        datatype=None,
     ):
         self.name = name
         self.expression = expression  # TODO: rename
@@ -99,10 +98,10 @@ class VariableDeclaration(object):
 
 class Assign(object):
     def __init__(
-            self,
-            name,
-            expression=None,
-            datatype=None,
+        self,
+        name,
+        expression=None,
+        datatype=None,
     ):
         self.name = name
         self.expression = expression
