@@ -4,59 +4,58 @@
 
 import ast
 import misc
+import textwrap
 
 
 class Generator(object):
 
-    # TODO: use '''..'''
-    prefix = (
-        '#include <stdio.h>\n'
-        '\n'
-        'typedef int Int;\n'
-        'typedef char* String;\n'
-        '\n'
-        'void printInteger(Int n) {\n'
-        '  printf("INTEGER: %d\\n", n);\n'
-        '}\n'
-        '\n'
-        'void printString(String s) {\n'
-        '  printf("STRING: %s\\n", s);\n'
-        '}\n'
-        '\n'
-        'void isLessInteger(Int* __result, Int a, Int b) {\n'
-        '  *__result = (a < b);\n'
-        '}\n'
-        '\n'
-        'void isGreaterInteger(Int* __result, Int a, Int b) {\n'
-        '  *__result = (a < b);\n'
-        '}\n'
-        '\n'
-        'void isEqualInteger(Int* __result, Int a, Int b) {\n'
-        '  *__result = (a == b);\n'
-        '}\n'
-        '\n'
-        'void minusInteger(Int* __result, Int a, Int b) {\n'
-        '  *__result = (a - b);\n'
-        '}\n'
-        '\n'
-        'void plusInteger(Int* __result, Int a, Int b) {\n'
-        '  *__result = (a + b);\n'
-        '}\n'
-        '\n'
-        'void multiplyInteger(Int* __result, Int a, Int b) {\n'
-        '  *__result = (a * b);\n'
-        '}\n'
-        '\n'
-    )
+    prefix = '''
+        #include <stdio.h>
 
-    postfix = (
-        '\n'
-        'Int main(void) {\n'
-        '  start();\n'
-        '  return 0;\n'
-        '}\n'
-        '\n'
-    )
+        typedef int Int;
+        typedef char* String;
+
+        void printInteger(Int n) {
+          printf("INTEGER: %d\\n", n);
+        }
+
+        void printString(String s) {
+          printf("STRING: %s\\n", s);
+        }
+
+        void isLessInteger(Int* __result, Int a, Int b) {
+          *__result = (a < b);
+        }
+
+        void isGreaterInteger(Int* __result, Int a, Int b) {
+          *__result = (a < b);
+        }
+
+        void isEqualInteger(Int* __result, Int a, Int b) {
+          *__result = (a == b);
+        }
+
+        void minusInteger(Int* __result, Int a, Int b) {
+          *__result = (a - b);
+        }
+
+        void plusInteger(Int* __result, Int a, Int b) {
+          *__result = (a + b);
+        }
+
+        void multiplyInteger(Int* __result, Int a, Int b) {
+          *__result = (a * b);
+        }
+
+    '''
+
+    postfix = '''
+        Int main(void) {
+          start();
+          return 0;
+        }
+
+    '''
 
     def __init__(self, ast_):
         self._ast = ast_
@@ -511,9 +510,9 @@ class Generator(object):
 
     def generate_full(self):
         out = ''
-        out += Generator.prefix
+        out += textwrap.dedent(Generator.prefix)
         out += self.generate()
-        out += Generator.postfix
+        out += textwrap.dedent(Generator.postfix)
         return out
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
