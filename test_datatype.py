@@ -146,5 +146,65 @@ class TestMarkOutDatatypes(TestCase):
             input_ast,
         )
 
+    def test_bad_expression_type_error(self):
+        class BadExpressionClass(object):
+            pass
+        input_ast = ast.Module(
+            declaration_sequence=[
+                ast.FunctionDeclaration(
+                    name='start',
+                    interface=ast.FunctionInterface(parameter_list=[]),
+                    body=[
+                        ast.VariableDeclaration(
+                            name='testVar',
+                            expression=BadExpressionClass(),
+                        ),
+                    ],
+                )
+            ]
+        )
+        self.assertRaisesRegexp(
+            Exception,
+            'Bad type:.*BadExpressionClass',
+            mark_out_datatypes,
+            input_ast,
+        )
+
+    def test_bad_statement_type_error(self):
+        class BadStatementClass(object):
+            pass
+        input_ast = ast.Module(
+            declaration_sequence=[
+                ast.FunctionDeclaration(
+                    name='start',
+                    interface=ast.FunctionInterface(parameter_list=[]),
+                    body=[
+                        BadStatementClass(),
+                    ],
+                )
+            ]
+        )
+        self.assertRaisesRegexp(
+            Exception,
+            'Bad type:.*BadStatementClass',
+            mark_out_datatypes,
+            input_ast,
+        )
+
+    def test_bad_declaration_type_error(self):
+        class BadDeclarationClass(object):
+            pass
+        input_ast = ast.Module(
+            declaration_sequence=[
+                BadDeclarationClass(),
+            ]
+        )
+        self.assertRaisesRegexp(
+            Exception,
+            'Bad type:.*BadDeclarationClass',
+            mark_out_datatypes,
+            input_ast,
+        )
+
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:

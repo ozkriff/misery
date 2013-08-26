@@ -35,7 +35,7 @@ def _mark_out_datatypes(ast_):
         elif isinstance(expression, ast.FunctionCall):
             return get_function_call_expression_datatype(block, expression)
         else:
-            raise Exception('Not Implemented: ' + str(type(expression)))
+            raise Exception('Bad type: ' + str(type(expression)))
 
     def mark_out_variable_declaration_statement(
             block, variable_declaration_statement):
@@ -64,7 +64,7 @@ def _mark_out_datatypes(ast_):
         elif isinstance(statement, ignored_statement_type_tuple):
             pass  # do nothing for this statements
         else:
-            raise Exception('Not Implemented: ' + str(type(statement)))
+            raise Exception('Bad type: ' + str(type(statement)))
 
     def mark_out_function_declaration(function_declaration):
         function = function_declaration
@@ -78,7 +78,7 @@ def _mark_out_datatypes(ast_):
         elif isinstance(declaration, ast.StructDeclaration):
             pass
         else:
-            raise Exception('Not Implemented: ' + str(type(declaration)))
+            raise Exception('Bad type: ' + str(type(declaration)))
 
 
 def mark_out_datatypes(ast_, do_copy=True):
