@@ -134,5 +134,54 @@ class TestGenerator(unittest.TestCase):
             ''',
         )
 
+    def test_multiply_function_parameters(self):
+        check_translation(
+            test_case=self,
+            input_ast=ast.Module(
+                declaration_sequence=[
+                    ast.FunctionDeclaration(
+                        name='testFunc',
+                        interface=ast.FunctionInterface(
+                            parameter_list=[
+                                ast.Parameter(
+                                    name='n1',
+                                    datatype=ast.Identifier('Int')
+                                ),
+                                ast.Parameter(
+                                    name='n2',
+                                    datatype=ast.Identifier('Int')
+                                ),
+                            ],
+                        ),
+                        body=[],
+                    ),
+                    ast.FunctionDeclaration(
+                        name='start',
+                        interface=ast.FunctionInterface(parameter_list=[]),
+                        body=[
+                            ast.FunctionCall(
+                                expression=ast.Identifier('testFunc'),
+                                argument_list=[ast.Number(1), ast.Number(2)],
+                            ),
+                        ]
+                    )
+                ]
+            ),
+            expected_output='''
+                void testFunc(Int n1, Int n2);
+                void start(void);
+
+                void testFunc(Int n1, Int n2) {
+
+                }
+
+                void start(void) {
+
+                  testFunc(1, 2);
+                }
+
+            ''',
+        )
+
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:

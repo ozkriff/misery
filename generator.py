@@ -88,7 +88,8 @@ class Generator(object):
         if interface.return_type:
             out += interface.return_type.name + '* __result'
         if len(interface.parameter_list) != 0:
-            out += ', '
+            if interface.return_type:
+                out += ', '
             out += self._generate_function_parameters(interface.parameter_list)
         elif not interface.return_type:
             out += 'void'
@@ -138,9 +139,10 @@ class Generator(object):
             out += '&' + function_call_expression.tmp_var
             is_first = False
         for argument in function_call_expression.argument_list:
-            if not is_first:
-                out += ', '
+            if is_first:
                 is_first = False
+            else:
+                out += ', '
             out += self._generate_argument(
                 function_declaration,
                 argument,
@@ -179,7 +181,7 @@ class Generator(object):
                 expression,
             )
         else:
-            raise Exception('Not Implemented' + str(type(expression)))
+            raise Exception('Bad expression type: ' + str(type(expression)))
         return out
 
     def _generate_assign_statement(
@@ -212,7 +214,9 @@ class Generator(object):
             out += assign_statement.expression.tmp_var
             out += ';\n'
         else:
-            raise Exception("Not Implemented" + str(type(rvalue_expression)))
+            raise Exception(
+                'Bad expression type: ' + str(type(rvalue_expression)),
+            )
         return out
 
     def _generate_function_call_statement(
@@ -331,7 +335,7 @@ class Generator(object):
                 statement,
             )
         else:
-            raise Exception('Not Implemented' + str(type(statement)))
+            raise Exception('Bad statement type: ' + str(type(statement)))
         return out
 
     def _generate_block(self, function_declaration, block):
@@ -365,7 +369,7 @@ class Generator(object):
         elif isinstance(expression, (ast.Number, ast.String, ast.Identifier)):
             pass  # ok
         else:
-            raise Exception('Not Implemented' + str(type(expression)))
+            raise Exception('Bad expression type: ' + str(type(expression)))
 
     # TODO: rename method, do in separate pass (like datatype)
     def _scan_vars(self, function_declaration, block):
@@ -405,7 +409,7 @@ class Generator(object):
                 )
                 self._scan_vars(function_declaration, statement.branch)
             else:
-                raise Exception('Not Implemented' + str(type(statement)))
+                raise Exception('Bad statement type: ' + str(type(statement)))
 
     def _generate_local_variables(self, function_declaration):
         out = ''
@@ -485,7 +489,7 @@ class Generator(object):
         elif isinstance(declaration, ast.StructDeclaration):
             out += self._generate_struct(declaration)
         else:
-            raise Exception('Not Implemented' + str(type(declaration)))
+            raise Exception('Bad declaration type: ' + str(type(declaration)))
         return out
 
     def _generate_declarations(self):
