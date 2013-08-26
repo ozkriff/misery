@@ -60,6 +60,7 @@ class Generator(object):
     def __init__(self, ast_):
         self._ast = ast_
         self._indent_level = 0
+        self._function_declaration = None
 
     def _indent(self):
         return self._indent_level * '  '
@@ -95,21 +96,14 @@ class Generator(object):
         out += ')'
         return out
 
-    def _generate_expression_dependencies(
-        self,
-        function_declaration,
-        function_call_expression,
-    ):
+    def _generate_expression_dependencies(self, function_call_expression):
         out = ''
         for argument in function_call_expression.argument_list:
             if isinstance(argument, ast.FunctionCall):
-                out += self._generate_expression(
-                    function_declaration,
-                    argument,
-                )
+                out += self._generate_expression(argument)
         return out
 
-    def _generate_argument(self, function_declaration, argument):
+    def _generate_argument(self, argument):
         out = ''
         if isinstance(argument, ast.Number):
             out += str(argument.value)
@@ -125,9 +119,8 @@ class Generator(object):
         return out
 
     def _generate_function_call_expression_arguments(
-            self,
-            function_declaration,
-            function_call_expression,
+        self,
+        function_call_expression,
     ):
         out = ''
         is_first = True
@@ -142,52 +135,36 @@ class Generator(object):
                 is_first = False
             else:
                 out += ', '
-            out += self._generate_argument(
-                function_declaration,
-                argument,
-            )
+            out += self._generate_argument(argument)
         return out
 
-    def _generate_function_call_expression(
-        self,
-        function_declaration,
-        function_call_expression,
-    ):
+    def _generate_function_call_expression(self, function_call_expression):
         out = ''
         # TODO: implement other expressions
         assert isinstance(function_call_expression.expression, ast.Identifier)
         called_func_name = function_call_expression.expression.name
         out += self._generate_expression_dependencies(
-            function_declaration=function_declaration,
             function_call_expression=function_call_expression,
         )
         out += self._indent()
         out += called_func_name
         out += '('
         out += self._generate_function_call_expression_arguments(
-            function_declaration,
             function_call_expression,
         )
         out += ');\n'
         return out
 
-    def _generate_expression(self, function_declaration, expression):
+    def _generate_expression(self, expression):
         ''' Generate evaluation code. '''
         out = ''
         if isinstance(expression, ast.FunctionCall):
-            out += self._generate_function_call_expression(
-                function_declaration,
-                expression,
-            )
+            out += self._generate_function_call_expression(expression)
         else:
             raise Exception('Bad expression type: ' + str(type(expression)))
         return out
 
-    def _generate_assign_statement(
-        self,
-        function_declaration,
-        assign_statement,
-    ):
+    def _generate_assign_statement(self, assign_statement):
         out = ''
         rvalue_expression = assign_statement.expression
         if isinstance(rvalue_expression, ast.Number):
@@ -203,10 +180,7 @@ class Generator(object):
             out += '\"' + str(rvalue_expression.value) + '\"'
             out += ';\n'
         elif isinstance(rvalue_expression, ast.FunctionCall):
-            out += self._generate_expression(
-                function_declaration,
-                rvalue_expression,
-            )
+            out += self._generate_expression(rvalue_expression)
             out += self._indent()
             out += assign_statement.name
             out += ' = '
@@ -218,57 +192,38 @@ class Generator(object):
             )
         return out
 
-    def _generate_function_call_statement(
-        self,
-        function_declaration,
-        statement,
-    ):
+    def _generate_function_call_statement(self, statement):
         out = ''
-        out += self._generate_expression(
-            function_declaration,
-            statement,
-        )
+        out += self._generate_expression(statement)
         return out
 
-    def _generate_if_statement(self, function_declaration, statement):
+    def _generate_if_statement(self, statement):
         out = ''
         assert isinstance(statement.condition, ast.FunctionCall)
-        out += self._generate_expression(
-            function_declaration,
-            statement.condition,
-        )
+        out += self._generate_expression(statement.condition)
         out += self._indent() + 'if ('
         variable_name = statement.condition.tmp_var
         out += variable_name
         out += ') {\n'
         self._increnent_indent()
-        out += self._generate_block(
-            function_declaration=function_declaration,
-            block=statement.branch_if,
-        )
+        out += self._generate_block(block=statement.branch_if)
         self._decrenent_indent()
         out += self._indent() + '}'
         if statement.branch_else:
             out += ' else {\n'
             self._increnent_indent()
-            out += self._generate_block(
-                function_declaration=function_declaration,
-                block=statement.branch_else,
-            )
+            out += self._generate_block(block=statement.branch_else)
             self._decrenent_indent()
             out += self._indent() + '}'
         out += '\n'
         return out
 
-    def _generate_for_statement(self, function_declaration, statement):
+    def _generate_for_statement(self, statement):
         out = ''
         assert isinstance(statement.condition, ast.FunctionCall)
         out += self._indent() + 'while (1) {\n'
         self._increnent_indent()
-        out += self._generate_expression(
-            function_declaration,
-            statement.condition,
-        )
+        out += self._generate_expression(statement.condition)
         variable_name = statement.condition.tmp_var
         out += self._indent() + 'if (' + '!' + variable_name + ') {\n'
         self._increnent_indent()
@@ -276,144 +231,94 @@ class Generator(object):
         self._decrenent_indent()
         out += self._indent() + '}'
         out += '\n'
-        out += self._generate_block(
-            function_declaration=function_declaration,
-            block=statement.branch,
-        )
+        out += self._generate_block(block=statement.branch)
         self._decrenent_indent()
         out += self._indent() + '}'
         out += '\n'
         return out
 
-    def _generate_return_statement(self, function_declaration, statement):
+    def _generate_return_statement(self, statement):
         out = ''
         if isinstance(statement.expression, ast.FunctionCall):
-            out += self._generate_expression(
-                function_declaration,
-                statement.expression,
-            )
+            out += self._generate_expression(statement.expression)
         out += self._indent() + '*__result = '
-        out += self._generate_argument(
-            function_declaration=function_declaration,
-            argument=statement.expression,
-        )
+        out += self._generate_argument(argument=statement.expression)
         out += ';\n'
         out += self._indent() + 'return;\n'
         return out
 
-    def _generate_statement(self, function_declaration, statement):
+    def _generate_statement(self, statement):
         out = ''
         if isinstance(statement, ast.FunctionCall):
-            out += self._generate_function_call_statement(
-                function_declaration,
-                statement,
-            )
+            out += self._generate_function_call_statement(statement)
         elif isinstance(statement, ast.VariableDeclaration):
-            out += self._generate_assign_statement(
-                function_declaration,
-                statement,
-            )
+            out += self._generate_assign_statement(statement)
         elif isinstance(statement, ast.Assign):
-            out += self._generate_assign_statement(
-                function_declaration,
-                statement,
-            )
+            out += self._generate_assign_statement(statement)
         elif isinstance(statement, ast.If):
-            out += self._generate_if_statement(
-                function_declaration,
-                statement,
-            )
+            out += self._generate_if_statement(statement)
         elif isinstance(statement, ast.For):
-            out += self._generate_for_statement(
-                function_declaration,
-                statement,
-            )
+            out += self._generate_for_statement(statement)
         elif isinstance(statement, ast.Return):
-            out += self._generate_return_statement(
-                function_declaration,
-                statement,
-            )
+            out += self._generate_return_statement(statement)
         else:
             raise Exception('Bad statement type: ' + str(type(statement)))
         return out
 
-    def _generate_block(self, function_declaration, block):
+    def _generate_block(self, block):
         out = ''
         for statement in block:
-            out += self._generate_statement(
-                function_declaration,
-                statement,
-            )
+            out += self._generate_statement(statement)
         return out
 
-    def _scan_expression(self, function_declaration, expression):
+    def _scan_expression(self, expression):
+        vars = self._function_declaration.vars
         if isinstance(expression, ast.FunctionCall):
             for argument in expression.argument_list:
                 if isinstance(argument, ast.FunctionCall):
-                    self._scan_expression(function_declaration, argument)
+                    self._scan_expression(argument)
             assert isinstance(expression.expression, ast.Identifier)
             called_func_name = expression.expression.name
             identifier_list = self._ast.identifier_list
             return_type = identifier_list[called_func_name].return_type
             if return_type is not None:
-                var_name = 'tmp_' + str(len(function_declaration.vars))
-                function_declaration.vars[var_name] = return_type
+                var_name = 'tmp_' + str(len(vars))
+                vars[var_name] = return_type
                 expression.tmp_var = var_name
         elif isinstance(expression, ast.VariableDeclaration):
-            function_declaration.vars[expression.name] = expression.datatype
-            self._scan_expression(
-                function_declaration,
-                expression.expression,
-            )
+            vars[expression.name] = expression.datatype
+            self._scan_expression(expression.expression)
         elif isinstance(expression, (ast.Number, ast.String, ast.Identifier)):
             pass  # ok
         else:
             raise Exception('Bad expression type: ' + str(type(expression)))
 
     # TODO: rename method, do in separate pass (like datatype)
-    def _scan_vars(self, function_declaration, block):
+    def _scan_vars(self, block):
         for statement in block:
             if isinstance(statement, ast.FunctionCall):
-                self._scan_expression(function_declaration, statement)
+                self._scan_expression(statement)
             elif isinstance(statement, ast.VariableDeclaration):
-                self._scan_expression(function_declaration, statement)
+                self._scan_expression(statement)
             elif isinstance(statement, ast.Return):
-                self._scan_expression(
-                    function_declaration,
-                    statement.expression,
-                )
+                self._scan_expression(statement.expression)
             elif isinstance(statement, ast.Assign):
-                self._scan_expression(
-                    function_declaration,
-                    statement.expression,
-                )
+                self._scan_expression(statement.expression)
             elif isinstance(statement, ast.If):
-                self._scan_expression(
-                    function_declaration,
-                    statement.condition,
-                )
-                self._scan_vars(
-                    function_declaration,
-                    statement.branch_if,
-                )
+                self._scan_expression(statement.condition)
+                self._scan_vars(statement.branch_if)
                 if statement.branch_else:
-                    self._scan_vars(
-                        function_declaration,
-                        statement.branch_else,
-                    )
+                    self._scan_vars(statement.branch_else)
             elif isinstance(statement, ast.For):
-                self._scan_expression(
-                    function_declaration,
-                    statement.condition,
-                )
-                self._scan_vars(function_declaration, statement.branch)
+                self._scan_expression(statement.condition)
+                self._scan_vars(statement.branch)
             else:
                 raise Exception('Bad statement type: ' + str(type(statement)))
 
-    def _generate_local_variables(self, function_declaration):
+    def _generate_local_variables(self):
         out = ''
         # TODO: sort! # TODO: python3
-        for name, type in function_declaration.vars.iteritems():
+        for name, type in self._function_declaration.vars.iteritems():
             out += self._indent()
             out += type.name
             out += ' '
@@ -422,6 +327,7 @@ class Generator(object):
         return out
 
     def _generate_function(self, function_declaration):
+        self._function_declaration = function_declaration
         out = ''
         out += self._generate_function_header(
             name=function_declaration.name,
@@ -429,13 +335,10 @@ class Generator(object):
         )
         out += ' {\n'
         self._increnent_indent()
-        self._scan_vars(function_declaration, function_declaration.body)
-        out += self._generate_local_variables(function_declaration)
+        self._scan_vars(function_declaration.body)
+        out += self._generate_local_variables()
         out += '\n'
-        out += self._generate_block(
-            function_declaration,
-            function_declaration.body,
-        )
+        out += self._generate_block(function_declaration.body)
         self._decrenent_indent()
         out += '}\n'
         return out
@@ -484,7 +387,6 @@ class Generator(object):
     def _generate_declaration(self, declaration):
         out = ''
         if isinstance(declaration, ast.FunctionDeclaration):
-            # TODO: move 'declaration' to self._ast.function_declaration
             out += self._generate_function(declaration)
         elif isinstance(declaration, ast.StructDeclaration):
             out += self._generate_struct(declaration)
