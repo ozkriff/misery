@@ -2,11 +2,13 @@
 # See LICENSE file for copyright and license details
 
 
-import table
+import ast
+import misc
 
 
 class Generator(object):
 
+    # TODO: use '''..'''
     prefix = (
         '#include <stdio.h>\n'
         '\n'
@@ -56,8 +58,8 @@ class Generator(object):
         '\n'
     )
 
-    def __init__(self, table):
-        self._table = table
+    def __init__(self, ast_):
+        self._ast = ast_
         self._indent_level = 0
 
     def _indent(self):
@@ -93,264 +95,402 @@ class Generator(object):
         out += ')'
         return out
 
-    def _generate_expression_dependancies(self, function, expression):
+    def _generate_expression_dependencies(
+        self,
+        function_declaration,
+        function_call_expression,
+    ):
         out = ''
-        for argument in expression.argument_id_list:
-            if isinstance(argument, table.LinkToFunctionCall):
+        for argument in function_call_expression.argument_list:
+            if isinstance(argument, ast.FunctionCall):
                 out += self._generate_expression(
-                    function, function.expression_list[argument.id])
+                    function_declaration,
+                    argument,
+                )
         return out
 
-    def _generate_argument(self, function, argument):
+    def _generate_argument(self, function_declaration, argument):
         out = ''
-        if isinstance(argument, table.LinkToNumberConstant):
-            out += str(function.constant_list[argument.id].value)
-        elif isinstance(argument, table.LinkToStringConstant):
-            out += '\"' + str(function.constant_list[argument.id].value) + '\"'
-        elif isinstance(argument, table.LinkToFunctionCall):
-            result_id = function.expression_list[argument.id].result_id.id
-            out += str(function.variable_list[result_id].name)
-        elif isinstance(argument, table.LinkToVariable):
-            out += function.variable_list[argument.id].name
-        elif isinstance(argument, table.LinkToParameter):
+        if isinstance(argument, ast.Number):
+            out += str(argument.value)
+        elif isinstance(argument, ast.String):
+            out += '\"' + str(argument.value) + '\"'
+        elif isinstance(argument, ast.Identifier):
+            # TODO: check if this is correct identifier
             out += argument.name
+        elif isinstance(argument, ast.FunctionCall):
+            out += argument.tmp_var
         else:
-            raise Exception("Wrong argument type: " + str(type(argument)))
+            raise Exception('Wrong argument type: ' + str(type(argument)))
         return out
 
     def _generate_function_call_expression_arguments(
-            self, function, expression):
+            self,
+            function_declaration,
+            function_call_expression,
+    ):
         out = ''
         is_first = True
-        if expression.result_id is not None:
-            # output argument passed by pointer
-            out += '&' + function.variable_list[expression.result_id.id].name
+        assert isinstance(function_call_expression.expression, ast.Identifier)
+        called_func_name = function_call_expression.expression.name
+        identifier_list = self._ast.identifier_list
+        if identifier_list[called_func_name].return_type is not None:
+            out += '&' + function_call_expression.tmp_var
             is_first = False
-        for argument in expression.argument_id_list:
+        for argument in function_call_expression.argument_list:
             if not is_first:
                 out += ', '
                 is_first = False
-            out += self._generate_argument(function, argument)
+            out += self._generate_argument(
+                function_declaration,
+                argument,
+            )
         return out
 
-    def _generate_function_call_expression(self, function, expression):
+    def _generate_function_call_expression(
+        self,
+        function_declaration,
+        function_call_expression,
+    ):
         out = ''
-        out += self._generate_expression_dependancies(function, expression)
+        # TODO: implement other expressions
+        assert isinstance(function_call_expression.expression, ast.Identifier)
+        called_func_name = function_call_expression.expression.name
+        out += self._generate_expression_dependencies(
+            function_declaration=function_declaration,
+            function_call_expression=function_call_expression,
+        )
         out += self._indent()
-        out += expression.name
+        out += called_func_name
         out += '('
         out += self._generate_function_call_expression_arguments(
-            function, expression)
+            function_declaration,
+            function_call_expression,
+        )
         out += ');\n'
         return out
 
-    def _generate_expression(self, function, expression):
+    def _generate_expression(self, function_declaration, expression):
         ''' Generate evaluation code. '''
         out = ''
-        if isinstance(expression, table.FunctionCallExpression):
+        if isinstance(expression, ast.FunctionCall):
             out += self._generate_function_call_expression(
-                function, expression)
+                function_declaration,
+                expression,
+            )
         else:
-            raise Exception("Not Implemented")
+            raise Exception('Not Implemented' + str(type(expression)))
         return out
 
-    def _generate_assign_statement(self, function, statement):
+    def _generate_assign_statement(
+        self,
+        function_declaration,
+        assign_statement,
+    ):
         out = ''
-        if isinstance(statement.expression_id, table.LinkToNumberConstant):
+        rvalue_expression = assign_statement.expression
+        if isinstance(rvalue_expression, ast.Number):
             out += self._indent()
-            out += function.variable_list[statement.variable_id].name
+            out += assign_statement.name
             out += ' = '
-            expression_id = statement.expression_id.id
-            constant = function.constant_list[expression_id]
-            out += str(constant.value)
+            out += str(rvalue_expression.value)
             out += ';\n'
-        elif isinstance(statement.expression_id, table.LinkToStringConstant):
+        elif isinstance(rvalue_expression, ast.String):
             out += self._indent()
-            out += function.variable_list[statement.variable_id].name
+            out += assign_statement.name
             out += ' = '
-            expression_id = statement.expression_id.id
-            constant = function.constant_list[expression_id]
-            out += '\"' + str(constant.value) + '\"'
+            out += '\"' + str(rvalue_expression.value) + '\"'
             out += ';\n'
-        elif isinstance(statement.expression_id, table.LinkToFunctionCall):
-            expression = function.expression_list[statement.expression_id.id]
-            out += self._generate_expression(function, expression)
-            expression_id = statement.expression_id.id
-            result_id = function.expression_list[expression_id].result_id.id
+        elif isinstance(rvalue_expression, ast.FunctionCall):
+            out += self._generate_expression(
+                function_declaration,
+                rvalue_expression,
+            )
             out += self._indent()
-            out += function.variable_list[statement.variable_id].name
+            out += assign_statement.name
             out += ' = '
-            out += function.variable_list[result_id].name
+            out += assign_statement.expression.tmp_var
             out += ';\n'
         else:
-            raise Exception(
-                "Not Implemented" + str(type(statement.expression_id)))
+            raise Exception("Not Implemented" + str(type(rvalue_expression)))
         return out
 
-    def _generate_variable_declaration_statement(self, function, statement):
+    def _generate_function_call_statement(
+        self,
+        function_declaration,
+        statement,
+    ):
         out = ''
-        out += self._generate_assign_statement(function, statement)
+        out += self._generate_expression(
+            function_declaration,
+            statement,
+        )
         return out
 
-    def _generate_function_call_statement(self, function, statement):
+    def _generate_if_statement(self, function_declaration, statement):
         out = ''
-        expression = function.expression_list[statement.expression_id.id]
-        out += self._generate_expression(function, expression)
-        return out
-
-    def _generate_if_statement(self, function, statement):
-        out = ''
-        expression = function.expression_list[statement.expression_id.id]
-        assert isinstance(expression, table.FunctionCallExpression)
-        out += self._generate_expression(function, expression)
+        assert isinstance(statement.condition, ast.FunctionCall)
+        out += self._generate_expression(
+            function_declaration,
+            statement.condition,
+        )
         out += self._indent() + 'if ('
-        out += self._generate_argument(function, expression.result_id)
+        variable_name = statement.condition.tmp_var
+        out += variable_name
         out += ') {\n'
-        block = function.block_list[statement.if_branch_id]
         self._increnent_indent()
-        out += self._generate_block(function, block)
+        out += self._generate_block(
+            function_declaration=function_declaration,
+            block=statement.branch_if,
+        )
         self._decrenent_indent()
         out += self._indent() + '}'
-        if statement.else_branch_id:
+        if statement.branch_else:
             out += ' else {\n'
-            block = function.block_list[statement.else_branch_id]
             self._increnent_indent()
-            out += self._generate_block(function, block)
+            out += self._generate_block(
+                function_declaration=function_declaration,
+                block=statement.branch_else,
+            )
             self._decrenent_indent()
             out += self._indent() + '}'
         out += '\n'
         return out
 
-    def _generate_for_statement(self, function, statement):
+    def _generate_for_statement(self, function_declaration, statement):
         out = ''
-        expression = function.expression_list[statement.expression_id.id]
-        assert isinstance(expression, table.FunctionCallExpression)
+        assert isinstance(statement.condition, ast.FunctionCall)
         out += self._indent() + 'while (1) {\n'
         self._increnent_indent()
-        out += self._generate_expression(function, expression)
-        variable_name = function.variable_list[expression.result_id.id].name
+        out += self._generate_expression(
+            function_declaration,
+            statement.condition,
+        )
+        variable_name = statement.condition.tmp_var
         out += self._indent() + 'if (' + '!' + variable_name + ') {\n'
         self._increnent_indent()
         out += self._indent() + 'break;\n'
         self._decrenent_indent()
         out += self._indent() + '}'
         out += '\n'
-        block = function.block_list[statement.branch_id]
-        out += self._generate_block(function, block)
+        out += self._generate_block(
+            function_declaration=function_declaration,
+            block=statement.branch,
+        )
         self._decrenent_indent()
         out += self._indent() + '}'
         out += '\n'
         return out
 
-    def _generate_return_statement(self, function, statement):
+    def _generate_return_statement(self, function_declaration, statement):
         out = ''
-        if isinstance(statement.expression_id, table.LinkToFunctionCall):
-            expression = function.expression_list[statement.expression_id.id]
-            out += self._generate_expression(function, expression)
+        if isinstance(statement.expression, ast.FunctionCall):
+            out += self._generate_expression(
+                function_declaration,
+                statement.expression,
+            )
         out += self._indent() + '*__result = '
-        out += self._generate_argument(function, statement.expression_id)
+        out += self._generate_argument(
+            function_declaration=function_declaration,
+            argument=statement.expression,
+        )
         out += ';\n'
         out += self._indent() + 'return;\n'
         return out
 
-    def _generate_statement(self, function, statement):
+    def _generate_statement(self, function_declaration, statement):
         out = ''
-        if isinstance(statement, table.AssignStatement):
-            out += self._generate_assign_statement(function, statement)
-        elif isinstance(statement, table.VariableDeclarationStatement):
-            out += self._generate_variable_declaration_statement(
-                function, statement)
-        elif isinstance(statement, table.FunctionCallStatement):
-            out += self._generate_function_call_statement(function, statement)
-        elif isinstance(statement, table.IfStatement):
-            out += self._generate_if_statement(function, statement)
-        elif isinstance(statement, table.ForStatement):
-            out += self._generate_for_statement(function, statement)
-        elif isinstance(statement, table.ReturnStatement):
-            out += self._generate_return_statement(function, statement)
+        if isinstance(statement, ast.FunctionCall):
+            out += self._generate_function_call_statement(
+                function_declaration,
+                statement,
+            )
+        elif isinstance(statement, ast.VariableDeclaration):
+            out += self._generate_assign_statement(
+                function_declaration,
+                statement,
+            )
+        elif isinstance(statement, ast.Assign):
+            out += self._generate_assign_statement(
+                function_declaration,
+                statement,
+            )
+        elif isinstance(statement, ast.If):
+            out += self._generate_if_statement(
+                function_declaration,
+                statement,
+            )
+        elif isinstance(statement, ast.For):
+            out += self._generate_for_statement(
+                function_declaration,
+                statement,
+            )
+        elif isinstance(statement, ast.Return):
+            out += self._generate_return_statement(
+                function_declaration,
+                statement,
+            )
         else:
-            raise Exception("Not Implemented")
+            raise Exception('Not Implemented' + str(type(statement)))
         return out
 
-    def _generate_block(self, function, block):
+    def _generate_block(self, function_declaration, block):
         out = ''
         for statement in block:
-            out += self._generate_statement(function, statement)
+            out += self._generate_statement(
+                function_declaration,
+                statement,
+            )
         return out
 
-    def _generate_local_variables(self, function):
+    def _scan_expression(self, function_declaration, expression):
+        if isinstance(expression, ast.FunctionCall):
+            for argument in expression.argument_list:
+                if isinstance(argument, ast.FunctionCall):
+                    self._scan_expression(function_declaration, argument)
+            assert isinstance(expression.expression, ast.Identifier)
+            called_func_name = expression.expression.name
+            identifier_list = self._ast.identifier_list
+            return_type = identifier_list[called_func_name].return_type
+            if return_type is not None:
+                var_name = 'tmp_' + str(len(function_declaration.vars))
+                function_declaration.vars[var_name] = return_type
+                expression.tmp_var = var_name
+        elif isinstance(expression, ast.VariableDeclaration):
+            function_declaration.vars[expression.name] = expression.datatype
+            self._scan_expression(
+                function_declaration,
+                expression.expression,
+            )
+        elif isinstance(expression, (ast.Number, ast.String, ast.Identifier)):
+            pass  # ok
+        else:
+            raise Exception('Not Implemented' + str(type(expression)))
+
+    # TODO: rename method, do in separate pass (like datatype)
+    def _scan_vars(self, function_declaration, block):
+        for statement in block:
+            if isinstance(statement, ast.FunctionCall):
+                self._scan_expression(function_declaration, statement)
+            elif isinstance(statement, ast.VariableDeclaration):
+                self._scan_expression(function_declaration, statement)
+            elif isinstance(statement, ast.Return):
+                self._scan_expression(
+                    function_declaration,
+                    statement.expression,
+                )
+            elif isinstance(statement, ast.Assign):
+                self._scan_expression(
+                    function_declaration,
+                    statement.expression,
+                )
+            elif isinstance(statement, ast.If):
+                self._scan_expression(
+                    function_declaration,
+                    statement.condition,
+                )
+                self._scan_vars(
+                    function_declaration,
+                    statement.branch_if,
+                )
+                if statement.branch_else:
+                    self._scan_vars(
+                        function_declaration,
+                        statement.branch_else,
+                    )
+            elif isinstance(statement, ast.For):
+                self._scan_expression(
+                    function_declaration,
+                    statement.condition,
+                )
+                self._scan_vars(function_declaration, statement.branch)
+            else:
+                raise Exception('Not Implemented' + str(type(statement)))
+
+    def _generate_local_variables(self, function_declaration):
         out = ''
-        for variable in function.variable_list:
+        # TODO: sort! # TODO: python3
+        for name, type in function_declaration.vars.iteritems():
             out += self._indent()
-            out += variable.datatype.name
+            out += type.name
             out += ' '
-            out += variable.name
+            out += name
             out += ';' + '\n'
         return out
 
-    def _generate_function(self, function):
+    def _generate_function(self, function_declaration):
         out = ''
         out += self._generate_function_header(
-            function.name, function.interface)
+            name=function_declaration.name,
+            interface=function_declaration.interface,
+        )
         out += ' {\n'
         self._increnent_indent()
-        out += self._generate_local_variables(function)
+        self._scan_vars(function_declaration, function_declaration.body)
+        out += self._generate_local_variables(function_declaration)
         out += '\n'
-        out += self._generate_block(function, function.block_list[0])
+        out += self._generate_block(
+            function_declaration,
+            function_declaration.body,
+        )
         self._decrenent_indent()
         out += '}\n'
         return out
 
-    def _generate_struct(self, struct):
+    def _generate_struct(self, struct_declaration):
         out = ''
         out += 'typedef struct {\n'
         self._increnent_indent()
-        for field_name in struct.field_list:
+        for field in struct_declaration.field_list:
             out += self._indent()
-            field_data_type = struct.field_list[field_name].name
-            out += field_data_type + ' ' + field_name + ';\n'
+            out += field.datatype.name + ' ' + field.name + ';\n'
         self._decrenent_indent()
         out += '} '
-        out += struct.name
+        out += struct_declaration.name
         out += ';\n'
         return out
 
     def _generate_forward_declarations(self):
         out = ''
-        for declaration in self._table.declaration_list:
-            if isinstance(declaration, table.Function):
+        for declaration in self._ast.declaration_sequence:
+            if isinstance(declaration, ast.FunctionDeclaration):
                 out += self._generate_function_header(
-                    declaration.name, declaration.interface)
+                    name=declaration.name,
+                    interface=declaration.interface,
+                )
                 out += ';\n'
-            elif isinstance(declaration, table.Struct):
+            elif isinstance(declaration, ast.StructDeclaration):
                 out += 'typedef struct '
                 out += declaration.name
                 out += ' '
                 out += declaration.name
                 out += ';\n'
+            else:
+                raise Exception('Bad type: ' + str(type(declaration)))
         return out
 
     def _generate_imports(self):
-        if self._table.import_list is None:
+        if self._ast.import_list is None:
             return ''
         out = ''
-        for import_node in self._table.import_list:
+        for import_node in self._ast.import_list:
             out += '// import: ' + import_node + '\n'
         return out
 
     def _generate_declaration(self, declaration):
         out = ''
-        if isinstance(declaration, table.Function):
+        if isinstance(declaration, ast.FunctionDeclaration):
+            # TODO: move 'declaration' to self._ast.function_declaration
             out += self._generate_function(declaration)
-        elif isinstance(declaration, table.Struct):
+        elif isinstance(declaration, ast.StructDeclaration):
             out += self._generate_struct(declaration)
         else:
-            raise Exception("Not Implemented")
+            raise Exception('Not Implemented' + str(type(declaration)))
         return out
 
     def _generate_declarations(self):
         out = ''
-        for declaration in self._table.declaration_list:
+        for declaration in self._ast.declaration_sequence:
             out += self._generate_declaration(declaration)
             out += '\n'
         return out

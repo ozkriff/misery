@@ -8,7 +8,6 @@
 import unittest
 import misc
 import generator
-import table
 import parse
 import datatype
 import textwrap
@@ -16,12 +15,10 @@ import textwrap
 
 def get_generator(input_string):
     generator_ = generator.Generator(
-        table=table.Table.from_ast(
-            ast_=datatype.mark_out_datatypes(
-                parse.make_parser().parse(
-                    input_string,
-                    lexer=parse.make_lexer(),
-                )
+        ast_=datatype.mark_out_datatypes(
+            parse.make_parser().parse(
+                input_string,
+                lexer=parse.make_lexer(),
             )
         )
     )
@@ -91,16 +88,16 @@ class TestTranslator(unittest.TestCase):
                 void start(void);
 
                 typedef struct {
-                  Int field2;
                   Int field1;
+                  Int field2;
                 } MyStruct;
 
                 void start(void) {
-                  MyStruct tmp_0;
                   MyStruct t;
+                  MyStruct tmp_1;
 
-                  MyStruct(&tmp_0);
-                  t = tmp_0;
+                  MyStruct(&tmp_1);
+                  t = tmp_1;
                 }
 
             ''',
@@ -128,8 +125,8 @@ class TestTranslator(unittest.TestCase):
                 void start(void);
 
                 typedef struct {
-                  Int field2;
                   Int field1;
+                  Int field2;
                 } MyStruct;
 
                 void someFunc(MyStruct* __result, MyStruct x) {
@@ -139,15 +136,15 @@ class TestTranslator(unittest.TestCase):
                 }
 
                 void start(void) {
-                  MyStruct tmp_0;
-                  MyStruct t;
-                  MyStruct tmp_2;
+                  MyStruct tmp_3;
                   MyStruct t2;
+                  MyStruct t;
+                  MyStruct tmp_1;
 
-                  MyStruct(&tmp_0);
-                  t = tmp_0;
-                  someFunc(&tmp_2, t);
-                  t2 = tmp_2;
+                  MyStruct(&tmp_1);
+                  t = tmp_1;
+                  someFunc(&tmp_3, t);
+                  t2 = tmp_3;
                 }
 
             ''',
@@ -252,8 +249,8 @@ class TestTranslator(unittest.TestCase):
 
                 void start(void) {
                   Int i;
-                  Int tmp_1;
                   Int tmp_2;
+                  Int tmp_1;
 
                   i = 0;
                   while (1) {
@@ -292,11 +289,11 @@ class TestTranslator(unittest.TestCase):
                 }
 
                 void start(void) {
-                  String tmp_0;
                   String s;
+                  String tmp_1;
 
-                  someString(&tmp_0);
-                  s = tmp_0;
+                  someString(&tmp_1);
+                  s = tmp_1;
                   printString(s);
                 }
 
@@ -356,11 +353,11 @@ class TestTranslator(unittest.TestCase):
                 }
 
                 void start(void) {
-                  Int tmp_0;
                   Int testVar;
+                  Int tmp_1;
 
-                  someNumber(&tmp_0);
-                  testVar = tmp_0;
+                  someNumber(&tmp_1);
+                  testVar = tmp_1;
                 }
 
             ''',
@@ -409,12 +406,12 @@ class TestTranslator(unittest.TestCase):
                 }
 
                 void start(void) {
-                  Int tmp_0;
                   Int tmp_1;
+                  Int tmp_0;
 
-                  someNumber(&tmp_1);
-                  minusInteger(&tmp_0, 666, tmp_1);
-                  printInteger(tmp_0);
+                  someNumber(&tmp_0);
+                  minusInteger(&tmp_1, 666, tmp_0);
+                  printInteger(tmp_1);
                 }
 
             ''',
@@ -446,12 +443,12 @@ class TestTranslator(unittest.TestCase):
                 }
 
                 void start(void) {
-                  Int tmp_0;
                   Int tmp_1;
+                  Int tmp_0;
 
-                  someNumber(&tmp_1);
-                  minusInteger(&tmp_0, 666, tmp_1);
-                  printInteger(tmp_0);
+                  someNumber(&tmp_0);
+                  minusInteger(&tmp_1, 666, tmp_0);
+                  printInteger(tmp_1);
                 }
 
             ''',
@@ -483,12 +480,12 @@ class TestTranslator(unittest.TestCase):
                 }
 
                 void start(void) {
-                  Int tmp_0;
                   Int tmp_1;
+                  Int tmp_0;
 
-                  someNumber(&tmp_1, 1);
-                  minusInteger(&tmp_0, 666, tmp_1);
-                  printInteger(tmp_0);
+                  someNumber(&tmp_0, 1);
+                  minusInteger(&tmp_1, 666, tmp_0);
+                  printInteger(tmp_1);
                 }
 
             ''',
@@ -512,8 +509,8 @@ class TestTranslator(unittest.TestCase):
                 void fac(Int* __result);
 
                 void start(void) {
-                  Int tmp_0;
                   Int tmp_1;
+                  Int tmp_0;
 
                   fac(&tmp_0);
                   printInteger(tmp_0);
@@ -560,24 +557,24 @@ class TestTranslator(unittest.TestCase):
                 }
 
                 void fib(Int* __result, Int n) {
-                  Int tmp_0;
-                  Int tmp_1;
-                  Int tmp_2;
-                  Int tmp_3;
-                  Int tmp_4;
                   Int tmp_5;
+                  Int tmp_4;
+                  Int tmp_3;
+                  Int tmp_2;
+                  Int tmp_1;
+                  Int tmp_0;
 
                   isLessInteger(&tmp_0, n, 2);
                   if (tmp_0) {
                     *__result = n;
                     return;
                   } else {
-                    minusInteger(&tmp_3, n, 1);
-                    fib(&tmp_2, tmp_3);
-                    minusInteger(&tmp_5, n, 2);
-                    fib(&tmp_4, tmp_5);
-                    plusInteger(&tmp_1, tmp_2, tmp_4);
-                    *__result = tmp_1;
+                    minusInteger(&tmp_1, n, 1);
+                    fib(&tmp_2, tmp_1);
+                    minusInteger(&tmp_3, n, 2);
+                    fib(&tmp_4, tmp_3);
+                    plusInteger(&tmp_5, tmp_2, tmp_4);
+                    *__result = tmp_5;
                     return;
                   }
                 }
@@ -615,20 +612,20 @@ class TestTranslator(unittest.TestCase):
                 }
 
                 void fac(Int* __result, Int n) {
-                  Int tmp_0;
-                  Int tmp_1;
-                  Int tmp_2;
                   Int tmp_3;
+                  Int tmp_2;
+                  Int tmp_1;
+                  Int tmp_0;
 
                   isEqualInteger(&tmp_0, n, 0);
                   if (tmp_0) {
                     *__result = 1;
                     return;
                   }
-                  minusInteger(&tmp_3, n, 1);
-                  fac(&tmp_2, tmp_3);
-                  multiplyInteger(&tmp_1, tmp_2, n);
-                  *__result = tmp_1;
+                  minusInteger(&tmp_1, n, 1);
+                  fac(&tmp_2, tmp_1);
+                  multiplyInteger(&tmp_3, tmp_2, n);
+                  *__result = tmp_3;
                   return;
                 }
 

@@ -68,6 +68,7 @@ class FunctionDeclaration(object):
         self.name = name
         self.interface = interface
         self.body = body
+        self.vars = {}  # TODO: move to ast.Block
 
 
 class FunctionInterface(object):
@@ -84,11 +85,13 @@ class Parameter(object):
 
 class FunctionCall(object):
     def __init__(self, expression, argument_list):
-        self.expression = expression
+        self.expression = expression  # TODO: rename - called_expression?
         self.argument_list = argument_list
+        self.tmp_var = None  # TODO: rename? - binded_variable_name
 
 
 class VariableDeclaration(object):
+    # TODO: use 4s indent
     def __init__(
             self,
             name,
@@ -96,7 +99,7 @@ class VariableDeclaration(object):
             datatype=None,
     ):
         self.name = name
-        self.expression = expression
+        self.expression = expression  # TODO: rename
         self.datatype = datatype
 
 
