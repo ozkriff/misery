@@ -477,6 +477,7 @@ class Generator(object):
         if self._ast.import_list is None:
             return ''
         out = ''
+        out += '\n'
         for import_node in self._ast.import_list:
             out += '// import: ' + import_node + '\n'
         return out

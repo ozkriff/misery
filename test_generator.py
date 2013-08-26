@@ -134,6 +134,21 @@ class TestGenerator(unittest.TestCase):
             ''',
         )
 
+    def test_import_simple(self):
+        check_translation(
+            test_case=self,
+            input_ast=ast.Module(
+                import_list=['module1', 'module2'],
+                declaration_sequence=[],
+            ),
+            expected_output='''
+                // import: module1
+                // import: module2
+
+
+            ''',
+        )
+
     def test_multiply_function_parameters(self):
         check_translation(
             test_case=self,
