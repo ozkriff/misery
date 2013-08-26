@@ -28,12 +28,6 @@ class QualifiedIdentifier(object):
         self.identifier_list = identifier_list
 
 
-# TODO: value -> field_list ?
-class TypeStruct(object):
-    def __init__(self, value):
-        self.value = value
-
-
 class Field(object):
     def __init__(self, name, datatype):
         self.name = name
