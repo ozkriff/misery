@@ -38,7 +38,9 @@ def _mark_out_datatypes(ast_):
             raise Exception('Bad type: ' + str(type(expression)))
 
     def mark_out_variable_declaration_statement(
-            block, variable_declaration_statement):
+        block,
+        variable_declaration_statement,
+    ):
         datatype = get_expression_datatype(
             block, variable_declaration_statement.expression)
         variable_declaration_statement.datatype = datatype
