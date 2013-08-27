@@ -149,6 +149,17 @@ class TestGenerator(unittest.TestCase):
             ''',
         )
 
+    def test_generate_full(self):
+        ''' Just generate something '''
+        input_ast = ast.Module(
+            import_list=[],
+            declaration_sequence=[],
+        )
+        marked_out_ast = datatype.mark_out_datatypes(input_ast)
+        generator_ = generator.Generator(marked_out_ast)
+        real_output = generator_.generate_full()
+        assert real_output != ''
+
     def test_multiply_function_parameters(self):
         check_translation(
             test_case=self,
