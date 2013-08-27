@@ -24,7 +24,6 @@ Test coverage::
 TODO
 ----
 
-- Rename: 'type' -> '???'
 - qualifiedIdentifier: module.submodule.Class.Subclass
 - generics
 - varargs
@@ -36,16 +35,6 @@ TODO
 - pep8, pylint, pyflakes
 - implement pointer as special kind of templates
 - do not implement NULL pointer!
-
-Notes
------
-
-Print lexems::
-
-    lexer.input(input_string);
-    for tok in lexer:
-        my_pretty_print.my_pretty_print(tok)
-
 
 See LICENSE file for copyright and license details.
 
