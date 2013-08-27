@@ -135,7 +135,7 @@ def flatten_tree(tree):
             elif isinstance(node, list):
                 _flatten_tree(node, outlist)
             else:
-                raise RuntimeError('flattenTree: bad type')
+                raise Exception('Bad node type: ' + str(type(node)))
     outlist = []
     _flatten_tree(tree, outlist)
     return outlist

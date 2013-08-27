@@ -338,5 +338,14 @@ class TestFlattenTree(unittest.TestCase):
         expected_output = ['1', '2', '3', '4']
         misc.assert_equal(self, expected_output, real_output)
 
+    def test_bad_node_type_error(self):
+        input_list = ['1', '2', 3, '4']
+        self.assertRaisesRegexp(
+            Exception,
+            'Bad node type: .*int',
+            misc.flatten_tree,
+            input_list,
+        )
+
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
