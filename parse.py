@@ -5,6 +5,7 @@
 import ast
 import ply.yacc
 import ply.lex
+import pprint  # TODO: replace with misc.pretty_print
 
 
 reserved = {
@@ -289,7 +290,6 @@ def make_parser():
         p[0] = p[1]
 
     def p_error(p):
-        from pprint import pformat
         toklen = len(str(p.value))
         column = find_column(p.lexer.lexdata, p.lexpos)
         message = (
@@ -304,7 +304,7 @@ def make_parser():
             '\n' +
             '\n' +
             # TODO: replace by misc.pretty_print
-            str(pformat(vars(p))) + '\n' +
+            str(pprint.pformat(vars(p))) + '\n' +
             '\n' +
             '  ' + p.lexer.lexdata.split('\n')[p.lineno - 1] + '\n' +
             '  ' + (' ' * column) + ('^' * toklen) + '\n'

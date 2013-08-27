@@ -5,13 +5,13 @@
 ''' Test 'datatype' module. '''
 
 
-from unittest import TestCase
-from misc import assert_is_part_of
+import unittest
+import misc
 import ast
-from datatype import mark_out_datatypes, SimpleDataType
+import datatype
 
 
-class TestMarkOutDatatypes(TestCase):
+class TestMarkOutDatatypes(unittest.TestCase):
 
     def test_simple_function_declaration(self):
         input_ast = ast.Module(
@@ -32,14 +32,14 @@ class TestMarkOutDatatypes(TestCase):
                 )
             ]
         )
-        real_output = mark_out_datatypes(input_ast)
-        assert_is_part_of(self, expected_output, real_output)
+        real_output = datatype.mark_out_datatypes(input_ast)
+        misc.assert_is_part_of(self, expected_output, real_output)
 
     def test_copy(self):
         input_ast = ast.Module(
             declaration_sequence=[],
         )
-        real_output = mark_out_datatypes(input_ast, do_copy=False)
+        real_output = datatype.mark_out_datatypes(input_ast, do_copy=False)
         input_ast.declaration_sequence.append(2)
         self.assertEquals(real_output.declaration_sequence[0], 2)
 
@@ -67,14 +67,14 @@ class TestMarkOutDatatypes(TestCase):
                         ast.VariableDeclaration(
                             name='testVar',
                             expression=ast.Number(666),
-                            datatype=SimpleDataType('Int'),
+                            datatype=datatype.SimpleDataType('Int'),
                         ),
                     ],
                 )
             ]
         )
-        real_output = mark_out_datatypes(input_ast)
-        assert_is_part_of(self, expected_output, real_output)
+        real_output = datatype.mark_out_datatypes(input_ast)
+        misc.assert_is_part_of(self, expected_output, real_output)
 
     def test_integer_variable_declaration_with_plus_integer(self):
         input_ast = ast.Module(
@@ -112,14 +112,14 @@ class TestMarkOutDatatypes(TestCase):
                                     ast.Number(2),
                                 ],
                             ),
-                            datatype=SimpleDataType('Int'),
+                            datatype=datatype.SimpleDataType('Int'),
                         ),
                     ],
                 )
             ]
         )
-        real_output = mark_out_datatypes(input_ast)
-        assert_is_part_of(self, expected_output, real_output)
+        real_output = datatype.mark_out_datatypes(input_ast)
+        misc.assert_is_part_of(self, expected_output, real_output)
 
     def test_bad_func_error(self):
         input_ast = ast.Module(
@@ -142,7 +142,7 @@ class TestMarkOutDatatypes(TestCase):
         self.assertRaisesRegexp(
             Exception,
             'no function: \'badFuncName\'',
-            mark_out_datatypes,
+            datatype.mark_out_datatypes,
             input_ast,
         )
 
@@ -166,7 +166,7 @@ class TestMarkOutDatatypes(TestCase):
         self.assertRaisesRegexp(
             Exception,
             'Bad type:.*BadExpressionClass',
-            mark_out_datatypes,
+            datatype.mark_out_datatypes,
             input_ast,
         )
 
@@ -187,7 +187,7 @@ class TestMarkOutDatatypes(TestCase):
         self.assertRaisesRegexp(
             Exception,
             'Bad type:.*BadStatementClass',
-            mark_out_datatypes,
+            datatype.mark_out_datatypes,
             input_ast,
         )
 
@@ -202,7 +202,7 @@ class TestMarkOutDatatypes(TestCase):
         self.assertRaisesRegexp(
             Exception,
             'Bad type:.*BadDeclarationClass',
-            mark_out_datatypes,
+            datatype.mark_out_datatypes,
             input_ast,
         )
 
