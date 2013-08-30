@@ -16,11 +16,11 @@ class Generator(object):
         typedef char* String;
 
         void printInteger(Int n) {
-          printf("INTEGER: %d\\n", n);
+          printf("INTEGER: %d\n", n);
         }
 
         void printString(String s) {
-          printf("STRING: %s\\n", s);
+          printf("STRING: %s\n", s);
         }
 
         void isLessInteger(Int* __result, Int a, Int b) {
