@@ -9,6 +9,7 @@ Data types.
 
 import misc
 import ast
+import copy
 
 
 class SimpleDataType(object):
@@ -83,15 +84,11 @@ def _mark_out_datatypes(ast_):
             raise Exception('Bad type: ' + str(type(declaration)))
 
 
-def mark_out_datatypes(ast_, do_copy=True):
+def mark_out_datatypes(ast_):
     ''' Mark out 'datatype' fields to ast nodes. '''
-    if do_copy:
-        import copy  # TODO: remove import from here, remove copying
-        ast2_ = copy.deepcopy(ast_)
-    else:
-        ast2_ = ast_
-    _mark_out_datatypes(ast2_)
-    return ast2_
+    copied_ast_ = copy.deepcopy(ast_)
+    _mark_out_datatypes(copied_ast_)
+    return copied_ast_
 
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:

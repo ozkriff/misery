@@ -39,9 +39,10 @@ class TestMarkOutDatatypes(unittest.TestCase):
         input_ast = ast.Module(
             declaration_sequence=[],
         )
-        real_output = datatype.mark_out_datatypes(input_ast, do_copy=False)
-        input_ast.declaration_sequence.append(2)
-        self.assertEquals(real_output.declaration_sequence[0], 2)
+        real_output = datatype.mark_out_datatypes(input_ast)
+        # change original data
+        input_ast.declaration_sequence.append('hi')
+        self.assertEquals(len(real_output.declaration_sequence), 0)
 
     def test_simple_integer_variable_declaration(self):
         input_ast = ast.Module(
