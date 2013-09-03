@@ -5,7 +5,6 @@
 import ast
 import ply.yacc
 import ply.lex
-import pprint  # TODO: replace with misc.pretty_print
 
 
 reserved = {
@@ -312,13 +311,10 @@ def make_parser():
                 'column': column - 1,
             } +
             '\n' +
-            '\n' +
-            # TODO: replace by misc.pretty_print
-            str(pprint.pformat(vars(p))) + '\n' +
-            '\n' +
             '  ' + p.lexer.lexdata.split('\n')[p.lineno - 1] + '\n' +
             '  ' + (' ' * column) + ('^' * toklen) + '\n'
         )
+        print message
         raise Exception(message)
 
     # TODO: python3 reports some warning about unclosed file here
