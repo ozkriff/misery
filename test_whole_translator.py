@@ -11,17 +11,17 @@ import generator
 import parse
 import datatype
 import textwrap
+import ast  # TODO: used only for identifier_table, remove this import later
 
 
 def get_generator(input_string):
-    generator_ = generator.Generator(
-        ast_=datatype.mark_out_datatypes(
-            parse.make_parser().parse(
-                input_string,
-                lexer=parse.make_lexer(),
-            )
-        )
+    ast_ = parse.make_parser().parse(
+        input_string,
+        lexer=parse.make_lexer(),
     )
+    ast_.identifier_list = ast.identifier_table(ast_)
+    ast_ = datatype.mark_out_datatypes(ast_=ast_)
+    generator_ = generator.Generator(ast_=ast_)
     return generator_
 
 

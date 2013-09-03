@@ -33,7 +33,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
             ]
         )
         real_output = datatype.mark_out_datatypes(input_ast)
-        misc.assert_is_part_of(self, expected_output, real_output)
+        misc.assert_equal(self, expected_output, real_output)
 
     def test_copy(self):
         input_ast = ast.Module(
@@ -74,9 +74,19 @@ class TestMarkOutDatatypes(unittest.TestCase):
             ]
         )
         real_output = datatype.mark_out_datatypes(input_ast)
-        misc.assert_is_part_of(self, expected_output, real_output)
+        misc.assert_equal(self, expected_output, real_output)
 
     def test_integer_variable_declaration_with_plus_integer(self):
+        int_data_type = datatype.SimpleDataType('Int'),
+        std_identifier_list = {
+            'plusInteger': ast.FunctionInterface(
+                return_type=datatype.SimpleDataType('Int'),
+                parameter_list=[
+                    ast.Parameter(name='a', datatype=int_data_type),
+                    ast.Parameter(name='b', datatype=int_data_type),
+                ],
+            ),
+        }
         input_ast = ast.Module(
             declaration_sequence=[
                 ast.FunctionDeclaration(
@@ -97,6 +107,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
                 )
             ]
         )
+        input_ast.identifier_list = std_identifier_list
         expected_output = ast.Module(
             declaration_sequence=[
                 ast.FunctionDeclaration(
@@ -118,8 +129,9 @@ class TestMarkOutDatatypes(unittest.TestCase):
                 )
             ]
         )
+        expected_output.identifier_list = std_identifier_list
         real_output = datatype.mark_out_datatypes(input_ast)
-        misc.assert_is_part_of(self, expected_output, real_output)
+        misc.assert_equal(self, expected_output, real_output)
 
     def test_bad_func_error(self):
         input_ast = ast.Module(
@@ -139,6 +151,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
                 )
             ]
         )
+        input_ast.identifier_list = {}
         self.assertRaisesRegexp(
             Exception,
             'no function: \'badFuncName\'',

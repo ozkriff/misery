@@ -15,6 +15,7 @@ import datatype
 
 def check_translation(test_case, input_ast, expected_output):
     ''' Small helper function. '''
+    input_ast.identifier_list = ast.identifier_table(input_ast)
     marked_out_ast = datatype.mark_out_datatypes(input_ast)
     generator_ = generator.Generator(marked_out_ast)
     real_output = generator_.generate()

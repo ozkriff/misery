@@ -86,11 +86,10 @@ def _mark_out_datatypes(ast_):
 def mark_out_datatypes(ast_, do_copy=True):
     ''' Mark out 'datatype' fields to ast nodes. '''
     if do_copy:
-        import copy
+        import copy  # TODO: remove import from here, remove copying
         ast2_ = copy.deepcopy(ast_)
     else:
         ast2_ = ast_
-    ast2_.identifier_list = ast.identifier_table(ast2_)
     _mark_out_datatypes(ast2_)
     return ast2_
 
