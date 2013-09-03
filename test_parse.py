@@ -441,7 +441,7 @@ class TestParser(unittest.TestCase):
         input_string = 'start := <'
         self.assertRaisesRegexp(
             Exception,
-            'Lexer error: Illegal character',  # TODO: more details
+            'Lexer error: Illegal character',
             self._parse,
             input_string,
         )
@@ -451,7 +451,7 @@ class TestParser(unittest.TestCase):
         input_string = 'start := func 666 () {}'
         self.assertRaisesRegexp(
             Exception,
-            'Parser error: unexpected token',  # TODO: more details
+            'Parser error: unexpected token',
             self._parse,
             input_string,
         )
