@@ -9,9 +9,9 @@ Misery compiler generates native code via compilation to ANSI C.
 Misery compiler is implemented in Python.
 
 
-Run all unit tests::
+Test source with pep8 and run all unit tests::
 
-    python -m unittest discover -v
+    make
 
 Test coverage::
 
@@ -20,21 +20,6 @@ Test coverage::
     simple report: python -m coverage report -m
     html report: python -m coverage html -d coverage_html
 
-
-TODO
-----
-
-- qualifiedIdentifier: module.submodule.Class.Subclass
-- generics
-- varargs
-- var testArray Array[Int](1, 2, 3)
-- qualifiedIdentifier: x.a.c
-- switch expr { case dfgd {} }
-- var myClosure = func() { killAllHumans() }
-- nested funcs
-- pep8, pylint, pyflakes
-- implement pointer as special kind of templates
-- do not implement NULL pointer!
 
 See LICENSE file for copyright and license details.
 
