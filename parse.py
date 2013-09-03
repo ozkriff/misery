@@ -314,7 +314,6 @@ def make_parser():
             '  ' + p.lexer.lexdata.split('\n')[p.lineno - 1] + '\n' +
             '  ' + (' ' * column) + ('^' * toklen) + '\n'
         )
-        print message
         raise Exception(message)
 
     # TODO: python3 reports some warning about unclosed file here
