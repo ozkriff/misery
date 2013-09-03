@@ -90,10 +90,12 @@ class VariableDeclaration(object):
         name,
         expression=None,
         datatype=None,
+        allocate_memory_on_stack=False,
     ):
         self.name = name
         self.expression = expression  # TODO: rename
         self.datatype = datatype
+        self.allocate_memory_on_stack = allocate_memory_on_stack
 
 
 class Assign(object):

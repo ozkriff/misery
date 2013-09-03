@@ -26,6 +26,7 @@ tokens = [
     'NUMBER',
     'ASSIGN',
     'COLONASSIGN',
+    'DOUBLECOLONASSIGN',
     'LPAREN',
     'RPAREN',
     'LCURLY',
@@ -57,6 +58,7 @@ def make_lexer():
     t_ARROW = r'->'
     t_ASSIGN = r'='
     t_COLONASSIGN = r':='
+    t_DOUBLECOLONASSIGN = r'::='
     t_LPAREN = r'\('
     t_RPAREN = r'\)'
     t_LCURLY = r'\{'
@@ -237,9 +239,17 @@ def make_parser():
         'statement : function_call'
         p[0] = p[1]
 
-    def p_statement_variable_declaration_with_init(p):
+    def p_statement_variable_declaration_1(p):
         'statement : IDENTIFIER COLONASSIGN expression'
         p[0] = ast.VariableDeclaration(name=p[1], expression=p[3])
+
+    def p_statement_variable_declaration_2(p):
+        'statement : IDENTIFIER DOUBLECOLONASSIGN expression'
+        p[0] = ast.VariableDeclaration(
+            name=p[1],
+            expression=p[3],
+            allocate_memory_on_stack=True,
+        )
 
     def p_statement_assignment(p):
         'statement : IDENTIFIER ASSIGN expression'
