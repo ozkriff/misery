@@ -348,8 +348,9 @@ class Generator(object):
         return out
 
     def _generate_struct(self, struct_declaration):
+        name = struct_declaration.name  # shortcut
         out = ''
-        out += 'struct ' + struct_declaration.name + ' {\n'
+        out += 'struct ' + name + ' {\n'
         self._increnent_indent()
         for field in struct_declaration.field_list:
             out += self._indent()
@@ -357,8 +358,7 @@ class Generator(object):
         self._decrenent_indent()
         out += '};\n'
         out += '\n'
-        out += 'void ' + struct_declaration.name + '_init'
-        out += '(' + struct_declaration.name + '* __result' + ') {\n'
+        out += 'void ' + name + '_init(' + name + '* __result' + ') {\n'
         out += '  /* todo */\n'
         out += '}\n'
         return out
