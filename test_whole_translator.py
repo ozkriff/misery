@@ -6,6 +6,7 @@
 
 
 import unittest
+import subprocess
 import misc
 import generator
 import parse
@@ -31,22 +32,48 @@ def translate_mis_to_c(input_string):
     return real_output
 
 
-# TODO: try to compile and run
 def translate_mis_to_c_and_write_to_file(input_string, filename='out.c'):
     ''' Translate to full C version and write to file. '''
     with open(filename, 'w') as file:
         file.write(get_generator(input_string).generate_full())
 
 
+def try_to_compile_and_run_file(file_name, input_string):
+    # translate mis to ANSI C and write to file
+    translate_mis_to_c_and_write_to_file(
+        input_string=input_string,
+        filename=file_name,
+    )
+
+    # compile c code with c compiler TODO: support other compilers
+    compiler_proc = subprocess.Popen(
+        ['tcc', file_name],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    compiler_out, compiler_err = compiler_proc.communicate()
+    assert compiler_out == ''
+    if compiler_err != '':
+        raise Exception('ANSI C compiler error: ' + compiler_err)
+
+    # run compiler program and check its output
+    proc = subprocess.Popen(
+        [file_name.replace('.c', '.exe')],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    out, err = proc.communicate()
+    # TODO: check output # if out != '': print '\nOUT: ', out, '\n'
+    if err != '':
+        raise Exception('Compiled prog error: ' + compiler_err)
+
+
 def check_translation(test_case, input_string, expected_output):
     ''' Small helper function. '''
     real_output = translate_mis_to_c(textwrap.dedent(input_string))
     misc.assert_equal(test_case, textwrap.dedent(expected_output), real_output)
-    # translate_mis_to_c_and_write_to_file(
-    #     input_string=input_string,
-    #     filename=misc.get_caller_func_name()[5:] + '_out.c',
-    # )
-    # try_to_compile_and_run_file()
+    file_name = misc.get_caller_func_name()[5:] + '_out.c'
+    try_to_compile_and_run_file(file_name, input_string)
 
 
 class TestTranslator(unittest.TestCase):
