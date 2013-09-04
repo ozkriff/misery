@@ -53,6 +53,7 @@ def try_to_compile_and_run_file(c_file_name, input_string):
         stderr=subprocess.PIPE,
     )
     compiler_out, compiler_err = compiler_proc.communicate()
+    os.remove(c_file_name)
     assert compiler_out == ''
     if compiler_err != '':
         raise Exception('ANSI C compiler error: ' + compiler_err)
@@ -65,12 +66,10 @@ def try_to_compile_and_run_file(c_file_name, input_string):
         stderr=subprocess.PIPE,
     )
     out, err = proc.communicate()
+    os.remove(exe_file_name)
     # TODO: check output # if out != '': print '\nOUT: ', out, '\n'
     if err != '':
         raise Exception('Compiled prog error: ' + compiler_err)
-
-    os.remove(c_file_name)
-    os.remove(exe_file_name)
 
 
 def check_translation(test_case, input_string, expected_output):
