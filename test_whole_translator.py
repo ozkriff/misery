@@ -7,6 +7,7 @@
 
 import unittest
 import subprocess
+import os
 import misc
 import generator
 import parse
@@ -38,16 +39,16 @@ def translate_mis_to_c_and_write_to_file(input_string, filename='out.c'):
         file.write(get_generator(input_string).generate_full())
 
 
-def try_to_compile_and_run_file(file_name, input_string):
+def try_to_compile_and_run_file(c_file_name, input_string):
     # translate mis to ANSI C and write to file
     translate_mis_to_c_and_write_to_file(
         input_string=input_string,
-        filename=file_name,
+        filename=c_file_name,
     )
 
     # compile c code with c compiler TODO: support other compilers
     compiler_proc = subprocess.Popen(
-        ['tcc', file_name],
+        ['tcc', c_file_name],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
@@ -57,8 +58,9 @@ def try_to_compile_and_run_file(file_name, input_string):
         raise Exception('ANSI C compiler error: ' + compiler_err)
 
     # run compiler program and check its output
+    exe_file_name = c_file_name.replace('.c', '.exe')
     proc = subprocess.Popen(
-        [file_name.replace('.c', '.exe')],
+        [exe_file_name],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
@@ -67,13 +69,16 @@ def try_to_compile_and_run_file(file_name, input_string):
     if err != '':
         raise Exception('Compiled prog error: ' + compiler_err)
 
+    os.remove(c_file_name)
+    os.remove(exe_file_name)
+
 
 def check_translation(test_case, input_string, expected_output):
     ''' Small helper function. '''
     real_output = translate_mis_to_c(textwrap.dedent(input_string))
     misc.assert_equal(test_case, textwrap.dedent(expected_output), real_output)
-    file_name = misc.get_caller_func_name()[5:] + '_out.c'
-    try_to_compile_and_run_file(file_name, input_string)
+    c_file_name = misc.get_caller_func_name()[5:] + '_out.c'
+    try_to_compile_and_run_file(c_file_name, input_string)
 
 
 class TestTranslator(unittest.TestCase):
