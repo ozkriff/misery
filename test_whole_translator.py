@@ -87,16 +87,20 @@ class TestTranslator(unittest.TestCase):
                 typedef struct MyStruct MyStruct;
                 void start(void);
 
-                typedef struct {
+                struct MyStruct {
                   Int field1;
                   Int field2;
-                } MyStruct;
+                };
+
+                void MyStruct_init(MyStruct* __result) {
+                  /* todo */
+                }
 
                 void start(void) {
                   MyStruct t;
                   MyStruct tmp_1;
 
-                  MyStruct(&tmp_1);
+                  MyStruct_init(&tmp_1);
                   t = tmp_1;
                 }
 
@@ -124,10 +128,14 @@ class TestTranslator(unittest.TestCase):
                 void someFunc(MyStruct* __result, MyStruct x);
                 void start(void);
 
-                typedef struct {
+                struct MyStruct {
                   Int field1;
                   Int field2;
-                } MyStruct;
+                };
+
+                void MyStruct_init(MyStruct* __result) {
+                  /* todo */
+                }
 
                 void someFunc(MyStruct* __result, MyStruct x) {
 
@@ -141,7 +149,7 @@ class TestTranslator(unittest.TestCase):
                   MyStruct t;
                   MyStruct tmp_1;
 
-                  MyStruct(&tmp_1);
+                  MyStruct_init(&tmp_1);
                   t = tmp_1;
                   someFunc(&tmp_3, t);
                   t2 = tmp_3;

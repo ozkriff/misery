@@ -147,7 +147,11 @@ class Generator(object):
             function_call_expression=function_call_expression,
         )
         out += self._indent()
-        out += called_func_name
+        # is constructor\initializer? TODO: remove from here, do earlier
+        if called_func_name[0].istitle():
+            out += called_func_name + '_init'
+        else:
+            out += called_func_name
         out += '('
         out += self._generate_function_call_expression_arguments(
             function_call_expression,
@@ -345,15 +349,18 @@ class Generator(object):
 
     def _generate_struct(self, struct_declaration):
         out = ''
-        out += 'typedef struct {\n'
+        out += 'struct ' + struct_declaration.name + ' {\n'
         self._increnent_indent()
         for field in struct_declaration.field_list:
             out += self._indent()
             out += field.datatype.name + ' ' + field.name + ';\n'
         self._decrenent_indent()
-        out += '} '
-        out += struct_declaration.name
-        out += ';\n'
+        out += '};\n'
+        out += '\n'
+        out += 'void ' + struct_declaration.name + '_init'
+        out += '(' + struct_declaration.name + '* __result' + ') {\n'
+        out += '  /* todo */\n'
+        out += '}\n'
         return out
 
     def _generate_forward_declarations(self):
