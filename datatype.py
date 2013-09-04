@@ -7,7 +7,6 @@ Data types.
 '''
 
 
-import misc
 import ast
 import copy
 

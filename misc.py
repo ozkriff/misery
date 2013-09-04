@@ -7,9 +7,6 @@ Miscellaneous classes and functions.
 '''
 
 
-import string
-
-
 class PrettyPrinter(object):
     ''' Prettyprints values. '''
 

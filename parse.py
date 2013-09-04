@@ -37,13 +37,13 @@ tokens = [
 ] + list(reserved.values())
 
 
-def find_column(input, lexpos):
+def find_column(input_string, lexpos):
     '''Compute column.
 
-    input is the input text string
+    input_string is the input text string
     lexpos is a lexem position
     '''
-    last_cr = input.rfind('\n', 0, lexpos)
+    last_cr = input_string.rfind('\n', 0, lexpos)
     if last_cr < 0:
         last_cr = 0
     else:

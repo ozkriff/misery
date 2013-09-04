@@ -6,9 +6,6 @@ Asbtract Syntax Tree
 '''
 
 
-import datatype
-
-
 class Module(object):
     def __init__(self, import_list=None, declaration_sequence=None):
         assert import_list is None or isinstance(import_list, list)

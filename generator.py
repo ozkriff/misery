@@ -3,7 +3,6 @@
 
 
 import ast
-import misc
 import textwrap
 
 
@@ -276,7 +275,7 @@ class Generator(object):
         return out
 
     def _scan_expression(self, expression):
-        vars = self._function_declaration.vars
+        local_vars = self._function_declaration.vars
         if isinstance(expression, ast.FunctionCall):
             for argument in expression.argument_list:
                 if isinstance(argument, ast.FunctionCall):
@@ -286,11 +285,11 @@ class Generator(object):
             identifier_list = self._ast.identifier_list
             return_type = identifier_list[called_func_name].return_type
             if return_type is not None:
-                var_name = 'tmp_' + str(len(vars))
-                vars[var_name] = return_type
+                var_name = 'tmp_' + str(len(local_vars))
+                local_vars[var_name] = return_type
                 expression.tmp_var = var_name
         elif isinstance(expression, ast.VariableDeclaration):
-            vars[expression.name] = expression.datatype
+            local_vars[expression.name] = expression.datatype
             self._scan_expression(expression.expression)
         elif isinstance(expression, (ast.Number, ast.String, ast.Identifier)):
             pass  # ok
@@ -322,9 +321,9 @@ class Generator(object):
     def _generate_local_variables(self):
         out = ''
         # TODO: sort! # TODO: python3
-        for name, type in self._function_declaration.vars.iteritems():
+        for name, datatype in self._function_declaration.vars.iteritems():
             out += self._indent()
-            out += type.name
+            out += datatype.name
             out += ' '
             out += name
             out += ';' + '\n'

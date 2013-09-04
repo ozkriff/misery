@@ -35,8 +35,8 @@ def translate_mis_to_c(input_string):
 
 def translate_mis_to_c_and_write_to_file(input_string, filename='out.c'):
     ''' Translate to full C version and write to file. '''
-    with open(filename, 'w') as file:
-        file.write(get_generator(input_string).generate_full())
+    with open(filename, 'w') as f:
+        f.write(get_generator(input_string).generate_full())
 
 
 def try_to_compile_and_run_file(c_file_name, input_string):
