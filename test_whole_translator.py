@@ -8,11 +8,11 @@
 import unittest
 import subprocess
 import os
+import textwrap
 import misc
 import generator
 import parse
 import datatype
-import textwrap
 import identifier_table
 
 

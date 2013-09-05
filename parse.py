@@ -2,9 +2,9 @@
 # See LICENSE file for copyright and license details
 
 
-import ast
 import ply.yacc
 import ply.lex
+import ast
 import datatype
 
 

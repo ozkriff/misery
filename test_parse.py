@@ -6,10 +6,10 @@
 
 
 import unittest
+import copy
 import ast
 import datatype
 import misc
-import copy
 import parse
 
 

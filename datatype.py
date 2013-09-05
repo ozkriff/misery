@@ -7,8 +7,8 @@ Data types.
 '''
 
 
-import ast
 import copy
+import ast
 
 
 class SimpleDataType(object):

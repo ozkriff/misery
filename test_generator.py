@@ -7,9 +7,9 @@
 
 import unittest
 import ast
+import textwrap
 import misc
 import generator
-import textwrap
 import datatype
 import identifier_table
 
