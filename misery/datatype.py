@@ -22,8 +22,6 @@ class SimpleDataType(object):
 def _mark_out_datatypes(ast_):
     ''' Mark out 'datatype' fields to ast nodes. '''
 
-    # function = None
-
     def get_function_call_expression_datatype(function_call_expression):
         function_name = function_call_expression.expression.name
         if function_name not in ast_.identifier_list:
@@ -71,7 +69,6 @@ def _mark_out_datatypes(ast_):
             raise Exception('Bad type: ' + str(type(statement)))
 
     def mark_out_function_declaration(function_declaration):
-        function = function_declaration
         block = function_declaration.body
         for statement in block:
             mark_out_statement(statement)
