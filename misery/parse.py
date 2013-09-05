@@ -2,8 +2,10 @@
 # See LICENSE file for copyright and license details
 
 
-import ply.yacc
-import ply.lex
+from ply import (
+    yacc,
+    lex,
+)
 from misery import (
     ast,
     datatype,
@@ -108,7 +110,7 @@ def make_lexer():
         # t.lexer.skip(1)
 
     # Build the lexer from my environment and return it
-    return ply.lex.lex()
+    return lex.lex()
 
 
 def make_parser():
@@ -320,7 +322,7 @@ def make_parser():
         raise Exception(message)
 
     # TODO: python3 reports some warning about unclosed file here
-    parser = ply.yacc.yacc()
+    parser = yacc.yacc()
     return parser
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
