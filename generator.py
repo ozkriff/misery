@@ -402,10 +402,12 @@ class Generator(object):
         out += ' {\n'
         self._increnent_indent()
         self._scan_vars(function_declaration.body)
-        out += self._generate_local_variables()
-        out += '\n'
-        out += self._generate_constats_initialization_code()
-        out += '\n'
+        if function_declaration.vars or function_declaration.constants:
+            out += self._generate_local_variables()
+            out += '\n'
+            if function_declaration.constants:
+                out += self._generate_constats_initialization_code()
+                out += '\n'
         out += self._generate_block(function_declaration.body)
         self._decrenent_indent()
         out += '}\n'

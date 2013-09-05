@@ -215,8 +215,6 @@ class TestGenerator(unittest.TestCase):
                 void start(void);
 
                 void testFunc(Int* n1, Int* n2) {
-
-
                 }
 
                 void start(void) {

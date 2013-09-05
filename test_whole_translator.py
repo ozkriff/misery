@@ -164,7 +164,6 @@ class TestTranslator(unittest.TestCase):
                   MyStruct* t;
                   MyStruct tmp_1;
 
-
                   t = &tmp_1;
                   MyStruct_init(&tmp_1);
                   *t = tmp_1;
@@ -204,8 +203,6 @@ class TestTranslator(unittest.TestCase):
                 }
 
                 void someFunc(MyStruct* __result, MyStruct* x) {
-
-
                   *__result = *x;
                   return;
                 }
@@ -215,7 +212,6 @@ class TestTranslator(unittest.TestCase):
                   MyStruct* t2;
                   MyStruct* t;
                   MyStruct tmp_1;
-
 
                   t = &tmp_1;
                   MyStruct_init(&tmp_1);
@@ -400,7 +396,6 @@ class TestTranslator(unittest.TestCase):
                   String* s;
                   String tmp_1;
 
-
                   s = &tmp_1;
                   someString(&tmp_1);
                   *s = tmp_1;
@@ -437,7 +432,6 @@ class TestTranslator(unittest.TestCase):
                 void start(void) {
                   String tmp_0;
 
-
                   someString(&tmp_0);
                   printString(&tmp_0);
                 }
@@ -472,7 +466,6 @@ class TestTranslator(unittest.TestCase):
                 void start(void) {
                   Int* testVar;
                   Int tmp_1;
-
 
                   testVar = &tmp_1;
                   someNumber(&tmp_1);
@@ -657,7 +650,6 @@ class TestTranslator(unittest.TestCase):
                 void start(void) {
                   Int tmp_1;
                   Int tmp_0;
-
 
                   fac(&tmp_0);
                   printInt(&tmp_0);
