@@ -39,7 +39,12 @@ def translate_mis_to_c_and_write_to_file(input_string, filename='out.c'):
         f.write(get_generator(input_string).generate_full())
 
 
-def try_to_compile_and_run_file(c_file_name, input_string):
+def try_to_compile_and_run_file(
+    test_case,
+    c_file_name,
+    input_string,
+    expected_stdout,
+):
     # translate mis to ANSI C and write to file
     translate_mis_to_c_and_write_to_file(
         input_string=input_string,
@@ -51,12 +56,14 @@ def try_to_compile_and_run_file(c_file_name, input_string):
         ['tcc', c_file_name],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
+        universal_newlines=True,
     )
     compiler_out, compiler_err = compiler_proc.communicate()
+    assert os.path.isfile(c_file_name)
     os.remove(c_file_name)
     assert compiler_out == ''
     if compiler_err != '':
-        raise Exception('ANSI C compiler error: ' + compiler_err)
+        test_case.fail('\n' + 'ANSI C compiler error:\n' + compiler_err)
 
     # run compiler program and check its output
     exe_file_name = c_file_name.replace('.c', '.exe')
@@ -64,20 +71,32 @@ def try_to_compile_and_run_file(c_file_name, input_string):
         [exe_file_name],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
+        universal_newlines=True,
     )
     out, err = proc.communicate()
+    assert os.path.isfile(exe_file_name)
     os.remove(exe_file_name)
-    # TODO: check output # if out != '': print '\nOUT: ', out, '\n'
+    misc.assert_equal(test_case, expected_stdout, out)
     if err != '':
-        raise Exception('Compiled prog error: ' + compiler_err)
+        test_case.fail('\n' + 'Compiled prog error:\n' + err)
 
 
-def check_translation(test_case, input_string, expected_output):
+def check_translation(
+    test_case,
+    input_string,
+    expected_output,
+    expected_stdout='',
+):
     ''' Small helper function. '''
     real_output = translate_mis_to_c(textwrap.dedent(input_string))
     misc.assert_equal(test_case, textwrap.dedent(expected_output), real_output)
     c_file_name = misc.get_caller_func_name().replace('test_', '') + '_out.c'
-    try_to_compile_and_run_file(c_file_name, input_string)
+    try_to_compile_and_run_file(
+        test_case,
+        c_file_name,
+        input_string,
+        expected_stdout,
+    )
 
 
 class TestTranslator(unittest.TestCase):
@@ -269,6 +288,7 @@ class TestTranslator(unittest.TestCase):
                 }
 
             ''',
+            expected_stdout='STRING: hello\n',
         )
 
     def test_print_string_var(self):
@@ -296,6 +316,7 @@ class TestTranslator(unittest.TestCase):
                 }
 
             ''',
+            expected_stdout='STRING: print this to console, please\n',
         )
 
     def test_basic_assignment_of_integer_literal(self):
@@ -366,6 +387,13 @@ class TestTranslator(unittest.TestCase):
                 }
 
             ''',
+            expected_stdout=(
+                'INTEGER: 0\n'
+                'INTEGER: 1\n'
+                'INTEGER: 2\n'
+                'INTEGER: 3\n'
+                'INTEGER: 4\n'
+            ),
         )
 
     def test_var_declaration_with_function_call_returning_string(self):
@@ -403,6 +431,7 @@ class TestTranslator(unittest.TestCase):
                 }
 
             ''',
+            expected_stdout='STRING: hi\n',
         )
 
     def test_nested_func_calls_with_strings(self):
@@ -437,6 +466,7 @@ class TestTranslator(unittest.TestCase):
                 }
 
             ''',
+            expected_stdout='STRING: hi\n',
         )
 
     def test_var_declaration_with_function_call_returning_integer(self):
@@ -499,6 +529,7 @@ class TestTranslator(unittest.TestCase):
                 }
 
             ''',
+            expected_stdout='INTEGER: 567\n',
         )
 
     def test_simple_func_2(self):
@@ -538,6 +569,7 @@ class TestTranslator(unittest.TestCase):
                 }
 
             ''',
+            expected_stdout='INTEGER: 567\n',
         )
 
     def test_simple_func_3(self):
@@ -583,6 +615,7 @@ class TestTranslator(unittest.TestCase):
                 }
 
             ''',
+            expected_stdout='INTEGER: 567\n',
         )
 
     def test_simple_func_4(self):
@@ -628,6 +661,7 @@ class TestTranslator(unittest.TestCase):
                 }
 
             ''',
+            expected_stdout='INTEGER: 567\n',
         )
 
     def test_some_bug(self):
@@ -666,6 +700,7 @@ class TestTranslator(unittest.TestCase):
                 }
 
             ''',
+            expected_stdout='INTEGER: 1\n',
         )
 
     def test_fib_1(self):
@@ -732,6 +767,7 @@ class TestTranslator(unittest.TestCase):
                 }
 
             ''',
+            expected_stdout='INTEGER: 55\n',
         )
 
     def test_factorial_1(self):
@@ -792,6 +828,7 @@ class TestTranslator(unittest.TestCase):
                 }
 
             ''',
+            expected_stdout='INTEGER: 6\n',
         )
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
