@@ -105,13 +105,13 @@ class TestParser(unittest.TestCase):
 
     def test_const_declaration(self):
         ''' Parse constant declaration. '''
-        input_string = 'const importantIdentifier:Integer := 10'
+        input_string = 'const importantIdentifier:Int := 10'
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
             declaration_sequence=[
                 ast.ConstDeclaration(
                     name='importantIdentifier',
-                    datatype=datatype.SimpleDataType('Integer'),
+                    datatype=datatype.SimpleDataType('Int'),
                     expression=ast.Number(10),
                 )
             ]
@@ -134,8 +134,8 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_func_with_return_value(self):
-        ''' Parse function that returns Integer. '''
-        input_string = 'testfunc2 := func () -> Integer {}'
+        ''' Parse function that returns Int. '''
+        input_string = 'testfunc2 := func () -> Int {}'
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
             declaration_sequence=[
@@ -143,7 +143,7 @@ class TestParser(unittest.TestCase):
                     name='testfunc2',
                     interface=ast.FunctionInterface(
                         parameter_list=[],
-                        return_type=datatype.SimpleDataType('Integer'),
+                        return_type=datatype.SimpleDataType('Int'),
                     ),
                     body=[],
                 )
@@ -223,13 +223,13 @@ class TestParser(unittest.TestCase):
 
     def test_var_declaration_without_initialization(self):
         ''' Parse variable declaration statement. '''
-        input_string = 'start := func () { testVar := Integer() }'
+        input_string = 'start := func () { testVar := Int() }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         var = ast.VariableDeclaration(
             name='testVar',
             expression=ast.FunctionCall(
-                expression=ast.Identifier('Integer'),
+                expression=ast.Identifier('Int'),
                 argument_list=[],
             )
         )
@@ -238,13 +238,13 @@ class TestParser(unittest.TestCase):
 
     def test_var_declaration_with_type_and_initialization(self):
         ''' Parse variable declaration statement with initiaization. '''
-        input_string = 'start := func () { testVar := Integer(666) }'
+        input_string = 'start := func () { testVar := Int(666) }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
         var = ast.VariableDeclaration(
             name='testVar',
             expression=ast.FunctionCall(
-                expression=ast.Identifier('Integer'),
+                expression=ast.Identifier('Int'),
                 argument_list=[
                     ast.Number(666),
                 ],

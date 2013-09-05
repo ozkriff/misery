@@ -80,7 +80,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
     def test_integer_variable_declaration_with_plus_integer(self):
         int_data_type = datatype.SimpleDataType('Int'),
         std_identifier_list = {
-            'plusInteger': ast.FunctionInterface(
+            'plusInt': ast.FunctionInterface(
                 return_type=datatype.SimpleDataType('Int'),
                 parameter_list=[
                     ast.Parameter(name='a', datatype=int_data_type),
@@ -97,7 +97,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
                         ast.VariableDeclaration(
                             name='testVar',
                             expression=ast.FunctionCall(
-                                expression=ast.Identifier('plusInteger'),
+                                expression=ast.Identifier('plusInt'),
                                 argument_list=[
                                     ast.Number(1),
                                     ast.Number(2),
@@ -118,7 +118,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
                         ast.VariableDeclaration(
                             name='testVar',
                             expression=ast.FunctionCall(
-                                expression=ast.Identifier('plusInteger'),
+                                expression=ast.Identifier('plusInt'),
                                 argument_list=[
                                     ast.Number(1),
                                     ast.Number(2),

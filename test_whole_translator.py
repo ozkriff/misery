@@ -335,9 +335,9 @@ class TestTranslator(unittest.TestCase):
             input_string='''
                 start := func () {
                   i := 0
-                  for isLessInteger(i 5) {
-                    printInteger(i)
-                    i = plusInteger(i 1)
+                  for isLessInt(i 5) {
+                    printInt(i)
+                    i = plusInt(i 1)
                   }
                 }
             ''',
@@ -359,12 +359,12 @@ class TestTranslator(unittest.TestCase):
                   i = &const_0;
                   *i = const_0;
                   while (1) {
-                    isLessInteger(&tmp_1, i, &const_1);
+                    isLessInt(&tmp_1, i, &const_1);
                     if (!tmp_1) {
                       break;
                     }
-                    printInteger(i);
-                    plusInteger(&tmp_2, i, &const_2);
+                    printInt(i);
+                    plusInt(&tmp_2, i, &const_2);
                     *i = tmp_2;
                   }
                 }
@@ -487,7 +487,7 @@ class TestTranslator(unittest.TestCase):
             test_case=self,
             input_string='''
                 start := func () {
-                  printInteger(minusInteger(666 99))
+                  printInt(minusInt(666 99))
                 }
             ''',
             expected_output='''
@@ -501,8 +501,8 @@ class TestTranslator(unittest.TestCase):
                   const_1 = 99;
                   const_0 = 666;
 
-                  minusInteger(&tmp_0, &const_0, &const_1);
-                  printInteger(&tmp_0);
+                  minusInt(&tmp_0, &const_0, &const_1);
+                  printInt(&tmp_0);
                 }
 
             ''',
@@ -516,7 +516,7 @@ class TestTranslator(unittest.TestCase):
                   return 99
                 }
                 start := func () {
-                  printInteger(minusInteger(666 someNumber()))
+                  printInt(minusInt(666 someNumber()))
                 }
             ''',
             expected_output='''
@@ -540,8 +540,8 @@ class TestTranslator(unittest.TestCase):
                   const_0 = 666;
 
                   someNumber(&tmp_0);
-                  minusInteger(&tmp_1, &const_0, &tmp_0);
-                  printInteger(&tmp_1);
+                  minusInt(&tmp_1, &const_0, &tmp_0);
+                  printInt(&tmp_1);
                 }
 
             ''',
@@ -552,11 +552,11 @@ class TestTranslator(unittest.TestCase):
             test_case=self,
             input_string='''
                 someNumber := func () -> Int {
-                  return minusInteger(100 1)
+                  return minusInt(100 1)
                 }
                 start := func () {
-                  printInteger(
-                    minusInteger(666 someNumber())
+                  printInt(
+                    minusInt(666 someNumber())
                   )
                 }
             ''',
@@ -572,7 +572,7 @@ class TestTranslator(unittest.TestCase):
                   const_1 = 1;
                   const_0 = 100;
 
-                  minusInteger(&tmp_0, &const_0, &const_1);
+                  minusInt(&tmp_0, &const_0, &const_1);
                   *__result = tmp_0;
                   return;
                 }
@@ -585,8 +585,8 @@ class TestTranslator(unittest.TestCase):
                   const_0 = 666;
 
                   someNumber(&tmp_0);
-                  minusInteger(&tmp_1, &const_0, &tmp_0);
-                  printInteger(&tmp_1);
+                  minusInt(&tmp_1, &const_0, &tmp_0);
+                  printInt(&tmp_1);
                 }
 
             ''',
@@ -597,11 +597,11 @@ class TestTranslator(unittest.TestCase):
             test_case=self,
             input_string='''
                 someNumber := func (xxx:Int) -> Int {
-                  return minusInteger(100 xxx)
+                  return minusInt(100 xxx)
                 }
                 start := func () {
-                  printInteger(
-                    minusInteger(666 someNumber(1))
+                  printInt(
+                    minusInt(666 someNumber(1))
                   )
                 }
             ''',
@@ -615,7 +615,7 @@ class TestTranslator(unittest.TestCase):
 
                   const_0 = 100;
 
-                  minusInteger(&tmp_0, &const_0, xxx);
+                  minusInt(&tmp_0, &const_0, xxx);
                   *__result = tmp_0;
                   return;
                 }
@@ -630,8 +630,8 @@ class TestTranslator(unittest.TestCase):
                   const_0 = 666;
 
                   someNumber(&tmp_0, &const_1);
-                  minusInteger(&tmp_1, &const_0, &tmp_0);
-                  printInteger(&tmp_1);
+                  minusInt(&tmp_1, &const_0, &tmp_0);
+                  printInt(&tmp_1);
                 }
 
             ''',
@@ -643,7 +643,7 @@ class TestTranslator(unittest.TestCase):
             test_case=self,
             input_string='''
                 start := func () {
-                    printInteger(fac())
+                    printInt(fac())
                     fac()
                 }
                 fac := func () -> Int {
@@ -660,7 +660,7 @@ class TestTranslator(unittest.TestCase):
 
 
                   fac(&tmp_0);
-                  printInteger(&tmp_0);
+                  printInt(&tmp_0);
                   fac(&tmp_1);
                 }
 
@@ -682,15 +682,15 @@ class TestTranslator(unittest.TestCase):
             test_case=self,
             input_string='''
                 start := func () {
-                  printInteger(fib(10))
+                  printInt(fib(10))
                 }
                 fib := func (n:Int) -> Int {
-                  if isLessInteger(n 2) {
+                  if isLessInt(n 2) {
                     return n
                   } else {
-                    return plusInteger (
-                      fib(minusInteger(n 1))
-                      fib(minusInteger(n 2))
+                    return plusInt (
+                      fib(minusInt(n 1))
+                      fib(minusInt(n 2))
                     )
                   }
                 }
@@ -706,7 +706,7 @@ class TestTranslator(unittest.TestCase):
                   const_0 = 10;
 
                   fib(&tmp_0, &const_0);
-                  printInteger(&tmp_0);
+                  printInt(&tmp_0);
                 }
 
                 void fib(Int* __result, Int* n) {
@@ -724,16 +724,16 @@ class TestTranslator(unittest.TestCase):
                   const_1 = 1;
                   const_0 = 2;
 
-                  isLessInteger(&tmp_0, n, &const_0);
+                  isLessInt(&tmp_0, n, &const_0);
                   if (tmp_0) {
                     *__result = *n;
                     return;
                   } else {
-                    minusInteger(&tmp_1, n, &const_1);
+                    minusInt(&tmp_1, n, &const_1);
                     fib(&tmp_2, &tmp_1);
-                    minusInteger(&tmp_3, n, &const_2);
+                    minusInt(&tmp_3, n, &const_2);
                     fib(&tmp_4, &tmp_3);
-                    plusInteger(&tmp_5, &tmp_2, &tmp_4);
+                    plusInt(&tmp_5, &tmp_2, &tmp_4);
                     *__result = tmp_5;
                     return;
                   }
@@ -748,14 +748,14 @@ class TestTranslator(unittest.TestCase):
             test_case=self,
             input_string='''
                 start := func () {
-                  printInteger(fac(3))
+                  printInt(fac(3))
                 }
                 fac := func (n:Int) -> Int {
-                  if isEqualInteger(n 0) {
+                  if isEqualInt(n 0) {
                     return 1
                   }
-                  return multiplyInteger(
-                    fac(minusInteger(n 1))
+                  return multiplyInt(
+                    fac(minusInt(n 1))
                     n
                   )
                 }
@@ -771,7 +771,7 @@ class TestTranslator(unittest.TestCase):
                   const_0 = 3;
 
                   fac(&tmp_0, &const_0);
-                  printInteger(&tmp_0);
+                  printInt(&tmp_0);
                 }
 
                 void fac(Int* __result, Int* n) {
@@ -787,14 +787,14 @@ class TestTranslator(unittest.TestCase):
                   const_1 = 1;
                   const_0 = 0;
 
-                  isEqualInteger(&tmp_0, n, &const_0);
+                  isEqualInt(&tmp_0, n, &const_0);
                   if (tmp_0) {
                     *__result = const_1;
                     return;
                   }
-                  minusInteger(&tmp_1, n, &const_2);
+                  minusInt(&tmp_1, n, &const_2);
                   fac(&tmp_2, &tmp_1);
-                  multiplyInteger(&tmp_3, &tmp_2, n);
+                  multiplyInt(&tmp_3, &tmp_2, n);
                   *__result = tmp_3;
                   return;
                 }

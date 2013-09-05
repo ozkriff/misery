@@ -35,7 +35,7 @@ class TestGenerator(unittest.TestCase):
                         interface=ast.FunctionInterface(parameter_list=[]),
                         body=[
                             ast.FunctionCall(
-                                expression=ast.Identifier('printInteger'),
+                                expression=ast.Identifier('printInt'),
                                 argument_list=[ast.Number(1)],
                             ),
                         ]
@@ -50,7 +50,7 @@ class TestGenerator(unittest.TestCase):
 
                   const_0 = 1;
 
-                  printInteger(&const_0);
+                  printInt(&const_0);
                 }
 
             ''',
@@ -59,10 +59,10 @@ class TestGenerator(unittest.TestCase):
     def test_2(self):
         body = [
             ast.FunctionCall(
-                expression=ast.Identifier('printInteger'),
+                expression=ast.Identifier('printInt'),
                 argument_list=[
                     ast.FunctionCall(
-                        expression=ast.Identifier('plusInteger'),
+                        expression=ast.Identifier('plusInt'),
                         argument_list=[ast.Number(1), ast.Number(2)],
                     ),
                 ],
@@ -90,8 +90,8 @@ class TestGenerator(unittest.TestCase):
                   const_1 = 2;
                   const_0 = 1;
 
-                  plusInteger(&tmp_0, &const_0, &const_1);
-                  printInteger(&tmp_0);
+                  plusInt(&tmp_0, &const_0, &const_1);
+                  printInt(&tmp_0);
                 }
 
             ''',
@@ -100,14 +100,14 @@ class TestGenerator(unittest.TestCase):
     def test_3(self):
         body = [
             ast.FunctionCall(
-                expression=ast.Identifier('printInteger'),
+                expression=ast.Identifier('printInt'),
                 argument_list=[
                     ast.FunctionCall(
-                        expression=ast.Identifier('plusInteger'),
+                        expression=ast.Identifier('plusInt'),
                         argument_list=[
                             ast.Number(1),
                             ast.FunctionCall(
-                                expression=ast.Identifier('plusInteger'),
+                                expression=ast.Identifier('plusInt'),
                                 argument_list=[
                                     ast.Number(2),
                                     ast.Number(3),
@@ -143,9 +143,9 @@ class TestGenerator(unittest.TestCase):
                   const_1 = 2;
                   const_0 = 1;
 
-                  plusInteger(&tmp_0, &const_1, &const_2);
-                  plusInteger(&tmp_1, &const_0, &tmp_0);
-                  printInteger(&tmp_1);
+                  plusInt(&tmp_0, &const_1, &const_2);
+                  plusInt(&tmp_1, &const_0, &tmp_0);
+                  printInt(&tmp_1);
                 }
 
             ''',

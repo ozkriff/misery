@@ -15,7 +15,7 @@ class Generator(object):
         typedef int Int;
         typedef char* String;
 
-        void printInteger(Int* n) {
+        void printInt(Int* n) {
           printf("INTEGER: %d\\n", *n);
         }
 
@@ -23,27 +23,27 @@ class Generator(object):
           printf("STRING: %s\\n", *s);
         }
 
-        void isLessInteger(Int* __result, Int* a, Int* b) {
+        void isLessInt(Int* __result, Int* a, Int* b) {
           *__result = (*a < *b);
         }
 
-        void isGreaterInteger(Int* __result, Int* a, Int* b) {
+        void isGreaterInt(Int* __result, Int* a, Int* b) {
           *__result = (*a < *b);
         }
 
-        void isEqualInteger(Int* __result, Int* a, Int* b) {
+        void isEqualInt(Int* __result, Int* a, Int* b) {
           *__result = (*a == *b);
         }
 
-        void minusInteger(Int* __result, Int* a, Int* b) {
+        void minusInt(Int* __result, Int* a, Int* b) {
           *__result = (*a - *b);
         }
 
-        void plusInteger(Int* __result, Int* a, Int* b) {
+        void plusInt(Int* __result, Int* a, Int* b) {
           *__result = (*a + *b);
         }
 
-        void multiplyInteger(Int* __result, Int* a, Int* b) {
+        void multiplyInt(Int* __result, Int* a, Int* b) {
           *__result = (*a * *b);
         }
 

@@ -25,17 +25,17 @@ def identifier_table(ast_):
                 ast.Parameter(name='s', datatype=datatype_string),
             ],
         )
-        identifier_list['printInteger'] = ast.FunctionInterface(
+        identifier_list['printInt'] = ast.FunctionInterface(
             parameter_list=[
                 ast.Parameter(name='n', datatype=datatype_int),
             ],
         )
-        identifier_list['isEqualInteger'] = std_interface
-        identifier_list['isLessInteger'] = std_interface
-        identifier_list['isGreaterInteger'] = std_interface
-        identifier_list['minusInteger'] = std_interface
-        identifier_list['plusInteger'] = std_interface
-        identifier_list['multiplyInteger'] = std_interface
+        identifier_list['isEqualInt'] = std_interface
+        identifier_list['isLessInt'] = std_interface
+        identifier_list['isGreaterInt'] = std_interface
+        identifier_list['minusInt'] = std_interface
+        identifier_list['plusInt'] = std_interface
+        identifier_list['multiplyInt'] = std_interface
         return identifier_list
 
     identifier_list = {}
