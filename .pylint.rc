@@ -1,0 +1,17 @@
+
+[MASTER]
+
+ignore=parsetab.py
+
+
+[MESSAGES CONTROL]
+
+# C0111: Missing docstring
+# R0903: Too few public methods (%s/%s)
+# C0103: Invalid name "%s" (should match %s)
+# W0612: Unused variable %r
+# R0912: Too many branches (%s/%s)
+# R0914: Too many local variables (%s/%s)
+# R0904: Too many public methods (%s/%s)
+# R0801: Similar lines in %s files
+disable=C0111, R0903, C0103, W0612, R0914, R0904

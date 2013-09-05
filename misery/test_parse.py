@@ -7,10 +7,12 @@
 
 import unittest
 import copy
-import ast
-import datatype
-import misc
-import parse
+from misery import (
+    ast,
+    datatype,
+    misc,
+    parse,
+)
 
 
 class TestParser(unittest.TestCase):
@@ -24,7 +26,7 @@ class TestParser(unittest.TestCase):
         declaration_sequence=[
             ast.FunctionDeclaration(
                 name='start',
-                interface=ast.FunctionInterface(parameter_list=[]),
+                signature=ast.FunctionSignature(parameter_list=[]),
                 body=[],
             )
         ]
@@ -126,7 +128,7 @@ class TestParser(unittest.TestCase):
             declaration_sequence=[
                 ast.FunctionDeclaration(
                     name='testfunc2',
-                    interface=ast.FunctionInterface(parameter_list=[]),
+                    signature=ast.FunctionSignature(parameter_list=[]),
                     body=[],
                 )
             ]
@@ -141,7 +143,7 @@ class TestParser(unittest.TestCase):
             declaration_sequence=[
                 ast.FunctionDeclaration(
                     name='testfunc2',
-                    interface=ast.FunctionInterface(
+                    signature=ast.FunctionSignature(
                         parameter_list=[],
                         return_type=datatype.SimpleDataType('Int'),
                     ),
@@ -155,7 +157,7 @@ class TestParser(unittest.TestCase):
         ''' Parse function that takes one parameter. '''
         input_string = 'testfunc := func (par:ParType) {}'
         real_ast = self._parse(input_string)
-        interface = ast.FunctionInterface(
+        signature = ast.FunctionSignature(
             parameter_list=[
                 ast.Parameter(
                     name='par',
@@ -167,7 +169,7 @@ class TestParser(unittest.TestCase):
             declaration_sequence=[
                 ast.FunctionDeclaration(
                     name='testfunc',
-                    interface=interface,
+                    signature=signature,
                     body=[],
                 )
             ]
@@ -178,7 +180,7 @@ class TestParser(unittest.TestCase):
         ''' Parse function that takes two parameters. '''
         input_string = 'testfunc := func (par1:ParType par2:ParType) {}'
         real_ast = self._parse(input_string)
-        interface = ast.FunctionInterface(
+        signature = ast.FunctionSignature(
             parameter_list=[
                 ast.Parameter(
                     name='par1',
@@ -194,7 +196,7 @@ class TestParser(unittest.TestCase):
             declaration_sequence=[
                 ast.FunctionDeclaration(
                     name='testfunc',
-                    interface=interface,
+                    signature=signature,
                     body=[],
                 )
             ]

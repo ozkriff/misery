@@ -9,11 +9,13 @@ import unittest
 import subprocess
 import os
 import textwrap
-import misc
-import generator
-import parse
-import datatype
-import identifier_table
+from misery import (
+    misc,
+    generator,
+    parse,
+    datatype,
+    identifier_table,
+)
 
 
 def get_generator(input_string):

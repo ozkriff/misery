@@ -6,12 +6,14 @@
 
 
 import unittest
-import ast
 import textwrap
-import misc
-import generator
-import datatype
-import identifier_table
+from misery import (
+    ast,
+    misc,
+    generator,
+    datatype,
+    identifier_table,
+)
 
 
 def check_translation(test_case, input_ast, expected_output):
@@ -32,7 +34,7 @@ class TestGenerator(unittest.TestCase):
                 declaration_sequence=[
                     ast.FunctionDeclaration(
                         name='start',
-                        interface=ast.FunctionInterface(parameter_list=[]),
+                        signature=ast.FunctionSignature(parameter_list=[]),
                         body=[
                             ast.FunctionCall(
                                 expression=ast.Identifier('printInt'),
@@ -74,7 +76,7 @@ class TestGenerator(unittest.TestCase):
                 declaration_sequence=[
                     ast.FunctionDeclaration(
                         name='start',
-                        interface=ast.FunctionInterface(parameter_list=[]),
+                        signature=ast.FunctionSignature(parameter_list=[]),
                         body=body,
                     )
                 ]
@@ -124,7 +126,7 @@ class TestGenerator(unittest.TestCase):
                 declaration_sequence=[
                     ast.FunctionDeclaration(
                         name='start',
-                        interface=ast.FunctionInterface(parameter_list=[]),
+                        signature=ast.FunctionSignature(parameter_list=[]),
                         body=body,
                     )
                 ]
@@ -184,7 +186,7 @@ class TestGenerator(unittest.TestCase):
                 declaration_sequence=[
                     ast.FunctionDeclaration(
                         name='testFunc',
-                        interface=ast.FunctionInterface(
+                        signature=ast.FunctionSignature(
                             parameter_list=[
                                 ast.Parameter(
                                     name='n1',
@@ -200,7 +202,7 @@ class TestGenerator(unittest.TestCase):
                     ),
                     ast.FunctionDeclaration(
                         name='start',
-                        interface=ast.FunctionInterface(parameter_list=[]),
+                        signature=ast.FunctionSignature(parameter_list=[]),
                         body=[
                             ast.FunctionCall(
                                 expression=ast.Identifier('testFunc'),

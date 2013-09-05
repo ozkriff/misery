@@ -4,8 +4,10 @@
 
 import ply.yacc
 import ply.lex
-import ast
-import datatype
+from misery import (
+    ast,
+    datatype,
+)
 
 
 reserved = {
@@ -170,18 +172,18 @@ def make_parser():
         p[2].append(ast.Return(expression=p[4]))
         p[0] = p[2]
 
-    def p_function_interface(p):
-        'function_interface : LPAREN parameter_list RPAREN ARROW type'
-        p[0] = ast.FunctionInterface(parameter_list=p[2], return_type=p[5])
+    def p_function_signature(p):
+        'function_signature : LPAREN parameter_list RPAREN ARROW type'
+        p[0] = ast.FunctionSignature(parameter_list=p[2], return_type=p[5])
 
-    def p_function_interface_without_return_type(p):
-        'function_interface : LPAREN parameter_list RPAREN'
-        p[0] = ast.FunctionInterface(parameter_list=p[2])
+    def p_function_signature_without_return_type(p):
+        'function_signature : LPAREN parameter_list RPAREN'
+        p[0] = ast.FunctionSignature(parameter_list=p[2])
 
     def p_function_declaration(p):
-        'declaration : IDENTIFIER COLONASSIGN FUNC function_interface block'
+        'declaration : IDENTIFIER COLONASSIGN FUNC function_signature block'
         p[0] = ast.FunctionDeclaration(
-            name=p[1], interface=p[4], body=p[5])
+            name=p[1], signature=p[4], body=p[5])
 
     def p_struct_declaration(p):
         'declaration : IDENTIFIER COLONASSIGN STRUCT LCURLY field_list RCURLY'

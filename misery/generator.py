@@ -4,7 +4,9 @@
 
 import copy
 import textwrap
-import ast
+from misery import (
+    ast,
+)
 
 
 class Generator(object):
@@ -82,16 +84,16 @@ class Generator(object):
             out += parameter.datatype.name + '*' + ' ' + parameter.name
         return out
 
-    def _generate_function_header(self, name, interface):
+    def _generate_function_header(self, name, signature):
         out = ''
         out += 'void ' + name + '('
-        if interface.return_type:
-            out += interface.return_type.name + '*' + ' ' + '__result'
-        if len(interface.parameter_list) != 0:
-            if interface.return_type:
+        if signature.return_type:
+            out += signature.return_type.name + '*' + ' ' + '__result'
+        if len(signature.parameter_list) != 0:
+            if signature.return_type:
                 out += ', '
-            out += self._generate_function_parameters(interface.parameter_list)
-        elif not interface.return_type:
+            out += self._generate_function_parameters(signature.parameter_list)
+        elif not signature.return_type:
             out += 'void'
         out += ')'
         return out
@@ -351,7 +353,6 @@ class Generator(object):
                 raise Exception('Bad statement type: ' + str(type(statement)))
 
     def _generate_local_variables(self):
-        import misc
         fd = self._function_declaration  # shortcut
         out = ''
         # TODO: sort! # TODO: python3
@@ -397,7 +398,7 @@ class Generator(object):
         out = ''
         out += self._generate_function_header(
             name=function_declaration.name,
-            interface=function_declaration.interface,
+            signature=function_declaration.signature,
         )
         out += ' {\n'
         self._increnent_indent()
@@ -435,7 +436,7 @@ class Generator(object):
             if isinstance(declaration, ast.FunctionDeclaration):
                 out += self._generate_function_header(
                     name=declaration.name,
-                    interface=declaration.interface,
+                    signature=declaration.signature,
                 )
                 out += ';\n'
             elif isinstance(declaration, ast.StructDeclaration):

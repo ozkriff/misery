@@ -6,9 +6,11 @@
 
 
 import unittest
-import misc
-import ast
-import datatype
+from misery import (
+    misc,
+    ast,
+    datatype,
+)
 
 
 class TestMarkOutDatatypes(unittest.TestCase):
@@ -18,7 +20,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
             declaration_sequence=[
                 ast.FunctionDeclaration(
                     name='start',
-                    interface=ast.FunctionInterface(parameter_list=[]),
+                    signature=ast.FunctionSignature(parameter_list=[]),
                     body=[],
                 )
             ]
@@ -27,7 +29,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
             declaration_sequence=[
                 ast.FunctionDeclaration(
                     name='start',
-                    interface=ast.FunctionInterface(parameter_list=[]),
+                    signature=ast.FunctionSignature(parameter_list=[]),
                     body=[],
                 )
             ]
@@ -49,7 +51,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
             declaration_sequence=[
                 ast.FunctionDeclaration(
                     name='start',
-                    interface=ast.FunctionInterface(parameter_list=[]),
+                    signature=ast.FunctionSignature(parameter_list=[]),
                     body=[
                         ast.VariableDeclaration(
                             name='testVar',
@@ -63,7 +65,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
             declaration_sequence=[
                 ast.FunctionDeclaration(
                     name='start',
-                    interface=ast.FunctionInterface(parameter_list=[]),
+                    signature=ast.FunctionSignature(parameter_list=[]),
                     body=[
                         ast.VariableDeclaration(
                             name='testVar',
@@ -80,7 +82,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
     def test_integer_variable_declaration_with_plus_integer(self):
         int_data_type = datatype.SimpleDataType('Int'),
         std_identifier_list = {
-            'plusInt': ast.FunctionInterface(
+            'plusInt': ast.FunctionSignature(
                 return_type=datatype.SimpleDataType('Int'),
                 parameter_list=[
                     ast.Parameter(name='a', datatype=int_data_type),
@@ -92,7 +94,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
             declaration_sequence=[
                 ast.FunctionDeclaration(
                     name='start',
-                    interface=ast.FunctionInterface(parameter_list=[]),
+                    signature=ast.FunctionSignature(parameter_list=[]),
                     body=[
                         ast.VariableDeclaration(
                             name='testVar',
@@ -113,7 +115,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
             declaration_sequence=[
                 ast.FunctionDeclaration(
                     name='start',
-                    interface=ast.FunctionInterface(parameter_list=[]),
+                    signature=ast.FunctionSignature(parameter_list=[]),
                     body=[
                         ast.VariableDeclaration(
                             name='testVar',
@@ -139,7 +141,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
             declaration_sequence=[
                 ast.FunctionDeclaration(
                     name='start',
-                    interface=ast.FunctionInterface(parameter_list=[]),
+                    signature=ast.FunctionSignature(parameter_list=[]),
                     body=[
                         ast.VariableDeclaration(
                             name='testVar',
@@ -167,7 +169,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
             declaration_sequence=[
                 ast.FunctionDeclaration(
                     name='start',
-                    interface=ast.FunctionInterface(parameter_list=[]),
+                    signature=ast.FunctionSignature(parameter_list=[]),
                     body=[
                         ast.VariableDeclaration(
                             name='testVar',
@@ -191,7 +193,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
             declaration_sequence=[
                 ast.FunctionDeclaration(
                     name='start',
-                    interface=ast.FunctionInterface(parameter_list=[]),
+                    signature=ast.FunctionSignature(parameter_list=[]),
                     body=[
                         BadStatementClass(),
                     ],

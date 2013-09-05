@@ -8,7 +8,9 @@ Data types.
 
 
 import copy
-import ast
+from misery import (
+    ast,
+)
 
 
 class SimpleDataType(object):
@@ -22,37 +24,36 @@ def _mark_out_datatypes(ast_):
 
     # function = None
 
-    def get_function_call_expression_datatype(block, function_call_expression):
+    def get_function_call_expression_datatype(function_call_expression):
         function_name = function_call_expression.expression.name
         if function_name not in ast_.identifier_list:
             raise Exception('no function: \'' + function_name + '\'')
         return ast_.identifier_list[function_name].return_type
 
-    def get_expression_datatype(block, expression):
+    def get_expression_datatype(expression):
         if isinstance(expression, ast.Number):
             return SimpleDataType('Int')
         if isinstance(expression, ast.String):
             return SimpleDataType('String')
         elif isinstance(expression, ast.FunctionCall):
-            return get_function_call_expression_datatype(block, expression)
+            return get_function_call_expression_datatype(expression)
         else:
             raise Exception('Bad type: ' + str(type(expression)))
 
     def mark_out_variable_declaration_statement(
-        block,
         variable_declaration_statement,
     ):
         datatype = get_expression_datatype(
-            block, variable_declaration_statement.expression)
+            variable_declaration_statement.expression,
+        )
         variable_declaration_statement.datatype = datatype
 
-    def mark_out_assign_statement(block, assign_statement):
-        datatype = get_expression_datatype(block, assign_statement.expression)
+    def mark_out_assign_statement(assign_statement):
+        datatype = get_expression_datatype(assign_statement.expression)
         assign_statement.datatype = datatype
 
-    def mark_out_statement(block, statement):
-        ''' block - current parsed block
-            statement - current parsed statement in this block
+    def mark_out_statement(statement):
+        ''' statement - current parsed statement in current parsed block
         '''
         ignored_statement_type_tuple = (
             ast.FunctionCall,
@@ -61,9 +62,9 @@ def _mark_out_datatypes(ast_):
             ast.For,
         )
         if isinstance(statement, ast.VariableDeclaration):
-            mark_out_variable_declaration_statement(block, statement)
+            mark_out_variable_declaration_statement(statement)
         elif isinstance(statement, ast.Assign):
-            mark_out_assign_statement(block, statement)
+            mark_out_assign_statement(statement)
         elif isinstance(statement, ignored_statement_type_tuple):
             pass  # do nothing for this statements
         else:
@@ -73,7 +74,7 @@ def _mark_out_datatypes(ast_):
         function = function_declaration
         block = function_declaration.body
         for statement in block:
-            mark_out_statement(block, statement)
+            mark_out_statement(statement)
 
     for declaration in ast_.declaration_sequence:
         if isinstance(declaration, ast.FunctionDeclaration):

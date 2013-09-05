@@ -6,7 +6,9 @@
 
 
 import unittest
-import misc
+from misery import (
+    misc,
+)
 
 
 # TODO: Add more tests!
@@ -135,7 +137,8 @@ class TestPrettyPrinter(unittest.TestCase):
     def test_empty_object(self):
         ''' Print object wothout fields. '''
         class TestClass:
-            pass
+            def __init__(self):
+                pass
         input_data = TestClass()
         expected_output = 'TestClass()'
         real_output = misc.pretty_print(input_data)
@@ -144,17 +147,20 @@ class TestPrettyPrinter(unittest.TestCase):
     def test_object_with_one_field(self):
         ''' Print object wothout fields. '''
         class TestClass:
-            pass
+            def __init__(self):
+                self.field = 0
         input_data = TestClass()
-        input_data.field1 = 1
-        expected_output = 'TestClass(field1=1)'
+        input_data.field = 1
+        expected_output = 'TestClass(field=1)'
         real_output = misc.pretty_print(input_data)
         self.assertEqual(expected_output, real_output)
 
     def test_object_with_two_field(self):
         ''' Print object wothout fields. '''
         class TestClass:
-            pass
+            def __init__(self):
+                self.field1 = 0
+                self.field2 = 0
         input_data = TestClass()
         input_data.field1 = 1
         input_data.field2 = 'hi'

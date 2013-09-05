@@ -57,15 +57,15 @@ class String(object):
 
 
 class FunctionDeclaration(object):
-    def __init__(self, name, interface, body):
+    def __init__(self, name, signature, body):
         self.name = name
-        self.interface = interface
+        self.signature = signature
         self.body = body
         self.vars = {}  # TODO: move to ast.Block
         self.constants = {}  # TODO: move to ast.Block
 
 
-class FunctionInterface(object):
+class FunctionSignature(object):
     def __init__(self, parameter_list, return_type=None):
         self.parameter_list = parameter_list
         self.return_type = return_type
