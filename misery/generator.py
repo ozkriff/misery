@@ -18,11 +18,15 @@ class Generator(object):
         typedef char* String;
 
         void printInt(Int* n) {
-          printf("INTEGER: %d\\n", *n);
+          printf("%d", *n);
         }
 
         void printString(String* s) {
-          printf("STRING: %s\\n", *s);
+          printf("%s", *s);
+        }
+
+        void printNewLine() {
+          printf("\\n");
         }
 
         void isLessInt(Int* __result, Int* a, Int* b) {

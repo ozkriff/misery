@@ -77,6 +77,8 @@ def try_to_compile_and_run_file(
     )
     out, err = proc.communicate()
     assert os.path.isfile(exe_file_name)
+    if out != '':
+        misc.assert_equal(test_case, '\n', out[-1])
     os.remove(exe_file_name)
     misc.assert_equal(test_case, expected_stdout, out)
     if err != '':
@@ -276,6 +278,7 @@ class TestTranslator(unittest.TestCase):
             input_string='''
                 start := func () {
                   printString("hello")
+                  printNewLine()
                 }
             ''',
             expected_output='''
@@ -287,10 +290,11 @@ class TestTranslator(unittest.TestCase):
                   const_0 = "hello";
 
                   printString(&const_0);
+                  printNewLine();
                 }
 
             ''',
-            expected_stdout='STRING: hello\n',
+            expected_stdout='hello\n',
         )
 
     def test_print_string_var(self):
@@ -300,6 +304,7 @@ class TestTranslator(unittest.TestCase):
                 start := func () {
                   testVar ::= "print this to console, please"
                   printString(testVar)
+                  printNewLine()
                 }
             ''',
             expected_output='''
@@ -315,10 +320,11 @@ class TestTranslator(unittest.TestCase):
                   testVar = &tmp_1;
                   *testVar = const_0;
                   printString(testVar);
+                  printNewLine();
                 }
 
             ''',
-            expected_stdout='STRING: print this to console, please\n',
+            expected_stdout='print this to console, please\n',
         )
 
     def test_basic_assignment_of_integer_literal(self):
@@ -356,6 +362,7 @@ class TestTranslator(unittest.TestCase):
                   i := 0
                   for isLessInt(i 5) {
                     printInt(i)
+                    printNewLine()
                     i = plusInt(i 1)
                   }
                 }
@@ -383,6 +390,7 @@ class TestTranslator(unittest.TestCase):
                       break;
                     }
                     printInt(i);
+                    printNewLine();
                     plusInt(&tmp_2, i, &const_2);
                     *i = tmp_2;
                   }
@@ -390,11 +398,11 @@ class TestTranslator(unittest.TestCase):
 
             ''',
             expected_stdout=(
-                'INTEGER: 0\n'
-                'INTEGER: 1\n'
-                'INTEGER: 2\n'
-                'INTEGER: 3\n'
-                'INTEGER: 4\n'
+                '0\n'
+                '1\n'
+                '2\n'
+                '3\n'
+                '4\n'
             ),
         )
 
@@ -406,7 +414,9 @@ class TestTranslator(unittest.TestCase):
                   return "hi"
                 }
                 start := func () {
-                  s := someString() printString(s)
+                  s := someString()
+                  printString(s)
+                  printNewLine()
                 }
             ''',
             expected_output='''
@@ -430,10 +440,11 @@ class TestTranslator(unittest.TestCase):
                   someString(&tmp_1);
                   *s = tmp_1;
                   printString(s);
+                  printNewLine();
                 }
 
             ''',
-            expected_stdout='STRING: hi\n',
+            expected_stdout='hi\n',
         )
 
     def test_nested_func_calls_with_strings(self):
@@ -445,6 +456,7 @@ class TestTranslator(unittest.TestCase):
                 }
                 start := func () {
                   printString(someString())
+                  printNewLine()
                 }
             ''',
             expected_output='''
@@ -465,10 +477,11 @@ class TestTranslator(unittest.TestCase):
 
                   someString(&tmp_0);
                   printString(&tmp_0);
+                  printNewLine();
                 }
 
             ''',
-            expected_stdout='STRING: hi\n',
+            expected_stdout='hi\n',
         )
 
     def test_var_declaration_with_function_call_returning_integer(self):
@@ -513,6 +526,7 @@ class TestTranslator(unittest.TestCase):
             input_string='''
                 start := func () {
                   printInt(minusInt(666 99))
+                  printNewLine()
                 }
             ''',
             expected_output='''
@@ -528,10 +542,11 @@ class TestTranslator(unittest.TestCase):
 
                   minusInt(&tmp_0, &const_0, &const_1);
                   printInt(&tmp_0);
+                  printNewLine();
                 }
 
             ''',
-            expected_stdout='INTEGER: 567\n',
+            expected_stdout='567\n',
         )
 
     def test_simple_func_2(self):
@@ -543,6 +558,7 @@ class TestTranslator(unittest.TestCase):
                 }
                 start := func () {
                   printInt(minusInt(666 someNumber()))
+                  printNewLine()
                 }
             ''',
             expected_output='''
@@ -568,10 +584,11 @@ class TestTranslator(unittest.TestCase):
                   someNumber(&tmp_0);
                   minusInt(&tmp_1, &const_0, &tmp_0);
                   printInt(&tmp_1);
+                  printNewLine();
                 }
 
             ''',
-            expected_stdout='INTEGER: 567\n',
+            expected_stdout='567\n',
         )
 
     def test_simple_func_3(self):
@@ -585,6 +602,7 @@ class TestTranslator(unittest.TestCase):
                   printInt(
                     minusInt(666 someNumber())
                   )
+                  printNewLine()
                 }
             ''',
             expected_output='''
@@ -614,10 +632,11 @@ class TestTranslator(unittest.TestCase):
                   someNumber(&tmp_0);
                   minusInt(&tmp_1, &const_0, &tmp_0);
                   printInt(&tmp_1);
+                  printNewLine();
                 }
 
             ''',
-            expected_stdout='INTEGER: 567\n',
+            expected_stdout='567\n',
         )
 
     def test_simple_func_4(self):
@@ -631,6 +650,7 @@ class TestTranslator(unittest.TestCase):
                   printInt(
                     minusInt(666 someNumber(1))
                   )
+                  printNewLine()
                 }
             ''',
             expected_output='''
@@ -660,10 +680,11 @@ class TestTranslator(unittest.TestCase):
                   someNumber(&tmp_0, &const_1);
                   minusInt(&tmp_1, &const_0, &tmp_0);
                   printInt(&tmp_1);
+                  printNewLine();
                 }
 
             ''',
-            expected_stdout='INTEGER: 567\n',
+            expected_stdout='567\n',
         )
 
     def test_some_bug(self):
@@ -673,6 +694,7 @@ class TestTranslator(unittest.TestCase):
             input_string='''
                 start := func () {
                     printInt(fac())
+                    printNewLine()
                     fac()
                 }
                 fac := func () -> Int {
@@ -689,6 +711,7 @@ class TestTranslator(unittest.TestCase):
 
                   fac(&tmp_0);
                   printInt(&tmp_0);
+                  printNewLine();
                   fac(&tmp_1);
                 }
 
@@ -702,7 +725,7 @@ class TestTranslator(unittest.TestCase):
                 }
 
             ''',
-            expected_stdout='INTEGER: 1\n',
+            expected_stdout='1\n',
         )
 
     def test_fib_1(self):
@@ -712,6 +735,7 @@ class TestTranslator(unittest.TestCase):
             input_string='''
                 start := func () {
                   printInt(fib(10))
+                  printNewLine()
                 }
                 fib := func (n:Int) -> Int {
                   if isLessInt(n 2) {
@@ -736,6 +760,7 @@ class TestTranslator(unittest.TestCase):
 
                   fib(&tmp_0, &const_0);
                   printInt(&tmp_0);
+                  printNewLine();
                 }
 
                 void fib(Int* __result, Int* n) {
@@ -769,7 +794,7 @@ class TestTranslator(unittest.TestCase):
                 }
 
             ''',
-            expected_stdout='INTEGER: 55\n',
+            expected_stdout='55\n',
         )
 
     def test_factorial_1(self):
@@ -779,6 +804,7 @@ class TestTranslator(unittest.TestCase):
             input_string='''
                 start := func () {
                   printInt(fac(3))
+                  printNewLine()
                 }
                 fac := func (n:Int) -> Int {
                   if isEqualInt(n 0) {
@@ -802,6 +828,7 @@ class TestTranslator(unittest.TestCase):
 
                   fac(&tmp_0, &const_0);
                   printInt(&tmp_0);
+                  printNewLine();
                 }
 
                 void fac(Int* __result, Int* n) {
@@ -830,7 +857,7 @@ class TestTranslator(unittest.TestCase):
                 }
 
             ''',
-            expected_stdout='INTEGER: 6\n',
+            expected_stdout='6\n',
         )
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
