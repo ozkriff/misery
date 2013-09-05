@@ -360,7 +360,7 @@ class Generator(object):
         fd = self._function_declaration  # shortcut
         out = ''
         # TODO: sort! # TODO: python3
-        for name, datatype_ in fd.vars.items():
+        for name, datatype_ in sorted(fd.vars.items()):
             out += self._indent()
             out += datatype_.name
             if datatype_.is_pointer:
@@ -368,7 +368,7 @@ class Generator(object):
             out += ' '
             out += name
             out += ';' + '\n'
-        for name, expression in fd.constants.items():
+        for name, expression in sorted(fd.constants.items()):
             out += self._indent()
             if isinstance(expression, ast.String):
                 out += 'String'
@@ -384,7 +384,7 @@ class Generator(object):
     def _generate_constats_initialization_code(self):
         fd = self._function_declaration  # shortcut
         out = ''
-        for name, expression in fd.constants.items():
+        for name, expression in sorted(fd.constants.items()):
             out += self._indent()
             out += name
             out += ' = '

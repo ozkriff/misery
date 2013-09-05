@@ -86,11 +86,11 @@ class TestGenerator(unittest.TestCase):
 
                 void start(void) {
                   Int tmp_0;
-                  Int const_1;
                   Int const_0;
+                  Int const_1;
 
-                  const_1 = 2;
                   const_0 = 1;
+                  const_1 = 2;
 
                   plusInt(&tmp_0, &const_0, &const_1);
                   printInt(&tmp_0);
@@ -135,15 +135,15 @@ class TestGenerator(unittest.TestCase):
                 void start(void);
 
                 void start(void) {
-                  Int tmp_1;
                   Int tmp_0;
-                  Int const_2;
-                  Int const_1;
+                  Int tmp_1;
                   Int const_0;
+                  Int const_1;
+                  Int const_2;
 
-                  const_2 = 3;
-                  const_1 = 2;
                   const_0 = 1;
+                  const_1 = 2;
+                  const_2 = 3;
 
                   plusInt(&tmp_0, &const_1, &const_2);
                   plusInt(&tmp_1, &const_0, &tmp_0);
@@ -220,11 +220,11 @@ class TestGenerator(unittest.TestCase):
                 }
 
                 void start(void) {
-                  Int const_1;
                   Int const_0;
+                  Int const_1;
 
-                  const_1 = 2;
                   const_0 = 1;
+                  const_1 = 2;
 
                   testFunc(&const_0, &const_1);
                 }
