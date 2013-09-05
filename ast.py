@@ -47,11 +47,13 @@ class StructDeclaration(object):
 class Number(object):
     def __init__(self, value):
         self.value = value
+        self.tmp_var = None
 
 
 class String(object):
     def __init__(self, value):
         self.value = value
+        self.tmp_var = None
 
 
 class FunctionDeclaration(object):
@@ -60,6 +62,7 @@ class FunctionDeclaration(object):
         self.interface = interface
         self.body = body
         self.vars = {}  # TODO: move to ast.Block
+        self.constants = {}  # TODO: move to ast.Block
 
 
 class FunctionInterface(object):

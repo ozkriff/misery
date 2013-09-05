@@ -87,20 +87,53 @@ class TestTranslator(unittest.TestCase):
             test_case=self,
             input_string='''
                 start := func () {
-                  testVar := 1
+                  testVar ::= 1
+                  testVar = 2
                 }
             ''',
             expected_output='''
                 void start(void);
 
                 void start(void) {
-                  Int testVar;
+                  Int* testVar;
+                  Int tmp_1;
+                  Int const_1;
+                  Int const_0;
 
-                  testVar = 1;
+                  const_1 = 2;
+                  const_0 = 1;
+
+                  testVar = &tmp_1;
+                  *testVar = const_0;
+                  *testVar = const_1;
                 }
 
             ''',
         )
+
+    # TODO: fix this test
+    def test_integer_var_declaration_with_constructor(self):
+        pass
+        # check_translation(
+        #     test_case=self,
+        #     input_string='''
+        #         start := func () {
+        #           testVar := Int(1)
+        #         }
+        #     ''',
+        #     expected_output='''
+        #         void start(void);
+        #
+        #         void start(void) {
+        #           Int* testVar;
+        #           Int tmp_1;
+        #
+        #           Int_init(&tmp_1, 1);
+        #           testVar = &tmp_1;
+        #         }
+        #
+        #     ''',
+        # )
 
     def test_struct(self):
         check_translation(
@@ -128,11 +161,13 @@ class TestTranslator(unittest.TestCase):
                 }
 
                 void start(void) {
-                  MyStruct t;
+                  MyStruct* t;
                   MyStruct tmp_1;
 
+
+                  t = &tmp_1;
                   MyStruct_init(&tmp_1);
-                  t = tmp_1;
+                  *t = tmp_1;
                 }
 
             ''',
@@ -156,7 +191,7 @@ class TestTranslator(unittest.TestCase):
             ''',
             expected_output='''
                 typedef struct MyStruct MyStruct;
-                void someFunc(MyStruct* __result, MyStruct x);
+                void someFunc(MyStruct* __result, MyStruct* x);
                 void start(void);
 
                 struct MyStruct {
@@ -168,22 +203,26 @@ class TestTranslator(unittest.TestCase):
                   /* todo */
                 }
 
-                void someFunc(MyStruct* __result, MyStruct x) {
+                void someFunc(MyStruct* __result, MyStruct* x) {
 
-                  *__result = x;
+
+                  *__result = *x;
                   return;
                 }
 
                 void start(void) {
                   MyStruct tmp_3;
-                  MyStruct t2;
-                  MyStruct t;
+                  MyStruct* t2;
+                  MyStruct* t;
                   MyStruct tmp_1;
 
+
+                  t = &tmp_1;
                   MyStruct_init(&tmp_1);
-                  t = tmp_1;
+                  *t = tmp_1;
+                  t2 = &tmp_3;
                   someFunc(&tmp_3, t);
-                  t2 = tmp_3;
+                  *t2 = tmp_3;
                 }
 
             ''',
@@ -194,16 +233,21 @@ class TestTranslator(unittest.TestCase):
             test_case=self,
             input_string='''
                 start := func () {
-                  testVar := "some string"
+                  testVar ::= "some string"
                 }
             ''',
             expected_output='''
                 void start(void);
 
                 void start(void) {
-                  String testVar;
+                  String* testVar;
+                  String tmp_1;
+                  String const_0;
 
-                  testVar = "some string";
+                  const_0 = "some string";
+
+                  testVar = &tmp_1;
+                  *testVar = const_0;
                 }
 
             ''',
@@ -221,8 +265,11 @@ class TestTranslator(unittest.TestCase):
                 void start(void);
 
                 void start(void) {
+                  String const_0;
 
-                  printString("hello");
+                  const_0 = "hello";
+
+                  printString(&const_0);
                 }
 
             ''',
@@ -233,7 +280,7 @@ class TestTranslator(unittest.TestCase):
             test_case=self,
             input_string='''
                 start := func () {
-                  testVar := "print this to console, please"
+                  testVar ::= "print this to console, please"
                   printString(testVar)
                 }
             ''',
@@ -241,9 +288,14 @@ class TestTranslator(unittest.TestCase):
                 void start(void);
 
                 void start(void) {
-                  String testVar;
+                  String* testVar;
+                  String tmp_1;
+                  String const_0;
 
-                  testVar = "print this to console, please";
+                  const_0 = "print this to console, please";
+
+                  testVar = &tmp_1;
+                  *testVar = const_0;
                   printString(testVar);
                 }
 
@@ -262,10 +314,16 @@ class TestTranslator(unittest.TestCase):
                 void start(void);
 
                 void start(void) {
-                  Int testVar;
+                  Int* testVar;
+                  Int const_1;
+                  Int const_0;
 
-                  testVar = 1;
-                  testVar = 2;
+                  const_1 = 2;
+                  const_0 = 1;
+
+                  testVar = &const_0;
+                  *testVar = const_0;
+                  *testVar = const_1;
                 }
 
             ''',
@@ -287,19 +345,27 @@ class TestTranslator(unittest.TestCase):
                 void start(void);
 
                 void start(void) {
-                  Int i;
+                  Int* i;
                   Int tmp_2;
                   Int tmp_1;
+                  Int const_2;
+                  Int const_1;
+                  Int const_0;
 
-                  i = 0;
+                  const_2 = 1;
+                  const_1 = 5;
+                  const_0 = 0;
+
+                  i = &const_0;
+                  *i = const_0;
                   while (1) {
-                    isLessInteger(&tmp_1, i, 5);
+                    isLessInteger(&tmp_1, i, &const_1);
                     if (!tmp_1) {
                       break;
                     }
                     printInteger(i);
-                    plusInteger(&tmp_2, i, 1);
-                    i = tmp_2;
+                    plusInteger(&tmp_2, i, &const_2);
+                    *i = tmp_2;
                   }
                 }
 
@@ -322,17 +388,22 @@ class TestTranslator(unittest.TestCase):
                 void start(void);
 
                 void someString(String* __result) {
+                  String const_0;
 
-                  *__result = "hi";
+                  const_0 = "hi";
+
+                  *__result = const_0;
                   return;
                 }
 
                 void start(void) {
-                  String s;
+                  String* s;
                   String tmp_1;
 
+
+                  s = &tmp_1;
                   someString(&tmp_1);
-                  s = tmp_1;
+                  *s = tmp_1;
                   printString(s);
                 }
 
@@ -355,16 +426,20 @@ class TestTranslator(unittest.TestCase):
                 void start(void);
 
                 void someString(String* __result) {
+                  String const_0;
 
-                  *__result = "hi";
+                  const_0 = "hi";
+
+                  *__result = const_0;
                   return;
                 }
 
                 void start(void) {
                   String tmp_0;
 
+
                   someString(&tmp_0);
-                  printString(tmp_0);
+                  printString(&tmp_0);
                 }
 
             ''',
@@ -386,17 +461,22 @@ class TestTranslator(unittest.TestCase):
                 void start(void);
 
                 void someNumber(Int* __result) {
+                  Int const_0;
 
-                  *__result = 99;
+                  const_0 = 99;
+
+                  *__result = const_0;
                   return;
                 }
 
                 void start(void) {
-                  Int testVar;
+                  Int* testVar;
                   Int tmp_1;
 
+
+                  testVar = &tmp_1;
                   someNumber(&tmp_1);
-                  testVar = tmp_1;
+                  *testVar = tmp_1;
                 }
 
             ''',
@@ -415,9 +495,14 @@ class TestTranslator(unittest.TestCase):
 
                 void start(void) {
                   Int tmp_0;
+                  Int const_1;
+                  Int const_0;
 
-                  minusInteger(&tmp_0, 666, 99);
-                  printInteger(tmp_0);
+                  const_1 = 99;
+                  const_0 = 666;
+
+                  minusInteger(&tmp_0, &const_0, &const_1);
+                  printInteger(&tmp_0);
                 }
 
             ''',
@@ -439,18 +524,24 @@ class TestTranslator(unittest.TestCase):
                 void start(void);
 
                 void someNumber(Int* __result) {
+                  Int const_0;
 
-                  *__result = 99;
+                  const_0 = 99;
+
+                  *__result = const_0;
                   return;
                 }
 
                 void start(void) {
                   Int tmp_1;
                   Int tmp_0;
+                  Int const_0;
+
+                  const_0 = 666;
 
                   someNumber(&tmp_0);
-                  minusInteger(&tmp_1, 666, tmp_0);
-                  printInteger(tmp_1);
+                  minusInteger(&tmp_1, &const_0, &tmp_0);
+                  printInteger(&tmp_1);
                 }
 
             ''',
@@ -475,8 +566,13 @@ class TestTranslator(unittest.TestCase):
 
                 void someNumber(Int* __result) {
                   Int tmp_0;
+                  Int const_1;
+                  Int const_0;
 
-                  minusInteger(&tmp_0, 100, 1);
+                  const_1 = 1;
+                  const_0 = 100;
+
+                  minusInteger(&tmp_0, &const_0, &const_1);
                   *__result = tmp_0;
                   return;
                 }
@@ -484,10 +580,13 @@ class TestTranslator(unittest.TestCase):
                 void start(void) {
                   Int tmp_1;
                   Int tmp_0;
+                  Int const_0;
+
+                  const_0 = 666;
 
                   someNumber(&tmp_0);
-                  minusInteger(&tmp_1, 666, tmp_0);
-                  printInteger(tmp_1);
+                  minusInteger(&tmp_1, &const_0, &tmp_0);
+                  printInteger(&tmp_1);
                 }
 
             ''',
@@ -507,13 +606,16 @@ class TestTranslator(unittest.TestCase):
                 }
             ''',
             expected_output='''
-                void someNumber(Int* __result, Int xxx);
+                void someNumber(Int* __result, Int* xxx);
                 void start(void);
 
-                void someNumber(Int* __result, Int xxx) {
+                void someNumber(Int* __result, Int* xxx) {
                   Int tmp_0;
+                  Int const_0;
 
-                  minusInteger(&tmp_0, 100, xxx);
+                  const_0 = 100;
+
+                  minusInteger(&tmp_0, &const_0, xxx);
                   *__result = tmp_0;
                   return;
                 }
@@ -521,10 +623,15 @@ class TestTranslator(unittest.TestCase):
                 void start(void) {
                   Int tmp_1;
                   Int tmp_0;
+                  Int const_1;
+                  Int const_0;
 
-                  someNumber(&tmp_0, 1);
-                  minusInteger(&tmp_1, 666, tmp_0);
-                  printInteger(tmp_1);
+                  const_1 = 1;
+                  const_0 = 666;
+
+                  someNumber(&tmp_0, &const_1);
+                  minusInteger(&tmp_1, &const_0, &tmp_0);
+                  printInteger(&tmp_1);
                 }
 
             ''',
@@ -551,14 +658,18 @@ class TestTranslator(unittest.TestCase):
                   Int tmp_1;
                   Int tmp_0;
 
+
                   fac(&tmp_0);
-                  printInteger(tmp_0);
+                  printInteger(&tmp_0);
                   fac(&tmp_1);
                 }
 
                 void fac(Int* __result) {
+                  Int const_0;
 
-                  *__result = 1;
+                  const_0 = 1;
+
+                  *__result = const_0;
                   return;
                 }
 
@@ -586,33 +697,43 @@ class TestTranslator(unittest.TestCase):
             ''',
             expected_output='''
                 void start(void);
-                void fib(Int* __result, Int n);
+                void fib(Int* __result, Int* n);
 
                 void start(void) {
                   Int tmp_0;
+                  Int const_0;
 
-                  fib(&tmp_0, 10);
-                  printInteger(tmp_0);
+                  const_0 = 10;
+
+                  fib(&tmp_0, &const_0);
+                  printInteger(&tmp_0);
                 }
 
-                void fib(Int* __result, Int n) {
+                void fib(Int* __result, Int* n) {
                   Int tmp_5;
                   Int tmp_4;
                   Int tmp_3;
                   Int tmp_2;
                   Int tmp_1;
                   Int tmp_0;
+                  Int const_2;
+                  Int const_1;
+                  Int const_0;
 
-                  isLessInteger(&tmp_0, n, 2);
+                  const_2 = 2;
+                  const_1 = 1;
+                  const_0 = 2;
+
+                  isLessInteger(&tmp_0, n, &const_0);
                   if (tmp_0) {
-                    *__result = n;
+                    *__result = *n;
                     return;
                   } else {
-                    minusInteger(&tmp_1, n, 1);
-                    fib(&tmp_2, tmp_1);
-                    minusInteger(&tmp_3, n, 2);
-                    fib(&tmp_4, tmp_3);
-                    plusInteger(&tmp_5, tmp_2, tmp_4);
+                    minusInteger(&tmp_1, n, &const_1);
+                    fib(&tmp_2, &tmp_1);
+                    minusInteger(&tmp_3, n, &const_2);
+                    fib(&tmp_4, &tmp_3);
+                    plusInteger(&tmp_5, &tmp_2, &tmp_4);
                     *__result = tmp_5;
                     return;
                   }
@@ -641,29 +762,39 @@ class TestTranslator(unittest.TestCase):
             ''',
             expected_output='''
                 void start(void);
-                void fac(Int* __result, Int n);
+                void fac(Int* __result, Int* n);
 
                 void start(void) {
                   Int tmp_0;
+                  Int const_0;
 
-                  fac(&tmp_0, 3);
-                  printInteger(tmp_0);
+                  const_0 = 3;
+
+                  fac(&tmp_0, &const_0);
+                  printInteger(&tmp_0);
                 }
 
-                void fac(Int* __result, Int n) {
+                void fac(Int* __result, Int* n) {
                   Int tmp_3;
                   Int tmp_2;
                   Int tmp_1;
                   Int tmp_0;
+                  Int const_2;
+                  Int const_1;
+                  Int const_0;
 
-                  isEqualInteger(&tmp_0, n, 0);
+                  const_2 = 1;
+                  const_1 = 1;
+                  const_0 = 0;
+
+                  isEqualInteger(&tmp_0, n, &const_0);
                   if (tmp_0) {
-                    *__result = 1;
+                    *__result = const_1;
                     return;
                   }
-                  minusInteger(&tmp_1, n, 1);
-                  fac(&tmp_2, tmp_1);
-                  multiplyInteger(&tmp_3, tmp_2, n);
+                  minusInteger(&tmp_1, n, &const_2);
+                  fac(&tmp_2, &tmp_1);
+                  multiplyInteger(&tmp_3, &tmp_2, n);
                   *__result = tmp_3;
                   return;
                 }

@@ -12,14 +12,15 @@ import copy
 
 
 class SimpleDataType(object):
-    def __init__(self, name):
+    def __init__(self, name, is_pointer=False):
         self.name = name
+        self.is_pointer = is_pointer
 
 
 def _mark_out_datatypes(ast_):
     ''' Mark out 'datatype' fields to ast nodes. '''
 
-    function = None
+    # function = None
 
     def get_function_call_expression_datatype(block, function_call_expression):
         function_name = function_call_expression.expression.name

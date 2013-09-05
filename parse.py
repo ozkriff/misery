@@ -5,6 +5,7 @@
 import ast
 import ply.yacc
 import ply.lex
+import datatype
 
 
 reserved = {
@@ -193,7 +194,7 @@ def make_parser():
 
     def p_type_identifier(p):
         'type : IDENTIFIER'
-        p[0] = ast.Identifier(name=p[1])
+        p[0] = datatype.SimpleDataType(name=p[1])
 
     def p_field_list_1(p):
         'field_list : field'

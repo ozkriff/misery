@@ -7,6 +7,7 @@
 
 import unittest
 import ast
+import datatype
 import misc
 import copy
 import parse
@@ -90,11 +91,11 @@ class TestParser(unittest.TestCase):
                     field_list=[
                         ast.Field(
                             name='field1',
-                            datatype=ast.Identifier('Int'),
+                            datatype=datatype.SimpleDataType('Int'),
                         ),
                         ast.Field(
                             name='field2',
-                            datatype=ast.Identifier('Float'),
+                            datatype=datatype.SimpleDataType('Float'),
                         )
                     ]
                 )
@@ -110,7 +111,7 @@ class TestParser(unittest.TestCase):
             declaration_sequence=[
                 ast.ConstDeclaration(
                     name='importantIdentifier',
-                    datatype=ast.Identifier('Integer'),
+                    datatype=datatype.SimpleDataType('Integer'),
                     expression=ast.Number(10),
                 )
             ]
@@ -142,7 +143,7 @@ class TestParser(unittest.TestCase):
                     name='testfunc2',
                     interface=ast.FunctionInterface(
                         parameter_list=[],
-                        return_type=ast.Identifier('Integer'),
+                        return_type=datatype.SimpleDataType('Integer'),
                     ),
                     body=[],
                 )
@@ -158,7 +159,7 @@ class TestParser(unittest.TestCase):
             parameter_list=[
                 ast.Parameter(
                     name='par',
-                    datatype=ast.Identifier('ParType')
+                    datatype=datatype.SimpleDataType('ParType')
                 )
             ],
         )
@@ -181,11 +182,11 @@ class TestParser(unittest.TestCase):
             parameter_list=[
                 ast.Parameter(
                     name='par1',
-                    datatype=ast.Identifier('ParType'),
+                    datatype=datatype.SimpleDataType('ParType'),
                 ),
                 ast.Parameter(
                     name='par2',
-                    datatype=ast.Identifier('ParType'),
+                    datatype=datatype.SimpleDataType('ParType'),
                 )
             ]
         )

@@ -46,8 +46,11 @@ class TestGenerator(unittest.TestCase):
                 void start(void);
 
                 void start(void) {
+                  Int const_0;
 
-                  printInteger(1);
+                  const_0 = 1;
+
+                  printInteger(&const_0);
                 }
 
             ''',
@@ -81,9 +84,14 @@ class TestGenerator(unittest.TestCase):
 
                 void start(void) {
                   Int tmp_0;
+                  Int const_1;
+                  Int const_0;
 
-                  plusInteger(&tmp_0, 1, 2);
-                  printInteger(tmp_0);
+                  const_1 = 2;
+                  const_0 = 1;
+
+                  plusInteger(&tmp_0, &const_0, &const_1);
+                  printInteger(&tmp_0);
                 }
 
             ''',
@@ -127,10 +135,17 @@ class TestGenerator(unittest.TestCase):
                 void start(void) {
                   Int tmp_1;
                   Int tmp_0;
+                  Int const_2;
+                  Int const_1;
+                  Int const_0;
 
-                  plusInteger(&tmp_0, 2, 3);
-                  plusInteger(&tmp_1, 1, tmp_0);
-                  printInteger(tmp_1);
+                  const_2 = 3;
+                  const_1 = 2;
+                  const_0 = 1;
+
+                  plusInteger(&tmp_0, &const_1, &const_2);
+                  plusInteger(&tmp_1, &const_0, &tmp_0);
+                  printInteger(&tmp_1);
                 }
 
             ''',
@@ -196,16 +211,22 @@ class TestGenerator(unittest.TestCase):
                 ]
             ),
             expected_output='''
-                void testFunc(Int n1, Int n2);
+                void testFunc(Int* n1, Int* n2);
                 void start(void);
 
-                void testFunc(Int n1, Int n2) {
+                void testFunc(Int* n1, Int* n2) {
+
 
                 }
 
                 void start(void) {
+                  Int const_1;
+                  Int const_0;
 
-                  testFunc(1, 2);
+                  const_1 = 2;
+                  const_0 = 1;
+
+                  testFunc(&const_0, &const_1);
                 }
 
             ''',

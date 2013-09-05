@@ -2,8 +2,9 @@
 # See LICENSE file for copyright and license details
 
 
-import ast
+import copy
 import textwrap
+import ast
 
 
 class Generator(object):
@@ -14,36 +15,36 @@ class Generator(object):
         typedef int Int;
         typedef char* String;
 
-        void printInteger(Int n) {
-          printf("INTEGER: %d\n", n);
+        void printInteger(Int* n) {
+          printf("INTEGER: %d\\n", *n);
         }
 
-        void printString(String s) {
-          printf("STRING: %s\n", s);
+        void printString(String* s) {
+          printf("STRING: %s\\n", *s);
         }
 
-        void isLessInteger(Int* __result, Int a, Int b) {
-          *__result = (a < b);
+        void isLessInteger(Int* __result, Int* a, Int* b) {
+          *__result = (*a < *b);
         }
 
-        void isGreaterInteger(Int* __result, Int a, Int b) {
-          *__result = (a < b);
+        void isGreaterInteger(Int* __result, Int* a, Int* b) {
+          *__result = (*a < *b);
         }
 
-        void isEqualInteger(Int* __result, Int a, Int b) {
-          *__result = (a == b);
+        void isEqualInteger(Int* __result, Int* a, Int* b) {
+          *__result = (*a == *b);
         }
 
-        void minusInteger(Int* __result, Int a, Int b) {
-          *__result = (a - b);
+        void minusInteger(Int* __result, Int* a, Int* b) {
+          *__result = (*a - *b);
         }
 
-        void plusInteger(Int* __result, Int a, Int b) {
-          *__result = (a + b);
+        void plusInteger(Int* __result, Int* a, Int* b) {
+          *__result = (*a + *b);
         }
 
-        void multiplyInteger(Int* __result, Int a, Int b) {
-          *__result = (a * b);
+        void multiplyInteger(Int* __result, Int* a, Int* b) {
+          *__result = (*a * *b);
         }
 
     '''
@@ -78,14 +79,14 @@ class Generator(object):
                 is_first = False
             else:
                 out += ', '
-            out += parameter.datatype.name + ' ' + parameter.name
+            out += parameter.datatype.name + '*' + ' ' + parameter.name
         return out
 
     def _generate_function_header(self, name, interface):
         out = ''
         out += 'void ' + name + '('
         if interface.return_type:
-            out += interface.return_type.name + '* __result'
+            out += interface.return_type.name + '*' + ' ' + '__result'
         if len(interface.parameter_list) != 0:
             if interface.return_type:
                 out += ', '
@@ -104,15 +105,13 @@ class Generator(object):
 
     def _generate_argument(self, argument):
         out = ''
-        if isinstance(argument, ast.Number):
-            out += str(argument.value)
-        elif isinstance(argument, ast.String):
-            out += '\"' + str(argument.value) + '\"'
+        if isinstance(argument, (ast.Number, ast.String)):
+            out += '&' + argument.tmp_var
         elif isinstance(argument, ast.Identifier):
             # TODO: check if this is correct identifier
             out += argument.name
         elif isinstance(argument, ast.FunctionCall):
-            out += argument.tmp_var
+            out += '&' + argument.tmp_var
         else:
             raise Exception('Wrong argument type: ' + str(type(argument)))
         return out
@@ -170,24 +169,18 @@ class Generator(object):
     def _generate_assign_statement(self, assign_statement):
         out = ''
         rvalue_expression = assign_statement.expression
-        if isinstance(rvalue_expression, ast.Number):
+        if isinstance(rvalue_expression, (ast.Number, ast.String)):
             out += self._indent()
-            out += assign_statement.name
+            out += '*' + assign_statement.name
             out += ' = '
-            out += str(rvalue_expression.value)
-            out += ';\n'
-        elif isinstance(rvalue_expression, ast.String):
-            out += self._indent()
-            out += assign_statement.name
-            out += ' = '
-            out += '\"' + str(rvalue_expression.value) + '\"'
+            out += rvalue_expression.tmp_var
             out += ';\n'
         elif isinstance(rvalue_expression, ast.FunctionCall):
             out += self._generate_expression(rvalue_expression)
             out += self._indent()
-            out += assign_statement.name
+            out += '*' + assign_statement.name
             out += ' = '
-            out += assign_statement.expression.tmp_var
+            out += rvalue_expression.tmp_var
             out += ';\n'
         else:
             raise Exception(
@@ -241,11 +234,25 @@ class Generator(object):
         return out
 
     def _generate_return_statement(self, statement):
+        def gen_expr(expression):
+            out = ''
+            if isinstance(expression, (ast.Number, ast.String)):
+                out += expression.tmp_var
+            elif isinstance(expression, ast.Identifier):
+                out = '*' + expression.name
+            elif isinstance(expression, ast.FunctionCall):
+                out += expression.tmp_var
+            else:
+                raise Exception(
+                    'Wrong expression type: ' + str(type(expression)),
+                )
+            return out
+
         out = ''
         if isinstance(statement.expression, ast.FunctionCall):
             out += self._generate_expression(statement.expression)
         out += self._indent() + '*__result = '
-        out += self._generate_argument(argument=statement.expression)
+        out += gen_expr(expression=statement.expression)
         out += ';\n'
         out += self._indent() + 'return;\n'
         return out
@@ -255,6 +262,18 @@ class Generator(object):
         if isinstance(statement, ast.FunctionCall):
             out += self._generate_function_call_statement(statement)
         elif isinstance(statement, ast.VariableDeclaration):
+            if statement.allocate_memory_on_stack:
+                out += self._indent()
+                out += statement.name
+                out += ' = '
+                out += '&' + statement.tmp_var
+                out += ';\n'
+            else:
+                out += self._indent()
+                out += statement.name
+                out += ' = '
+                out += '&' + statement.expression.tmp_var
+                out += ';\n'
             out += self._generate_assign_statement(statement)
         elif isinstance(statement, ast.Assign):
             out += self._generate_assign_statement(statement)
@@ -276,10 +295,10 @@ class Generator(object):
 
     def _scan_expression(self, expression):
         local_vars = self._function_declaration.vars
+        local_constants = self._function_declaration.constants
         if isinstance(expression, ast.FunctionCall):
             for argument in expression.argument_list:
-                if isinstance(argument, ast.FunctionCall):
-                    self._scan_expression(argument)
+                self._scan_expression(argument)
             assert isinstance(expression.expression, ast.Identifier)
             called_func_name = expression.expression.name
             identifier_list = self._ast.identifier_list
@@ -288,21 +307,34 @@ class Generator(object):
                 var_name = 'tmp_' + str(len(local_vars))
                 local_vars[var_name] = return_type
                 expression.tmp_var = var_name
-        elif isinstance(expression, ast.VariableDeclaration):
-            local_vars[expression.name] = expression.datatype
-            self._scan_expression(expression.expression)
-        elif isinstance(expression, (ast.Number, ast.String, ast.Identifier)):
+        elif isinstance(expression, ast.Number):
+            var_name = 'const_' + str(len(local_constants))
+            local_constants[var_name] = copy.deepcopy(expression)
+            expression.tmp_var = var_name
+        elif isinstance(expression, ast.String):
+            var_name = 'const_' + str(len(local_constants))
+            local_constants[var_name] = copy.deepcopy(expression)
+            expression.tmp_var = var_name
+        elif isinstance(expression, ast.Identifier):
             pass  # ok
         else:
             raise Exception('Bad expression type: ' + str(type(expression)))
 
     # TODO: rename method, do in separate pass (like datatype)
     def _scan_vars(self, block):
+        local_vars = self._function_declaration.vars
         for statement in block:
             if isinstance(statement, ast.FunctionCall):
                 self._scan_expression(statement)
             elif isinstance(statement, ast.VariableDeclaration):
-                self._scan_expression(statement)
+                datatype_ = copy.deepcopy(statement.datatype)
+                datatype_.is_pointer = True
+                local_vars[statement.name] = datatype_
+                if statement.allocate_memory_on_stack:
+                    var_name = 'tmp_' + str(len(local_vars))
+                    local_vars[var_name] = copy.deepcopy(statement.datatype)
+                    statement.tmp_var = var_name
+                self._scan_expression(statement.expression)
             elif isinstance(statement, ast.Return):
                 self._scan_expression(statement.expression)
             elif isinstance(statement, ast.Assign):
@@ -319,13 +351,44 @@ class Generator(object):
                 raise Exception('Bad statement type: ' + str(type(statement)))
 
     def _generate_local_variables(self):
+        import misc
+        fd = self._function_declaration  # shortcut
         out = ''
         # TODO: sort! # TODO: python3
-        for name, datatype in self._function_declaration.vars.iteritems():
+        for name, datatype_ in fd.vars.iteritems():
             out += self._indent()
-            out += datatype.name
+            out += datatype_.name
+            if datatype_.is_pointer:
+                out += '*'
             out += ' '
             out += name
+            out += ';' + '\n'
+        for name, expression in fd.constants.iteritems():
+            out += self._indent()
+            if isinstance(expression, ast.String):
+                out += 'String'
+            elif isinstance(expression, ast.Number):
+                out += 'Int'
+            else:
+                raise Exception('bad type: ' + str(type(expression)))
+            out += ' '
+            out += name
+            out += ';' + '\n'
+        return out
+
+    def _generate_constats_initialization_code(self):
+        fd = self._function_declaration  # shortcut
+        out = ''
+        for name, expression in fd.constants.iteritems():
+            out += self._indent()
+            out += name
+            out += ' = '
+            if isinstance(expression, ast.String):
+                out += '\"' + str(expression.value) + '\"'
+            elif isinstance(expression, ast.Number):
+                out += str(expression.value)
+            else:
+                raise Exception('bad type: ...todo...')
             out += ';' + '\n'
         return out
 
@@ -340,6 +403,8 @@ class Generator(object):
         self._increnent_indent()
         self._scan_vars(function_declaration.body)
         out += self._generate_local_variables()
+        out += '\n'
+        out += self._generate_constats_initialization_code()
         out += '\n'
         out += self._generate_block(function_declaration.body)
         self._decrenent_indent()
