@@ -76,7 +76,7 @@ def check_translation(test_case, input_string, expected_output):
     ''' Small helper function. '''
     real_output = translate_mis_to_c(textwrap.dedent(input_string))
     misc.assert_equal(test_case, textwrap.dedent(expected_output), real_output)
-    c_file_name = misc.get_caller_func_name()[5:] + '_out.c'
+    c_file_name = misc.get_caller_func_name().replace('test_', '') + '_out.c'
     try_to_compile_and_run_file(c_file_name, input_string)
 
 
