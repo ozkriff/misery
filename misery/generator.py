@@ -119,7 +119,7 @@ class Generator(object):
         for parameter in fd.signature.parameter_list:
             if parameter.name == name:
                 return True
-        for variable_name, datatype in fd.vars.items():
+        for variable_name in fd.vars.keys():
             if variable_name == name:
                 return True
         return False
