@@ -182,9 +182,8 @@ class TestCaseMock:
     def assertEqual(self, expected, real):
         return expected == real
 
-    def fail(self, diff):
-        if diff:
-            self.is_ok = False
+    def fail(self, msg=''):
+        self.is_ok = False
 
 
 class TestAssertEqual(unittest.TestCase):
@@ -197,11 +196,16 @@ class TestAssertEqual(unittest.TestCase):
         self.assertEqual(mock.is_ok, False)
 
     def test_passed(self):
-        ''' Test failed. '''
+        ''' Test passed. '''
         mock = TestCaseMock()
         misc.assert_equal(mock, 1, 1)
         self.assertEqual(mock.is_ok, True)
 
+    def test_passed_2(self):
+        ''' Test passed. '''
+        mock = TestCaseMock()
+        mock.assertEqual(1, 1)
+        self.assertEqual(mock.is_ok, True)
 
 class TestGetCallerFuncName(unittest.TestCase):
 

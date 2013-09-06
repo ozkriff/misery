@@ -64,8 +64,10 @@ def try_to_compile_and_run_file(
     assert os.path.isfile(c_file_name)
     os.remove(c_file_name)
     assert compiler_out == ''
-    if compiler_err != '':
-        test_case.fail('\n' + 'ANSI C compiler error:\n' + compiler_err)
+    test_case.assertEqual(
+        compiler_err, '',
+        'ANSI C compiler error:\n' + compiler_err,
+    )
 
     # run compiler program and check its output
     exe_file_name = c_file_name.replace('.c', '.exe')
@@ -81,8 +83,7 @@ def try_to_compile_and_run_file(
         misc.assert_equal(test_case, '\n', out[-1])
     os.remove(exe_file_name)
     misc.assert_equal(test_case, expected_stdout, out)
-    if err != '':
-        test_case.fail('\n' + 'Compiled prog error:\n' + err)
+    test_case.assertEqual(err, '', 'Compiled prog error:\n' + err)
 
 
 def check_translation(
