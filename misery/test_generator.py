@@ -26,14 +26,16 @@ def check_translation(test_case, input_ast, expected_output):
 
 class TestGenerator(unittest.TestCase):
 
-    def test_1(self):
+    def test_print_int_constant(self):
         check_translation(
             test_case=self,
             input_ast=ast.Module(
                 declaration_sequence=[
                     ast.FunctionDeclaration(
                         name='start',
-                        signature=ast.FunctionSignature(parameter_list=[]),
+                        signature=ast.FunctionSignature(
+                            parameter_list=[],
+                        ),
                         body=[
                             ast.FunctionCall(
                                 expression=ast.Identifier('printInt'),
@@ -57,7 +59,7 @@ class TestGenerator(unittest.TestCase):
             ''',
         )
 
-    def test_2(self):
+    def test_print_plus_int_result(self):
         body = [
             ast.FunctionCall(
                 expression=ast.Identifier('printInt'),
@@ -98,7 +100,7 @@ class TestGenerator(unittest.TestCase):
             ''',
         )
 
-    def test_3(self):
+    def test_print_result_of_nested_calls(self):
         body = [
             ast.FunctionCall(
                 expression=ast.Identifier('printInt'),

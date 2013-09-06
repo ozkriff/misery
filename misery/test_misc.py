@@ -210,9 +210,12 @@ class TestAssertEqual(unittest.TestCase):
 
 class TestGetCallerFuncName(unittest.TestCase):
 
-    def test_1(self):
+    def test_check_caller_name(self):
         def helper_func():
-            self.assertEqual('test_1', misc.get_caller_func_name())
+            self.assertEqual(
+                'test_check_caller_name',
+                misc.get_caller_func_name(),
+            )
         helper_func()
 
 
