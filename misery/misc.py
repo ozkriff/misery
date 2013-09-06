@@ -113,8 +113,6 @@ def assert_equal(test_case, expected, real):
     difference = diff(expected, real)
     if difference:
         test_case.fail('\n' + difference)
-    # else:
-    #     test_case.assertEqual(expected, real)
 
 
 def flatten_tree(tree):
