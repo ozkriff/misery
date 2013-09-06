@@ -363,7 +363,6 @@ class Generator(object):
     def _generate_local_variables(self):
         fd = self._function_declaration  # shortcut
         out = ''
-        # TODO: sort! # TODO: python3
         for name, datatype_ in sorted(fd.vars.items()):
             out += self._indent()
             out += datatype_.name
