@@ -17,6 +17,10 @@ class Generator(object):
         typedef int Int;
         typedef char* String;
 
+        void Int_init(Int* __result, Int* n) {
+          *__result = *n;
+        }
+
         void printInt(Int* n) {
           printf("%d", *n);
         }

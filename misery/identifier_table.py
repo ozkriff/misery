@@ -22,6 +22,13 @@ def identifier_table(ast_):
                 ast.Parameter(name='b', datatype=datatype_int),
             ],
         )
+        # Int constructor
+        identifier_list['Int'] = ast.FunctionSignature(
+            return_type=datatype_int,
+            parameter_list=[
+                ast.Parameter(name='n', datatype=datatype_int),
+            ],
+        )
         identifier_list['printNewLine'] = ast.FunctionSignature(
             parameter_list=[],
         )

@@ -135,29 +135,37 @@ class TestTranslator(unittest.TestCase):
             ''',
         )
 
-    # TODO: fix this test
     def test_integer_var_declaration_with_constructor(self):
         pass
-        # check_translation(
-        #     test_case=self,
-        #     input_string='''
-        #         start := func () {
-        #           testVar := Int(1)
-        #         }
-        #     ''',
-        #     expected_output='''
-        #         void start(void);
-        #
-        #         void start(void) {
-        #           Int* testVar;
-        #           Int tmp_1;
-        #
-        #           Int_init(&tmp_1, 1);
-        #           testVar = &tmp_1;
-        #         }
-        #
-        #     ''',
-        # )
+        check_translation(
+            test_case=self,
+            input_string='''
+                start := func () {
+                  testVar := Int(1)
+                  printInt(testVar)
+                  printNewLine()
+                }
+            ''',
+            expected_output='''
+                void start(void);
+
+                void start(void) {
+                  Int* testVar;
+                  Int tmp_1;
+                  Int const_0;
+
+                  const_0 = 1;
+
+                  testVar = &tmp_1;
+                  Int_init(&tmp_1, &const_0);
+                  *testVar = tmp_1;
+                  printInt(testVar);
+                  printNewLine();
+                }
+
+            ''',
+            expected_stdout='1\n',
+        )
 
     def test_struct(self):
         check_translation(
