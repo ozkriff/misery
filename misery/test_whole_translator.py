@@ -120,14 +120,14 @@ class TestTranslator(unittest.TestCase):
 
                 void start(void) {
                   Int* testVar;
-                  Int tmp_1;
+                  Int tmp_0;
                   Int const_0;
                   Int const_1;
 
                   const_0 = 1;
                   const_1 = 2;
 
-                  testVar = &tmp_1;
+                  testVar = &tmp_0;
                   *testVar = const_0;
                   *testVar = const_1;
                 }
@@ -151,14 +151,14 @@ class TestTranslator(unittest.TestCase):
 
                 void start(void) {
                   Int* testVar;
-                  Int tmp_1;
+                  Int tmp_0;
                   Int const_0;
 
                   const_0 = 1;
 
-                  testVar = &tmp_1;
-                  Int_init(&tmp_1, &const_0);
-                  *testVar = tmp_1;
+                  testVar = &tmp_0;
+                  Int_init(&tmp_0, &const_0);
+                  *testVar = tmp_0;
                   printInt(testVar);
                   printNewLine();
                 }
@@ -194,11 +194,11 @@ class TestTranslator(unittest.TestCase):
 
                 void start(void) {
                   MyStruct* t;
-                  MyStruct tmp_1;
+                  MyStruct tmp_0;
 
-                  t = &tmp_1;
-                  MyStruct_init(&tmp_1);
-                  *t = tmp_1;
+                  t = &tmp_0;
+                  MyStruct_init(&tmp_0);
+                  *t = tmp_0;
                 }
 
             ''',
@@ -242,15 +242,15 @@ class TestTranslator(unittest.TestCase):
                 void start(void) {
                   MyStruct* t;
                   MyStruct* t2;
+                  MyStruct tmp_0;
                   MyStruct tmp_1;
-                  MyStruct tmp_3;
 
-                  t = &tmp_1;
-                  MyStruct_init(&tmp_1);
-                  *t = tmp_1;
-                  t2 = &tmp_3;
-                  someFunc(&tmp_3, t);
-                  *t2 = tmp_3;
+                  t = &tmp_0;
+                  MyStruct_init(&tmp_0);
+                  *t = tmp_0;
+                  t2 = &tmp_1;
+                  someFunc(&tmp_1, t);
+                  *t2 = tmp_1;
                 }
 
             ''',
@@ -269,12 +269,12 @@ class TestTranslator(unittest.TestCase):
 
                 void start(void) {
                   String* testVar;
-                  String tmp_1;
+                  String tmp_0;
                   String const_0;
 
                   const_0 = "some string";
 
-                  testVar = &tmp_1;
+                  testVar = &tmp_0;
                   *testVar = const_0;
                 }
 
@@ -321,12 +321,12 @@ class TestTranslator(unittest.TestCase):
 
                 void start(void) {
                   String* testVar;
-                  String tmp_1;
+                  String tmp_0;
                   String const_0;
 
                   const_0 = "print this to console, please";
 
-                  testVar = &tmp_1;
+                  testVar = &tmp_0;
                   *testVar = const_0;
                   printString(testVar);
                   printNewLine();
@@ -381,8 +381,8 @@ class TestTranslator(unittest.TestCase):
 
                 void start(void) {
                   Int* i;
+                  Int tmp_0;
                   Int tmp_1;
-                  Int tmp_2;
                   Int const_0;
                   Int const_1;
                   Int const_2;
@@ -394,14 +394,14 @@ class TestTranslator(unittest.TestCase):
                   i = &const_0;
                   *i = const_0;
                   while (1) {
-                    isLessInt(&tmp_1, i, &const_1);
-                    if (!tmp_1) {
+                    isLessInt(&tmp_0, i, &const_1);
+                    if (!tmp_0) {
                       break;
                     }
                     printInt(i);
                     printNewLine();
-                    plusInt(&tmp_2, i, &const_2);
-                    *i = tmp_2;
+                    plusInt(&tmp_1, i, &const_2);
+                    *i = tmp_1;
                   }
                 }
 
@@ -443,11 +443,11 @@ class TestTranslator(unittest.TestCase):
 
                 void start(void) {
                   String* s;
-                  String tmp_1;
+                  String tmp_0;
 
-                  s = &tmp_1;
-                  someString(&tmp_1);
-                  *s = tmp_1;
+                  s = &tmp_0;
+                  someString(&tmp_0);
+                  *s = tmp_0;
                   printString(s);
                   printNewLine();
                 }
@@ -519,11 +519,11 @@ class TestTranslator(unittest.TestCase):
 
                 void start(void) {
                   Int* testVar;
-                  Int tmp_1;
+                  Int tmp_0;
 
-                  testVar = &tmp_1;
-                  someNumber(&tmp_1);
-                  *testVar = tmp_1;
+                  testVar = &tmp_0;
+                  someNumber(&tmp_0);
+                  *testVar = tmp_0;
                 }
 
             ''',

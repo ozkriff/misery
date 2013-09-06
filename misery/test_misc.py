@@ -166,8 +166,8 @@ class TestPrettyPrinter(unittest.TestCase):
         input_data.field2 = 'hi'
         expected_output = (
             'TestClass(\n'
-            '    field2=\"hi\",\n'
             '    field1=1,\n'
+            '    field2=\"hi\",\n'
             ')'
         )
         real_output = misc.pretty_print(input_data)

@@ -304,7 +304,7 @@ class Generator(object):
         return out
 
     def _scan_expression(self, expression):
-        local_vars = self._function_declaration.vars
+        local_tmp_vars = self._function_declaration.tmp_vars
         local_constants = self._function_declaration.constants
         if isinstance(expression, ast.FunctionCall):
             for argument in expression.argument_list:
@@ -314,8 +314,8 @@ class Generator(object):
             identifier_list = self._ast.identifier_list
             return_type = identifier_list[called_func_name].return_type
             if return_type is not None:
-                var_name = 'tmp_' + str(len(local_vars))
-                local_vars[var_name] = return_type
+                var_name = 'tmp_' + str(len(local_tmp_vars))
+                local_tmp_vars[var_name] = return_type
                 expression.tmp_var = var_name
         elif isinstance(expression, ast.Number):
             var_name = 'const_' + str(len(local_constants))
@@ -333,6 +333,7 @@ class Generator(object):
     # TODO: rename method, do in separate pass (like datatype)
     def _scan_vars(self, block):
         local_vars = self._function_declaration.vars
+        local_tmp_vars = self._function_declaration.tmp_vars
         for statement in block:
             if isinstance(statement, ast.FunctionCall):
                 self._scan_expression(statement)
@@ -341,8 +342,8 @@ class Generator(object):
                 datatype_.is_pointer = True
                 local_vars[statement.name] = datatype_
                 if statement.allocate_memory_on_stack:
-                    var_name = 'tmp_' + str(len(local_vars))
-                    local_vars[var_name] = copy.deepcopy(statement.datatype)
+                    var_name = 'tmp_' + str(len(local_tmp_vars))
+                    local_tmp_vars[var_name] = copy.deepcopy(statement.datatype)
                     statement.tmp_var = var_name
                 self._scan_expression(statement.expression)
             elif isinstance(statement, ast.Return):
@@ -364,6 +365,14 @@ class Generator(object):
         fd = self._function_declaration  # shortcut
         out = ''
         for name, datatype_ in sorted(fd.vars.items()):
+            out += self._indent()
+            out += datatype_.name
+            if datatype_.is_pointer:
+                out += '*'
+            out += ' '
+            out += name
+            out += ';' + '\n'
+        for name, datatype_ in sorted(fd.tmp_vars.items()):
             out += self._indent()
             out += datatype_.name
             if datatype_.is_pointer:
@@ -401,7 +410,8 @@ class Generator(object):
         return out
 
     def _generate_function(self, function_declaration):
-        self._function_declaration = function_declaration
+        fd = function_declaration  # shortcut
+        self._function_declaration = fd
         out = ''
         out += self._generate_function_header(
             name=function_declaration.name,
@@ -410,7 +420,7 @@ class Generator(object):
         out += ' {\n'
         self._increnent_indent()
         self._scan_vars(function_declaration.body)
-        if function_declaration.vars or function_declaration.constants:
+        if fd.vars or fd.tmp_vars or fd.constants:
             out += self._generate_local_variables()
             out += '\n'
             if function_declaration.constants:

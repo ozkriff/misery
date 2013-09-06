@@ -60,7 +60,7 @@ class PrettyPrinter(object):
                 out += ')'
             elif len(obj.__dict__) > 1:
                 out += '\n'
-                for key in obj.__dict__.keys():
+                for key in sorted(obj.__dict__.keys()):
                     value = obj.__dict__[key]
                     out += next_indent + key + '='
                     out += self.pretty_print(value, indent_level + 1)

@@ -56,8 +56,10 @@ class FunctionDeclaration(object):
         self.name = name
         self.signature = signature
         self.body = body
-        self.vars = {}  # TODO: move to ast.Block
-        self.constants = {}  # TODO: move to ast.Block
+        # TODO: move to ast.Block ...
+        self.vars = {}
+        self.tmp_vars = {}
+        self.constants = {}
 
 
 class FunctionSignature(object):
