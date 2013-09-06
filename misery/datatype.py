@@ -14,9 +14,8 @@ from misery import (
 
 
 class SimpleDataType(object):
-    def __init__(self, name, is_pointer=False):
+    def __init__(self, name):
         self.name = name
-        self.is_pointer = is_pointer
 
 
 def _mark_out_datatypes(ast_):

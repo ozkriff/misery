@@ -339,7 +339,6 @@ class Generator(object):
                 self._scan_expression(statement)
             elif isinstance(statement, ast.VariableDeclaration):
                 datatype_ = copy.deepcopy(statement.datatype)
-                datatype_.is_pointer = True
                 local_vars[statement.name] = datatype_
                 if statement.allocate_memory_on_stack:
                     var_name = 'tmp_' + str(len(local_tmp_vars))
@@ -368,16 +367,13 @@ class Generator(object):
         for name, datatype_ in sorted(fd.vars.items()):
             out += self._indent()
             out += datatype_.name
-            if datatype_.is_pointer:
-                out += '*'
+            out += '*'
             out += ' '
             out += name
             out += ';' + '\n'
         for name, datatype_ in sorted(fd.tmp_vars.items()):
             out += self._indent()
             out += datatype_.name
-            if datatype_.is_pointer:
-                out += '*'
             out += ' '
             out += name
             out += ';' + '\n'
