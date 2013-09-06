@@ -146,7 +146,6 @@ class TestTranslator(unittest.TestCase):
         )
 
     def test_integer_var_declaration_with_constructor(self):
-        pass
         check_translation(
             test_case=self,
             input_string='''
