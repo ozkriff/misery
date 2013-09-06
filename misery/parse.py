@@ -270,10 +270,10 @@ def make_parser():
 
     def p_expression_string(p):
         'expression : STRING'
-        value = p[1]
-        assert value[0] == '\"' and value[-1] == '\"'
-        value = value[1:-1]  # remove quotation marks
-        p[0] = ast.String(value=value)
+        def remove_quotation_marks(s):
+            assert s[0] == '\"' and s[-1] == '\"'
+            return s[1:-1]
+        p[0] = ast.String(value=remove_quotation_marks(p[1]))
 
     def p_expression_identifier(p):
         'expression : IDENTIFIER'
