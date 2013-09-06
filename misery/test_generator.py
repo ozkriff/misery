@@ -244,7 +244,8 @@ class TestGenerator(unittest.TestCase):
                 )
             ]
         )
-        input_ast.declaration_sequence[0].constants['badConst'] = BadConstantClass()
+        constants = input_ast.declaration_sequence[0].constants  # shortcut
+        constants['badConst'] = BadConstantClass()
         input_ast.identifier_list = {}
         generator_ = generator.Generator(input_ast)
         self.assertRaisesRegexp(
