@@ -107,7 +107,6 @@ def make_lexer():
             '  ' + (' ' * (column)) + '^' + '\n'
         )
         raise Exception(message)
-        # t.lexer.skip(1)
 
     # Build the lexer from my environment and return it
     return lex.lex()
