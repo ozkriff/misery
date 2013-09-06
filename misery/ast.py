@@ -13,6 +13,7 @@ class Module(object):
                 isinstance(declaration_sequence, list))
         self.import_list = import_list
         self.declaration_sequence = declaration_sequence
+        self.identifier_list = None
 
 
 class Identifier(object):
