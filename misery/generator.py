@@ -113,12 +113,23 @@ class Generator(object):
                 out += self._generate_expression(argument)
         return out
 
+    def _is_correct_identifier(self, name):
+        ''' Check if this is correct identifier '''
+        fd = self._function_declaration  # shortcut
+        for parameter in fd.signature.parameter_list:
+            if parameter.name == name:
+                return True
+        for variable_name, datatype in fd.vars.items():
+            if variable_name == name:
+                return True
+        return False
+
     def _generate_argument(self, argument):
         out = ''
         if isinstance(argument, (ast.Number, ast.String)):
             out += '&' + argument.binded_variable_name
         elif isinstance(argument, ast.Identifier):
-            # TODO: check if this is correct identifier
+            assert self._is_correct_identifier(argument.name)
             out += argument.name
         elif isinstance(argument, ast.FunctionCall):
             out += '&' + argument.binded_variable_name
