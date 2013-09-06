@@ -77,7 +77,7 @@ class Parameter(object):
 
 class FunctionCall(object):
     def __init__(self, expression, argument_list):
-        self.expression = expression  # TODO: rename - called_expression?
+        self.called_expression = expression
         self.argument_list = argument_list
         self.binded_variable_name = None
 

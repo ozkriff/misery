@@ -22,7 +22,7 @@ def _mark_out_datatypes(ast_):
     ''' Mark out 'datatype' fields to ast nodes. '''
 
     def get_function_call_expression_datatype(function_call_expression):
-        function_name = function_call_expression.expression.name
+        function_name = function_call_expression.called_expression.name
         if function_name not in ast_.identifier_list:
             raise Exception('no function: \'' + function_name + '\'')
         return ast_.identifier_list[function_name].return_type

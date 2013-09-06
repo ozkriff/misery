@@ -143,8 +143,9 @@ class Generator(object):
     ):
         out = ''
         is_first = True
-        assert isinstance(function_call_expression.expression, ast.Identifier)
-        called_func_name = function_call_expression.expression.name
+        assert isinstance( \
+            function_call_expression.called_expression, ast.Identifier)
+        called_func_name = function_call_expression.called_expression.name
         identifier_list = self._ast.identifier_list
         if identifier_list[called_func_name].return_type is not None:
             out += '&' + function_call_expression.binded_variable_name
@@ -160,8 +161,9 @@ class Generator(object):
     def _generate_function_call_expression(self, function_call_expression):
         out = ''
         # TODO: implement other expressions
-        assert isinstance(function_call_expression.expression, ast.Identifier)
-        called_func_name = function_call_expression.expression.name
+        assert isinstance( \
+            function_call_expression.called_expression, ast.Identifier)
+        called_func_name = function_call_expression.called_expression.name
         out += self._generate_expression_dependencies(
             function_call_expression=function_call_expression,
         )
@@ -467,8 +469,8 @@ def scan_module_vars(ast_):
         if isinstance(expression, ast.FunctionCall):
             for argument in expression.argument_list:
                 scan_expression_vars(fd, argument)
-            assert isinstance(expression.expression, ast.Identifier)
-            called_func_name = expression.expression.name
+            assert isinstance(expression.called_expression, ast.Identifier)
+            called_func_name = expression.called_expression.name
             identifier_list = ast_.identifier_list
             return_type = identifier_list[called_func_name].return_type
             if return_type is not None:
