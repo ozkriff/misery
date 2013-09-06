@@ -19,8 +19,7 @@ from misery import (
 def check_translation(test_case, input_ast, expected_output):
     ''' Small helper function. '''
     input_ast.identifier_list = identifier_table.identifier_table(input_ast)
-    marked_out_ast = datatype.mark_out_datatypes(input_ast)
-    generator_ = generator.Generator(marked_out_ast)
+    generator_ = generator.Generator(input_ast)
     real_output = generator_.generate()
     misc.assert_equal(test_case, textwrap.dedent(expected_output), real_output)
 
@@ -230,6 +229,95 @@ class TestGenerator(unittest.TestCase):
                 }
 
             ''',
+        )
+
+    def test_bad_constant_type_error(self):
+        class BadConstantClass(object):
+            def __init__(self):
+                pass
+        input_ast = ast.Module(
+            declaration_sequence=[
+                ast.FunctionDeclaration(
+                    name='start',
+                    signature=ast.FunctionSignature(parameter_list=[]),
+                    body=[],
+                )
+            ]
+        )
+        input_ast.declaration_sequence[0].constants['badConst'] = BadConstantClass()
+        input_ast.identifier_list = {}
+        generator_ = generator.Generator(input_ast)
+        self.assertRaisesRegexp(
+            Exception,
+            'bad type:.*BadConstantClass',
+            generator_.generate,
+        )
+
+    def test_bad_expression_type_error(self):
+        class BadExpressionClass(object):
+            def __init__(self):
+                pass
+        input_ast = ast.Module(
+            declaration_sequence=[
+                ast.FunctionDeclaration(
+                    name='start',
+                    signature=ast.FunctionSignature(parameter_list=[]),
+                    body=[
+                        ast.VariableDeclaration(
+                            name='testVar',
+                            expression=BadExpressionClass(),
+                            datatype=datatype.SimpleDataType('Int'),
+                        ),
+                    ],
+                )
+            ]
+        )
+        input_ast.identifier_list = identifier_table.identifier_table(input_ast)
+        generator_ = generator.Generator(input_ast)
+        self.assertRaisesRegexp(
+            Exception,
+            'Bad expression type:.*BadExpressionClass',
+            generator_.generate,
+        )
+
+    def test_bad_declaration_type_error(self):
+        class BadDeclarationClass(object):
+            def __init__(self):
+                pass
+        input_ast = ast.Module(
+            declaration_sequence=[
+                BadDeclarationClass(),
+            ],
+        )
+        input_ast.identifier_list = identifier_table.identifier_table(input_ast)
+        generator_ = generator.Generator(input_ast)
+        self.assertRaisesRegexp(
+            Exception,
+            'Bad type:.*BadDeclarationClass',
+            generator_.generate,
+        )
+
+    def test_bad_statement_type_error(self):
+        class BadStatementClass(object):
+            def __init__(self):
+                pass
+        input_ast = ast.Module(
+            declaration_sequence=[
+                ast.FunctionDeclaration(
+                    name='start',
+                    signature=ast.FunctionSignature(parameter_list=[]),
+                    body=[
+                        BadStatementClass(),
+                    ],
+                )
+            ]
+        )
+        input_ast.identifier_list = identifier_table.identifier_table(input_ast)
+        generator_ = generator.Generator(input_ast)
+        self.assertRaisesRegexp(
+            Exception,
+            'Bad statement type:.*BadStatementClass',
+            generator_.generate,
         )
 
 
