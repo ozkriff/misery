@@ -207,12 +207,12 @@ class TestAssertEqual(unittest.TestCase):
         mock.assertEqual(1, 1)
         self.assertEqual(mock.is_ok, True)
 
+
 class TestGetCallerFuncName(unittest.TestCase):
 
     def test_1(self):
         def helper_func():
             self.assertEqual('test_1', misc.get_caller_func_name())
-
         helper_func()
 
 

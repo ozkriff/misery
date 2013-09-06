@@ -343,7 +343,8 @@ class Generator(object):
                 local_vars[statement.name] = datatype_
                 if statement.allocate_memory_on_stack:
                     var_name = 'tmp_' + str(len(local_tmp_vars))
-                    local_tmp_vars[var_name] = copy.deepcopy(statement.datatype)
+                    local_tmp_vars[var_name] = \
+                        copy.deepcopy(statement.datatype)
                     statement.tmp_var = var_name
                 self._scan_expression(statement.expression)
             elif isinstance(statement, ast.Return):

@@ -273,7 +273,8 @@ class TestGenerator(unittest.TestCase):
                 )
             ]
         )
-        input_ast.identifier_list = identifier_table.identifier_table(input_ast)
+        input_ast.identifier_list = \
+            identifier_table.identifier_table(input_ast)
         generator_ = generator.Generator(input_ast)
         self.assertRaisesRegexp(
             Exception,
@@ -290,7 +291,8 @@ class TestGenerator(unittest.TestCase):
                 BadDeclarationClass(),
             ],
         )
-        input_ast.identifier_list = identifier_table.identifier_table(input_ast)
+        input_ast.identifier_list = \
+            identifier_table.identifier_table(input_ast)
         generator_ = generator.Generator(input_ast)
         self.assertRaisesRegexp(
             Exception,
@@ -313,7 +315,8 @@ class TestGenerator(unittest.TestCase):
                 )
             ]
         )
-        input_ast.identifier_list = identifier_table.identifier_table(input_ast)
+        input_ast.identifier_list = \
+            identifier_table.identifier_table(input_ast)
         generator_ = generator.Generator(input_ast)
         self.assertRaisesRegexp(
             Exception,
