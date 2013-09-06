@@ -342,7 +342,7 @@ class TestTranslator(unittest.TestCase):
             test_case=self,
             input_string='''
                 start := func () {
-                  testVar := 1 testVar = 2
+                  testVar ::= 1 testVar = 2
                 }
             ''',
             expected_output='''
@@ -350,13 +350,14 @@ class TestTranslator(unittest.TestCase):
 
                 void start(void) {
                   Int* testVar;
+                  Int tmp_0;
                   Int const_0;
                   Int const_1;
 
                   const_0 = 1;
                   const_1 = 2;
 
-                  testVar = &const_0;
+                  testVar = &tmp_0;
                   *testVar = const_0;
                   *testVar = const_1;
                 }
@@ -369,7 +370,7 @@ class TestTranslator(unittest.TestCase):
             test_case=self,
             input_string='''
                 start := func () {
-                  i := 0
+                  i ::= 0
                   for isLessInt(i 5) {
                     printInt(i)
                     printNewLine()
@@ -384,6 +385,7 @@ class TestTranslator(unittest.TestCase):
                   Int* i;
                   Int tmp_0;
                   Int tmp_1;
+                  Int tmp_2;
                   Int const_0;
                   Int const_1;
                   Int const_2;
@@ -392,17 +394,17 @@ class TestTranslator(unittest.TestCase):
                   const_1 = 5;
                   const_2 = 1;
 
-                  i = &const_0;
+                  i = &tmp_0;
                   *i = const_0;
                   while (1) {
-                    isLessInt(&tmp_0, i, &const_1);
-                    if (!tmp_0) {
+                    isLessInt(&tmp_1, i, &const_1);
+                    if (!tmp_1) {
                       break;
                     }
                     printInt(i);
                     printNewLine();
-                    plusInt(&tmp_1, i, &const_2);
-                    *i = tmp_1;
+                    plusInt(&tmp_2, i, &const_2);
+                    *i = tmp_2;
                   }
                 }
 
@@ -424,7 +426,7 @@ class TestTranslator(unittest.TestCase):
                   return "hi"
                 }
                 start := func () {
-                  s := someString()
+                  s ::= someString()
                   printString(s)
                   printNewLine()
                 }
@@ -445,10 +447,11 @@ class TestTranslator(unittest.TestCase):
                 void start(void) {
                   String* s;
                   String tmp_0;
+                  String tmp_1;
 
                   s = &tmp_0;
-                  someString(&tmp_0);
-                  *s = tmp_0;
+                  someString(&tmp_1);
+                  *s = tmp_1;
                   printString(s);
                   printNewLine();
                 }
@@ -502,7 +505,7 @@ class TestTranslator(unittest.TestCase):
                   return 99
                 }
                 start := func () {
-                  testVar := someNumber()
+                  testVar ::= someNumber()
                 }
             ''',
             expected_output='''
@@ -521,10 +524,11 @@ class TestTranslator(unittest.TestCase):
                 void start(void) {
                   Int* testVar;
                   Int tmp_0;
+                  Int tmp_1;
 
                   testVar = &tmp_0;
-                  someNumber(&tmp_0);
-                  *testVar = tmp_0;
+                  someNumber(&tmp_1);
+                  *testVar = tmp_1;
                 }
 
             ''',
