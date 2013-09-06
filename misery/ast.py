@@ -42,13 +42,13 @@ class StructDeclaration(object):
 class Number(object):
     def __init__(self, value):
         self.value = value
-        self.tmp_var = None
+        self.binded_variable_name = None
 
 
 class String(object):
     def __init__(self, value):
         self.value = value
-        self.tmp_var = None
+        self.binded_variable_name = None
 
 
 class FunctionDeclaration(object):
@@ -78,7 +78,7 @@ class FunctionCall(object):
     def __init__(self, expression, argument_list):
         self.expression = expression  # TODO: rename - called_expression?
         self.argument_list = argument_list
-        self.tmp_var = None  # TODO: rename? - binded_variable_name
+        self.binded_variable_name = None
 
 
 class VariableDeclaration(object):

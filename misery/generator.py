@@ -116,12 +116,12 @@ class Generator(object):
     def _generate_argument(self, argument):
         out = ''
         if isinstance(argument, (ast.Number, ast.String)):
-            out += '&' + argument.tmp_var
+            out += '&' + argument.binded_variable_name
         elif isinstance(argument, ast.Identifier):
             # TODO: check if this is correct identifier
             out += argument.name
         elif isinstance(argument, ast.FunctionCall):
-            out += '&' + argument.tmp_var
+            out += '&' + argument.binded_variable_name
         else:
             raise Exception('Wrong argument type: ' + str(type(argument)))
         return out
@@ -136,7 +136,7 @@ class Generator(object):
         called_func_name = function_call_expression.expression.name
         identifier_list = self._ast.identifier_list
         if identifier_list[called_func_name].return_type is not None:
-            out += '&' + function_call_expression.tmp_var
+            out += '&' + function_call_expression.binded_variable_name
             is_first = False
         for argument in function_call_expression.argument_list:
             if is_first:
@@ -183,14 +183,14 @@ class Generator(object):
             out += self._indent()
             out += '*' + assign_statement.name
             out += ' = '
-            out += rvalue_expression.tmp_var
+            out += rvalue_expression.binded_variable_name
             out += ';\n'
         elif isinstance(rvalue_expression, ast.FunctionCall):
             out += self._generate_expression(rvalue_expression)
             out += self._indent()
             out += '*' + assign_statement.name
             out += ' = '
-            out += rvalue_expression.tmp_var
+            out += rvalue_expression.binded_variable_name
             out += ';\n'
         else:
             raise Exception(
@@ -208,7 +208,7 @@ class Generator(object):
         assert isinstance(statement.condition, ast.FunctionCall)
         out += self._generate_expression(statement.condition)
         out += self._indent() + 'if ('
-        variable_name = statement.condition.tmp_var
+        variable_name = statement.condition.binded_variable_name
         out += variable_name
         out += ') {\n'
         self._increnent_indent()
@@ -230,7 +230,7 @@ class Generator(object):
         out += self._indent() + 'while (1) {\n'
         self._increnent_indent()
         out += self._generate_expression(statement.condition)
-        variable_name = statement.condition.tmp_var
+        variable_name = statement.condition.binded_variable_name
         out += self._indent() + 'if (' + '!' + variable_name + ') {\n'
         self._increnent_indent()
         out += self._indent() + 'break;\n'
@@ -247,11 +247,11 @@ class Generator(object):
         def gen_expr(expression):
             out = ''
             if isinstance(expression, (ast.Number, ast.String)):
-                out += expression.tmp_var
+                out += expression.binded_variable_name
             elif isinstance(expression, ast.Identifier):
                 out = '*' + expression.name
             elif isinstance(expression, ast.FunctionCall):
-                out += expression.tmp_var
+                out += expression.binded_variable_name
             else:
                 raise Exception(
                     'Wrong expression type: ' + str(type(expression)),
@@ -276,13 +276,13 @@ class Generator(object):
                 out += self._indent()
                 out += statement.name
                 out += ' = '
-                out += '&' + statement.tmp_var
+                out += '&' + statement.binded_variable_name
                 out += ';\n'
             else:
                 out += self._indent()
                 out += statement.name
                 out += ' = '
-                out += '&' + statement.expression.tmp_var
+                out += '&' + statement.expression.binded_variable_name
                 out += ';\n'
             out += self._generate_assign_statement(statement)
         elif isinstance(statement, ast.Assign):
@@ -316,15 +316,15 @@ class Generator(object):
             if return_type is not None:
                 var_name = 'tmp_' + str(len(local_tmp_vars))
                 local_tmp_vars[var_name] = return_type
-                expression.tmp_var = var_name
+                expression.binded_variable_name = var_name
         elif isinstance(expression, ast.Number):
             var_name = 'const_' + str(len(local_constants))
             local_constants[var_name] = copy.deepcopy(expression)
-            expression.tmp_var = var_name
+            expression.binded_variable_name = var_name
         elif isinstance(expression, ast.String):
             var_name = 'const_' + str(len(local_constants))
             local_constants[var_name] = copy.deepcopy(expression)
-            expression.tmp_var = var_name
+            expression.binded_variable_name = var_name
         elif isinstance(expression, ast.Identifier):
             pass  # ok
         else:
@@ -344,7 +344,7 @@ class Generator(object):
                     var_name = 'tmp_' + str(len(local_tmp_vars))
                     local_tmp_vars[var_name] = \
                         copy.deepcopy(statement.datatype)
-                    statement.tmp_var = var_name
+                    statement.binded_variable_name = var_name
                 self._scan_expression(statement.expression)
             elif isinstance(statement, ast.Return):
                 self._scan_expression(statement.expression)
