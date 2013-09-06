@@ -8,6 +8,7 @@
 import unittest
 import subprocess
 import os
+import sys
 import textwrap
 from misery import (
     misc,
@@ -54,9 +55,14 @@ def try_to_compile_and_run_file(
         filename=c_file_name,
     )
 
+    if sys.platform == 'win32':
+        exe_file_name = c_file_name.replace('.c', '.exe')
+    else:
+        exe_file_name = c_file_name.replace('.c', '')
+
     # compile c code with c compiler TODO: support other compilers
     compiler_proc = subprocess.Popen(
-        ['tcc', c_file_name],
+        ['tcc', c_file_name, '-o', exe_file_name],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         universal_newlines=True,
@@ -71,9 +77,12 @@ def try_to_compile_and_run_file(
     )
 
     # run compiler program and check its output
-    exe_file_name = c_file_name.replace('.c', '.exe')
+    if sys.platform == 'win32':
+        cmd = [exe_file_name]
+    else:
+        cmd = ['./' + exe_file_name]
     proc = subprocess.Popen(
-        [exe_file_name],
+        cmd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         universal_newlines=True,
