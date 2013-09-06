@@ -19,6 +19,7 @@ from misery import (
 def check_translation(test_case, input_ast, expected_output):
     ''' Small helper function. '''
     input_ast.identifier_list = identifier_table.identifier_table(input_ast)
+    generator.scan_module_vars(input_ast)  # TODO: remove this line
     generator_ = generator.Generator(input_ast)
     real_output = generator_.generate()
     misc.assert_equal(test_case, textwrap.dedent(expected_output), real_output)
@@ -259,7 +260,7 @@ class TestGenerator(unittest.TestCase):
     def test_bad_expression_type_error(self):
         class BadExpressionClass(object):
             def __init__(self):
-                pass
+                self.binded_variable_name = 'xxx'
         input_ast = ast.Module(
             declaration_sequence=[
                 ast.FunctionDeclaration(

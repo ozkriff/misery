@@ -25,6 +25,7 @@ def get_generator(input_string):
     )
     ast_.identifier_list = identifier_table.identifier_table(ast_)
     ast_ = datatype.mark_out_datatypes(ast_=ast_)
+    generator.scan_module_vars(ast_)
     generator_ = generator.Generator(ast_=ast_)
     return generator_
 

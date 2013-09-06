@@ -303,64 +303,6 @@ class Generator(object):
             out += self._generate_statement(statement)
         return out
 
-    def _scan_expression(self, expression):
-        local_tmp_vars = self._function_declaration.tmp_vars
-        local_constants = self._function_declaration.constants
-        if isinstance(expression, ast.FunctionCall):
-            for argument in expression.argument_list:
-                self._scan_expression(argument)
-            assert isinstance(expression.expression, ast.Identifier)
-            called_func_name = expression.expression.name
-            identifier_list = self._ast.identifier_list
-            return_type = identifier_list[called_func_name].return_type
-            if return_type is not None:
-                var_name = 'tmp_' + str(len(local_tmp_vars))
-                local_tmp_vars[var_name] = return_type
-                expression.binded_variable_name = var_name
-        elif isinstance(expression, ast.Number):
-            var_name = 'const_' + str(len(local_constants))
-            local_constants[var_name] = copy.deepcopy(expression)
-            expression.binded_variable_name = var_name
-        elif isinstance(expression, ast.String):
-            var_name = 'const_' + str(len(local_constants))
-            local_constants[var_name] = copy.deepcopy(expression)
-            expression.binded_variable_name = var_name
-        elif isinstance(expression, ast.Identifier):
-            pass  # ok
-        else:
-            raise Exception('Bad expression type: ' + str(type(expression)))
-
-    # TODO: rename method, do in separate pass (like datatype)
-    def _scan_vars(self, block):
-        local_vars = self._function_declaration.vars
-        local_tmp_vars = self._function_declaration.tmp_vars
-        for statement in block:
-            if isinstance(statement, ast.FunctionCall):
-                self._scan_expression(statement)
-            elif isinstance(statement, ast.VariableDeclaration):
-                datatype_ = copy.deepcopy(statement.datatype)
-                local_vars[statement.name] = datatype_
-                if statement.allocate_memory_on_stack:
-                    var_name = 'tmp_' + str(len(local_tmp_vars))
-                    local_tmp_vars[var_name] = \
-                        copy.deepcopy(statement.datatype)
-                    statement.binded_variable_name = var_name
-                self._scan_expression(statement.expression)
-            elif isinstance(statement, ast.Return):
-                self._scan_expression(statement.expression)
-            elif isinstance(statement, ast.Assign):
-                self._scan_expression(statement.expression)
-            elif isinstance(statement, ast.If):
-                self._scan_expression(statement.condition)
-                self._scan_vars(statement.branch_if)
-                if statement.branch_else:
-                    self._scan_vars(statement.branch_else)
-            elif isinstance(statement, ast.For):
-                self._scan_expression(statement.condition)
-                self._scan_vars(statement.branch)
-            else:
-                raise Exception('Bad statement type: ' + str(type(statement)))
-
     def _generate_local_variables(self):
         fd = self._function_declaration  # shortcut
         out = ''
@@ -416,7 +358,6 @@ class Generator(object):
         )
         out += ' {\n'
         self._increnent_indent()
-        self._scan_vars(function_declaration.body)
         if fd.vars or fd.tmp_vars or fd.constants:
             out += self._generate_local_variables()
             out += '\n'
@@ -504,5 +445,76 @@ class Generator(object):
         out += self.generate()
         out += textwrap.dedent(Generator.postfix)
         return out
+
+
+# TODO: rename: not 'scan'
+def scan_module_vars(ast_):
+    ''' TODO: explain this thing '''
+
+    def scan_expression_vars(function_declaration, expression):
+        fd = function_declaration  # shortcut
+        if isinstance(expression, ast.FunctionCall):
+            for argument in expression.argument_list:
+                scan_expression_vars(fd, argument)
+            assert isinstance(expression.expression, ast.Identifier)
+            called_func_name = expression.expression.name
+            identifier_list = ast_.identifier_list
+            return_type = identifier_list[called_func_name].return_type
+            if return_type is not None:
+                var_name = 'tmp_' + str(len(fd.tmp_vars))
+                fd.tmp_vars[var_name] = return_type
+                expression.binded_variable_name = var_name
+        elif isinstance(expression, ast.Number):
+            var_name = 'const_' + str(len(fd.constants))
+            fd.constants[var_name] = copy.deepcopy(expression)
+            expression.binded_variable_name = var_name
+        elif isinstance(expression, ast.String):
+            var_name = 'const_' + str(len(fd.constants))
+            fd.constants[var_name] = copy.deepcopy(expression)
+            expression.binded_variable_name = var_name
+        elif isinstance(expression, ast.Identifier):
+            pass  # ok
+        else:
+            raise Exception('Bad expression type: ' + str(type(expression)))
+
+    def scan_statement_vars(ast_, function_declaration, statement):
+        fd = function_declaration  # shortcut
+        if isinstance(statement, ast.FunctionCall):
+            scan_expression_vars(fd, statement)
+        elif isinstance(statement, ast.VariableDeclaration):
+            datatype_ = copy.deepcopy(statement.datatype)
+            fd.vars[statement.name] = datatype_
+            if statement.allocate_memory_on_stack:
+                var_name = 'tmp_' + str(len(fd.tmp_vars))
+                fd.tmp_vars[var_name] = copy.deepcopy(statement.datatype)
+                statement.binded_variable_name = var_name
+            scan_expression_vars(fd, statement.expression)
+        elif isinstance(statement, ast.Return):
+            scan_expression_vars(fd, statement.expression)
+        elif isinstance(statement, ast.Assign):
+            scan_expression_vars(fd, statement.expression)
+        elif isinstance(statement, ast.If):
+            scan_expression_vars(fd, statement.condition)
+            scan_block_vars(ast_, fd, statement.branch_if)
+            if statement.branch_else:
+                scan_block_vars(ast_, fd, statement.branch_else)
+        elif isinstance(statement, ast.For):
+            scan_expression_vars(fd, statement.condition)
+            scan_block_vars(ast_, fd, statement.branch)
+        else:
+            raise Exception('Bad statement type: ' + str(type(statement)))
+
+    def scan_block_vars(ast_, function_declaration, block):
+        for statement in block:
+            scan_statement_vars(ast_, function_declaration, statement)
+
+    for declaration in ast_.declaration_sequence:
+        if isinstance(declaration, ast.FunctionDeclaration):
+            scan_block_vars(
+                ast_=ast_,
+                function_declaration=declaration,
+                block=declaration.body,
+            )
+
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
