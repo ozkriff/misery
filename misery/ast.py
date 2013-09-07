@@ -91,7 +91,7 @@ class VariableDeclaration(object):
         allocate_memory_on_stack=False,
     ):
         self.name = name
-        self.expression = expression  # TODO: rename
+        self.rvalue_expression = expression
         self.datatype = datatype
         self.allocate_memory_on_stack = allocate_memory_on_stack
 
@@ -104,7 +104,7 @@ class Assign(object):
         datatype=None,
     ):
         self.name = name
-        self.expression = expression
+        self.rvalue_expression = expression
         self.datatype = datatype
 
 

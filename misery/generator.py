@@ -191,7 +191,7 @@ class Generator(object):
 
     def _generate_assign_statement(self, assign_statement):
         out = ''
-        rvalue_expression = assign_statement.expression
+        rvalue_expression = assign_statement.rvalue_expression
         if isinstance(rvalue_expression, (ast.Number, ast.String)):
             out += self._indent()
             out += '*' + assign_statement.name
@@ -295,7 +295,7 @@ class Generator(object):
                 out += self._indent()
                 out += statement.name
                 out += ' = '
-                out += '&' + statement.expression.binded_variable_name
+                out += '&' + statement.rvalue_expression.binded_variable_name
                 out += ';\n'
             out += self._generate_assign_statement(statement)
         elif isinstance(statement, ast.Assign):
@@ -501,11 +501,11 @@ def scan_module_vars(ast_):
                 var_name = 'tmp_' + str(len(fd.tmp_vars))
                 fd.tmp_vars[var_name] = copy.deepcopy(statement.datatype)
                 statement.binded_variable_name = var_name
-            scan_expression_vars(fd, statement.expression)
+            scan_expression_vars(fd, statement.rvalue_expression)
         elif isinstance(statement, ast.Return):
             scan_expression_vars(fd, statement.expression)
         elif isinstance(statement, ast.Assign):
-            scan_expression_vars(fd, statement.expression)
+            scan_expression_vars(fd, statement.rvalue_expression)
         elif isinstance(statement, ast.If):
             scan_expression_vars(fd, statement.condition)
             scan_block_vars(ast_, fd, statement.branch_if)

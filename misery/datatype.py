@@ -41,12 +41,12 @@ def _mark_out_datatypes(ast_):
         variable_declaration_statement,
     ):
         datatype = get_expression_datatype(
-            variable_declaration_statement.expression,
+            variable_declaration_statement.rvalue_expression,
         )
         variable_declaration_statement.datatype = datatype
 
     def mark_out_assign_statement(assign_statement):
-        datatype = get_expression_datatype(assign_statement.expression)
+        datatype = get_expression_datatype(assign_statement.rvalue_expression)
         assign_statement.datatype = datatype
 
     def mark_out_statement(statement):
