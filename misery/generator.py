@@ -143,8 +143,10 @@ class Generator(object):
     ):
         out = ''
         is_first = True
-        assert isinstance( \
-            function_call_expression.called_expression, ast.Identifier)
+        assert isinstance(
+            function_call_expression.called_expression,
+            ast.Identifier,
+        )
         called_func_name = function_call_expression.called_expression.name
         identifier_list = self._ast.identifier_list
         if identifier_list[called_func_name].return_type is not None:
@@ -161,8 +163,10 @@ class Generator(object):
     def _generate_function_call_expression(self, function_call_expression):
         out = ''
         # TODO: implement other expressions
-        assert isinstance( \
-            function_call_expression.called_expression, ast.Identifier)
+        assert isinstance(
+            function_call_expression.called_expression,
+            ast.Identifier,
+        )
         called_func_name = function_call_expression.called_expression.name
         out += self._generate_expression_dependencies(
             function_call_expression=function_call_expression,
