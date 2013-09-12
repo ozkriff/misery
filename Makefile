@@ -1,7 +1,7 @@
 all: pep8 test
 
 test:
-	python -m unittest discover
+	python -B -m unittest discover
 
 lint:
 	pylint misery
