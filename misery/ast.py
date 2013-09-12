@@ -64,8 +64,17 @@ class FunctionDeclaration(object):
 
 
 class FunctionSignature(object):
-    def __init__(self, parameter_list, return_type=None):
+    def __init__(
+        self,
+        parameter_list,
+        generic_parameter_list=None,
+        return_type=None,
+    ):
         self.parameter_list = parameter_list
+        if generic_parameter_list:
+            self.generic_parameter_list = generic_parameter_list
+        else:
+            self.generic_parameter_list = []
         self.return_type = return_type
 
 

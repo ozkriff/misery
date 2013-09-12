@@ -400,6 +400,24 @@ class TestParser(unittest.TestCase):
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
+    def test_generic_func_1(self):
+        ''' First test of generic functions. '''
+        input_string = 'testFunc := func <Int> () {}'
+        real_ast = self._parse(input_string)
+        expected_ast = ast.Module(
+            declaration_sequence=[
+                ast.FunctionDeclaration(
+                    name='testFunc',
+                    signature=ast.FunctionSignature(
+                        parameter_list=[],
+                        generic_parameter_list=["Int"],
+                    ),
+                    body=[],
+                )
+            ]
+        )
+        misc.assert_equal(self, expected_ast, real_ast)
+
     def test_string(self):
         ''' Parse anythong with string. '''
         input_string = 'start := func () { return "hi" }'

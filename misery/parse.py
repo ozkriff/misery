@@ -35,6 +35,8 @@ tokens = [
     'RPAREN',
     'LCURLY',
     'RCURLY',
+    'LT',
+    'GT',
     # 'COMMA',
     'COLON',
     'ARROW',
@@ -67,6 +69,8 @@ def make_lexer():
     t_RPAREN = r'\)'
     t_LCURLY = r'\{'
     t_RCURLY = r'\}'
+    t_LT = r'<'
+    t_GT = r'>'
     # t_COMMA = r','
     t_COLON = r':'
     # t_DOT = r'\.'
@@ -158,13 +162,28 @@ def make_parser():
         p[2].append(ast.Return(expression=p[4]))
         p[0] = p[2]
 
+    def p_generic_empty(p):
+        'generic :'
+        p[0] = []
+
+    def p_generic(p):
+        'generic : LT IDENTIFIER GT'
+        p[0] = [p[2]]
+
     def p_function_signature(p):
-        'function_signature : LPAREN parameter_list RPAREN ARROW type'
-        p[0] = ast.FunctionSignature(parameter_list=p[2], return_type=p[5])
+        'function_signature : generic LPAREN parameter_list RPAREN ARROW type'
+        p[0] = ast.FunctionSignature(
+            parameter_list=p[3],
+            return_type=p[6],
+            generic_parameter_list=p[1],
+        )
 
     def p_function_signature_without_return_type(p):
-        'function_signature : LPAREN parameter_list RPAREN'
-        p[0] = ast.FunctionSignature(parameter_list=p[2])
+        'function_signature : generic LPAREN parameter_list RPAREN'
+        p[0] = ast.FunctionSignature(
+            parameter_list=p[3],
+            generic_parameter_list=p[1],
+        )
 
     def p_function_declaration(p):
         'declaration : IDENTIFIER COLONASSIGN FUNC function_signature block'
