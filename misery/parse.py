@@ -187,7 +187,10 @@ def make_parser():
     def p_function_declaration(p):
         'declaration : IDENTIFIER COLONASSIGN FUNC function_signature block'
         p[0] = ast.FunctionDeclaration(
-            name=p[1], signature=p[4], body=p[5])
+            name=p[1],
+            signature=p[4],
+            body=p[5],
+        )
 
     def p_struct_declaration(p):
         'declaration : IDENTIFIER COLONASSIGN STRUCT LCURLY field_list RCURLY'
