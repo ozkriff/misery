@@ -413,7 +413,7 @@ class TestParser(unittest.TestCase):
 
     def test_lex_error(self):
         ''' Check lexer error reporting. '''
-        input_string = 'start := <'
+        input_string = 'start := &'
         self.assertRaisesRegexp(
             Exception,
             'Lexer error: Illegal character',
