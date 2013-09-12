@@ -60,7 +60,7 @@ def try_to_compile_and_run_file(
     else:
         exe_file_name = c_file_name.replace('.c', '')
 
-    # compile c code with c compiler TODO: support other compilers
+    # compile c code with c compiler
     compiler_proc = subprocess.Popen(
         ['tcc', c_file_name, '-o', exe_file_name],
         stdout=subprocess.PIPE,
