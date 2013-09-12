@@ -11,7 +11,6 @@ from misery import (
 )
 
 
-# TODO: Add more tests!
 class TestDiff(unittest.TestCase):
     ''' Test misc.diff function. '''
 

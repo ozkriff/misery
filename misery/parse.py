@@ -81,7 +81,6 @@ def make_lexer():
         t.type = reserved.get(t.value, 'IDENTIFIER')
         return t
 
-    # TODO: float?
     def t_NUMBER(t):
         r'-?\d+'
         t.value = int(t.value)
@@ -324,7 +323,6 @@ def make_parser():
         )
         raise Exception(message)
 
-    # TODO: python3 reports some warning about unclosed file here
     parser = yacc.yacc()
     return parser
 
