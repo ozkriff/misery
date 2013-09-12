@@ -1,4 +1,4 @@
-all: pep8 lint
+all: pep8
 	python -m unittest discover
 
 lint:
