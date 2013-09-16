@@ -19,7 +19,7 @@ from misery import (
 def check_translation(test_case, input_ast, expected_output):
     ''' Small helper function. '''
     input_ast.identifier_list = identifier_table.identifier_table(input_ast)
-    generator.scan_module_vars(input_ast)  # TODO: remove this line
+    generator.scan_vars(input_ast)
     generator_ = generator.Generator(input_ast)
     real_output = generator_.generate()
     misc.assert_equal(test_case, textwrap.dedent(expected_output), real_output)

@@ -464,9 +464,8 @@ class Generator(object):
         return out
 
 
-# TODO: rename: not 'scan'
-def scan_module_vars(ast_):
-    ''' Add information about local variables into AST '''
+def scan_vars(ast_):
+    ''' Add information about local variables allocation on stack into AST '''
 
     def scan_expression_vars(function_declaration, expression):
         fd = function_declaration  # shortcut
