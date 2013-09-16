@@ -167,7 +167,6 @@ class TestTranslator(unittest.TestCase):
 
                   testVar = &tmp_0;
                   Int_init(&tmp_0, &const_0);
-                  *testVar = tmp_0;
                   printInt(testVar);
                   printNewLine();
                 }
@@ -207,7 +206,6 @@ class TestTranslator(unittest.TestCase):
 
                   t = &tmp_0;
                   MyStruct_init(&tmp_0);
-                  *t = tmp_0;
                 }
 
             ''',
@@ -256,10 +254,8 @@ class TestTranslator(unittest.TestCase):
 
                   t = &tmp_0;
                   MyStruct_init(&tmp_0);
-                  *t = tmp_0;
                   t2 = &tmp_1;
                   someFunc(&tmp_1, t);
-                  *t2 = tmp_1;
                 }
 
             ''',

@@ -295,13 +295,14 @@ class Generator(object):
                 out += ' = '
                 out += '&' + statement.binded_variable_name
                 out += ';\n'
+                out += self._generate_assign_statement(statement)
             else:
                 out += self._indent()
                 out += statement.name
                 out += ' = '
                 out += '&' + statement.rvalue_expression.binded_variable_name
                 out += ';\n'
-            out += self._generate_assign_statement(statement)
+                out += self._generate_expression(statement.rvalue_expression)
         elif isinstance(statement, ast.Assign):
             out += self._generate_assign_statement(statement)
         elif isinstance(statement, ast.If):
