@@ -1,7 +1,10 @@
-all: pep8 test
+all: prepare_parsetab pep8 test
 
 test:
 	python -B -m unittest discover
+
+prepare_parsetab:
+	python -c 'from misery.parse import make_parser; p = make_parser()'
 
 lint:
 	pylint misery
