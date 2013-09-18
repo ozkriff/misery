@@ -19,9 +19,9 @@ from misery import (
 )
 
 
-def get_generator(input_string):
+def get_generator(input_mis_code):
     ast_ = parse.make_parser().parse(
-        input_string,
+        input_mis_code,
         lexer=parse.make_lexer(),
     )
     ast_.identifier_list = identifier_table.identifier_table(ast_)
@@ -31,27 +31,27 @@ def get_generator(input_string):
     return generator_
 
 
-def translate_mis_to_c(input_string):
+def translate_mis_to_c(input_mis_code):
     ''' Helper function, compiles program in Mis to program in C. '''
-    real_output = get_generator(input_string).generate()
+    real_output = get_generator(input_mis_code).generate()
     return real_output
 
 
-def translate_mis_to_c_and_write_to_file(input_string, filename='out.c'):
+def translate_mis_to_c_and_write_to_file(input_mis_code, filename='out.c'):
     ''' Translate to full C version and write to file. '''
     with open(filename, 'w') as f:
-        f.write(get_generator(input_string).generate_full())
+        f.write(get_generator(input_mis_code).generate_full())
 
 
 def try_to_compile_and_run_file(
     test_case,
     c_file_name,
-    input_string,
+    input_mis_code,
     expected_stdout,
 ):
     # translate mis to ANSI C and write to file
     translate_mis_to_c_and_write_to_file(
-        input_string=input_string,
+        input_mis_code=input_mis_code,
         filename=c_file_name,
     )
 
@@ -98,18 +98,18 @@ def try_to_compile_and_run_file(
 
 def check_translation(
     test_case,
-    input_string,
-    expected_output,
+    input_mis_code,
+    expected_c_code,
     expected_stdout='',
 ):
     ''' Small helper function. '''
-    real_output = translate_mis_to_c(textwrap.dedent(input_string))
-    misc.assert_equal(test_case, textwrap.dedent(expected_output), real_output)
+    real_output = translate_mis_to_c(textwrap.dedent(input_mis_code))
+    misc.assert_equal(test_case, textwrap.dedent(expected_c_code), real_output)
     c_file_name = misc.get_caller_func_name().replace('test_', '') + '_out.c'
     try_to_compile_and_run_file(
         test_case,
         c_file_name,
-        input_string,
+        input_mis_code,
         expected_stdout,
     )
 
@@ -119,13 +119,13 @@ class TestTranslator(unittest.TestCase):
     def test_var_declaration_with_integer_literal(self):
         check_translation(
             test_case=self,
-            input_string='''
+            input_mis_code='''
                 start := func () {
                   testVar ::= 1
                   testVar = 2
                 }
             ''',
-            expected_output='''
+            expected_c_code='''
                 void start(void);
 
                 void start(void) {
@@ -148,14 +148,14 @@ class TestTranslator(unittest.TestCase):
     def test_integer_var_declaration_with_constructor(self):
         check_translation(
             test_case=self,
-            input_string='''
+            input_mis_code='''
                 start := func () {
                   testVar := Int(1)
                   printInt(testVar)
                   printNewLine()
                 }
             ''',
-            expected_output='''
+            expected_c_code='''
                 void start(void);
 
                 void start(void) {
@@ -178,7 +178,7 @@ class TestTranslator(unittest.TestCase):
     def test_struct(self):
         check_translation(
             test_case=self,
-            input_string='''
+            input_mis_code='''
                 MyStruct := struct {
                   field1: Int
                   field2: Int
@@ -187,7 +187,7 @@ class TestTranslator(unittest.TestCase):
                   t := MyStruct()
                 }
             ''',
-            expected_output='''
+            expected_c_code='''
                 typedef struct MyStruct MyStruct;
                 void start(void);
 
@@ -214,7 +214,7 @@ class TestTranslator(unittest.TestCase):
     def test_struct_as_func_argument(self):
         check_translation(
             test_case=self,
-            input_string='''
+            input_mis_code='''
                 MyStruct := struct {
                   field1: Int
                   field2: Int
@@ -227,7 +227,7 @@ class TestTranslator(unittest.TestCase):
                   t2 := someFunc(t)
                 }
             ''',
-            expected_output='''
+            expected_c_code='''
                 typedef struct MyStruct MyStruct;
                 void someFunc(MyStruct* __result, MyStruct* x);
                 void start(void);
@@ -264,12 +264,12 @@ class TestTranslator(unittest.TestCase):
     def test_var_declaration_with_string_literal(self):
         check_translation(
             test_case=self,
-            input_string='''
+            input_mis_code='''
                 start := func () {
                   testVar ::= "some string"
                 }
             ''',
-            expected_output='''
+            expected_c_code='''
                 void start(void);
 
                 void start(void) {
@@ -289,13 +289,13 @@ class TestTranslator(unittest.TestCase):
     def test_print_string_literal(self):
         check_translation(
             test_case=self,
-            input_string='''
+            input_mis_code='''
                 start := func () {
                   printString("hello")
                   printNewLine()
                 }
             ''',
-            expected_output='''
+            expected_c_code='''
                 void start(void);
 
                 void start(void) {
@@ -314,14 +314,14 @@ class TestTranslator(unittest.TestCase):
     def test_print_string_var(self):
         check_translation(
             test_case=self,
-            input_string='''
+            input_mis_code='''
                 start := func () {
                   testVar ::= "print this to console, please"
                   printString(testVar)
                   printNewLine()
                 }
             ''',
-            expected_output='''
+            expected_c_code='''
                 void start(void);
 
                 void start(void) {
@@ -344,12 +344,12 @@ class TestTranslator(unittest.TestCase):
     def test_basic_assignment_of_integer_literal(self):
         check_translation(
             test_case=self,
-            input_string='''
+            input_mis_code='''
                 start := func () {
                   testVar ::= 1 testVar = 2
                 }
             ''',
-            expected_output='''
+            expected_c_code='''
                 void start(void);
 
                 void start(void) {
@@ -372,7 +372,7 @@ class TestTranslator(unittest.TestCase):
     def test_simple_loop_from_1_to_5(self):
         check_translation(
             test_case=self,
-            input_string='''
+            input_mis_code='''
                 start := func () {
                   i ::= 0
                   for isLessInt(i 5) {
@@ -382,7 +382,7 @@ class TestTranslator(unittest.TestCase):
                   }
                 }
             ''',
-            expected_output='''
+            expected_c_code='''
                 void start(void);
 
                 void start(void) {
@@ -425,7 +425,7 @@ class TestTranslator(unittest.TestCase):
     def test_var_declaration_with_function_call_returning_string(self):
         check_translation(
             test_case=self,
-            input_string='''
+            input_mis_code='''
                 someString := func () -> String {
                   return "hi"
                 }
@@ -435,7 +435,7 @@ class TestTranslator(unittest.TestCase):
                   printNewLine()
                 }
             ''',
-            expected_output='''
+            expected_c_code='''
                 void someString(String* __result);
                 void start(void);
 
@@ -467,7 +467,7 @@ class TestTranslator(unittest.TestCase):
     def test_nested_func_calls_with_strings(self):
         check_translation(
             test_case=self,
-            input_string='''
+            input_mis_code='''
                 someString := func () -> String {
                   return "hi"
                 }
@@ -476,7 +476,7 @@ class TestTranslator(unittest.TestCase):
                   printNewLine()
                 }
             ''',
-            expected_output='''
+            expected_c_code='''
                 void someString(String* __result);
                 void start(void);
 
@@ -504,7 +504,7 @@ class TestTranslator(unittest.TestCase):
     def test_var_declaration_with_function_call_returning_integer(self):
         check_translation(
             test_case=self,
-            input_string='''
+            input_mis_code='''
                 someNumber := func () -> Int {
                   return 99
                 }
@@ -512,7 +512,7 @@ class TestTranslator(unittest.TestCase):
                   testVar ::= someNumber()
                 }
             ''',
-            expected_output='''
+            expected_c_code='''
                 void someNumber(Int* __result);
                 void start(void);
 
@@ -541,13 +541,13 @@ class TestTranslator(unittest.TestCase):
     def test_simple_func_1(self):
         check_translation(
             test_case=self,
-            input_string='''
+            input_mis_code='''
                 start := func () {
                   printInt(minusInt(666 99))
                   printNewLine()
                 }
             ''',
-            expected_output='''
+            expected_c_code='''
                 void start(void);
 
                 void start(void) {
@@ -570,7 +570,7 @@ class TestTranslator(unittest.TestCase):
     def test_simple_func_2(self):
         check_translation(
             test_case=self,
-            input_string='''
+            input_mis_code='''
                 someNumber := func () -> Int {
                   return 99
                 }
@@ -579,7 +579,7 @@ class TestTranslator(unittest.TestCase):
                   printNewLine()
                 }
             ''',
-            expected_output='''
+            expected_c_code='''
                 void someNumber(Int* __result);
                 void start(void);
 
@@ -612,7 +612,7 @@ class TestTranslator(unittest.TestCase):
     def test_simple_func_3(self):
         check_translation(
             test_case=self,
-            input_string='''
+            input_mis_code='''
                 someNumber := func () -> Int {
                   return minusInt(100 1)
                 }
@@ -623,7 +623,7 @@ class TestTranslator(unittest.TestCase):
                   printNewLine()
                 }
             ''',
-            expected_output='''
+            expected_c_code='''
                 void someNumber(Int* __result);
                 void start(void);
 
@@ -660,7 +660,7 @@ class TestTranslator(unittest.TestCase):
     def test_simple_func_4(self):
         check_translation(
             test_case=self,
-            input_string='''
+            input_mis_code='''
                 someNumber := func (xxx:Int) -> Int {
                   return minusInt(100 xxx)
                 }
@@ -671,7 +671,7 @@ class TestTranslator(unittest.TestCase):
                   printNewLine()
                 }
             ''',
-            expected_output='''
+            expected_c_code='''
                 void someNumber(Int* __result, Int* xxx);
                 void start(void);
 
@@ -709,7 +709,7 @@ class TestTranslator(unittest.TestCase):
         ''' Process factorial function. '''
         check_translation(
             test_case=self,
-            input_string='''
+            input_mis_code='''
                 start := func () {
                     printInt(fac())
                     printNewLine()
@@ -719,7 +719,7 @@ class TestTranslator(unittest.TestCase):
                     return 1
                 }
             ''',
-            expected_output='''
+            expected_c_code='''
                 void start(void);
                 void fac(Int* __result);
 
@@ -750,7 +750,7 @@ class TestTranslator(unittest.TestCase):
         ''' Process fib function. '''
         check_translation(
             test_case=self,
-            input_string='''
+            input_mis_code='''
                 start := func () {
                   printInt(fib(10))
                   printNewLine()
@@ -766,7 +766,7 @@ class TestTranslator(unittest.TestCase):
                   }
                 }
             ''',
-            expected_output='''
+            expected_c_code='''
                 void start(void);
                 void fib(Int* __result, Int* n);
 
@@ -819,7 +819,7 @@ class TestTranslator(unittest.TestCase):
         ''' Process factorial function. '''
         check_translation(
             test_case=self,
-            input_string='''
+            input_mis_code='''
                 start := func () {
                   printInt(fac(3))
                   printNewLine()
@@ -834,7 +834,7 @@ class TestTranslator(unittest.TestCase):
                   )
                 }
             ''',
-            expected_output='''
+            expected_c_code='''
                 void start(void);
                 void fac(Int* __result, Int* n);
 
