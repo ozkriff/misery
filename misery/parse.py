@@ -25,7 +25,7 @@ reserved = {
 
 
 tokens = [
-    'IDENTIFIER',
+    'IDENT',
     'STRING',
     'NUMBER',
     'ASSIGN',
@@ -78,7 +78,7 @@ def make_lexer():
 
     def t_IDENTIFIER(t):
         r'[a-zA-Z_][a-zA-Z0-9_]*'
-        t.type = reserved.get(t.value, 'IDENTIFIER')
+        t.type = reserved.get(t.value, 'IDENT')
         return t
 
     def t_NUMBER(t):
@@ -134,7 +134,7 @@ def make_parser():
         p[0] = []
 
     def p_import_list(p):
-        'import_list : import_list IDENTIFIER'
+        'import_list : import_list IDENT'
         p[1].append(p[2])
         p[0] = p[1]
 
@@ -166,7 +166,7 @@ def make_parser():
         p[0] = []
 
     def p_generic(p):
-        'generic : LT IDENTIFIER GT'
+        'generic : LT IDENT GT'
         p[0] = [p[2]]
 
     def p_func_signature(p):
@@ -185,7 +185,7 @@ def make_parser():
         )
 
     def p_func_decl(p):
-        'decl : IDENTIFIER COLONASSIGN FUNC func_signature block'
+        'decl : IDENT COLONASSIGN FUNC func_signature block'
         p[0] = ast.FuncDecl(
             name=p[1],
             signature=p[4],
@@ -193,16 +193,16 @@ def make_parser():
         )
 
     def p_struct_decl(p):
-        'decl : IDENTIFIER COLONASSIGN STRUCT LCURLY field_list RCURLY'
+        'decl : IDENT COLONASSIGN STRUCT LCURLY field_list RCURLY'
         p[0] = ast.StructDecl(name=p[1], field_list=p[5])
 
     def p_const_decl(p):
-        'decl : CONST IDENTIFIER COLON type COLONASSIGN expr'
+        'decl : CONST IDENT COLON type COLONASSIGN expr'
         p[0] = ast.ConstDecl(
             name=p[2], datatype=p[4], expr=p[6])
 
     def p_type_ident(p):
-        'type : IDENTIFIER'
+        'type : IDENT'
         p[0] = datatype.SimpleDataType(name=p[1])
 
     def p_field_list_1(p):
@@ -215,7 +215,7 @@ def make_parser():
         p[0] = p[1]
 
     def p_field(p):
-        'field : IDENTIFIER COLON type'
+        'field : IDENT COLON type'
         p[0] = ast.Field(name=p[1], datatype=p[3])
 
     def p_par_list_1(p):
@@ -228,7 +228,7 @@ def make_parser():
         p[0] = p[1]
 
     def p_parameter(p):
-        'parameter : IDENTIFIER COLON type'
+        'parameter : IDENT COLON type'
         p[0] = ast.Parameter(name=p[1], datatype=p[3])
 
     def p_stmt_list_empty(p):
@@ -249,11 +249,11 @@ def make_parser():
         p[0] = p[1]
 
     def p_stmt_var_decl_1(p):
-        'stmt : IDENTIFIER COLONASSIGN expr'
+        'stmt : IDENT COLONASSIGN expr'
         p[0] = ast.VarDecl(name=p[1], expr=p[3])
 
     def p_stmt_var_decl_2(p):
-        'stmt : IDENTIFIER DOUBLECOLONASSIGN expr'
+        'stmt : IDENT DOUBLECOLONASSIGN expr'
         p[0] = ast.VarDecl(
             name=p[1],
             expr=p[3],
@@ -261,7 +261,7 @@ def make_parser():
         )
 
     def p_stmt_assignment(p):
-        'stmt : IDENTIFIER ASSIGN expr'
+        'stmt : IDENT ASSIGN expr'
         p[0] = ast.Assign(name=p[1], expr=p[3])
 
     def p_stmt_if(p):
@@ -297,7 +297,7 @@ def make_parser():
         p[0] = ast.String(value=remove_quotation_marks(p[1]))
 
     def p_expr_ident(p):
-        'expr : IDENTIFIER'
+        'expr : IDENT'
         p[0] = ast.Ident(name=p[1])
 
     def p_expr_number(p):
