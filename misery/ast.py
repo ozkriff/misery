@@ -7,16 +7,16 @@ Asbtract Syntax Tree
 
 
 class Module(object):
-    def __init__(self, import_list=None, declaration_sequence=None):
+    def __init__(self, import_list=None, decl_seq=None):
         assert import_list is None or isinstance(import_list, list)
-        assert (declaration_sequence is None or
-                isinstance(declaration_sequence, list))
+        assert (decl_seq is None or
+                isinstance(decl_seq, list))
         self.import_list = import_list
-        self.declaration_sequence = declaration_sequence
-        self.identifier_list = None
+        self.decl_seq = decl_seq
+        self.ident_list = None
 
 
-class Identifier(object):
+class Ident(object):
     def __init__(self, name):
         self.name = name
 
@@ -27,14 +27,14 @@ class Field(object):
         self.datatype = datatype
 
 
-class ConstDeclaration(object):
-    def __init__(self, name, datatype, expression):
+class ConstDecl(object):
+    def __init__(self, name, datatype, expr):
         self.name = name
         self.datatype = datatype
-        self.expression = expression
+        self.expr = expr
 
 
-class StructDeclaration(object):
+class StructDecl(object):
     def __init__(self, name, field_list):
         self.name = name
         self.field_list = field_list
@@ -43,16 +43,16 @@ class StructDeclaration(object):
 class Number(object):
     def __init__(self, value):
         self.value = value
-        self.binded_variable_name = None
+        self.binded_var_name = None
 
 
 class String(object):
     def __init__(self, value):
         self.value = value
-        self.binded_variable_name = None
+        self.binded_var_name = None
 
 
-class FunctionDeclaration(object):
+class FuncDecl(object):
     def __init__(self, name, signature, body):
         self.name = name
         self.signature = signature
@@ -63,18 +63,18 @@ class FunctionDeclaration(object):
         self.constants = {}
 
 
-class FunctionSignature(object):
+class FuncSignature(object):
     def __init__(
         self,
-        parameter_list,
-        generic_parameter_list=None,
+        par_list,
+        generic_par_list=None,
         return_type=None,
     ):
-        self.parameter_list = parameter_list
-        if generic_parameter_list:
-            self.generic_parameter_list = generic_parameter_list
+        self.par_list = par_list
+        if generic_par_list:
+            self.generic_par_list = generic_par_list
         else:
-            self.generic_parameter_list = []
+            self.generic_par_list = []
         self.return_type = return_type
 
 
@@ -84,23 +84,23 @@ class Parameter(object):
         self.datatype = datatype
 
 
-class FunctionCall(object):
-    def __init__(self, expression, argument_list):
-        self.called_expression = expression
-        self.argument_list = argument_list
-        self.binded_variable_name = None
+class FuncCall(object):
+    def __init__(self, expr, arg_list):
+        self.called_expr = expr
+        self.arg_list = arg_list
+        self.binded_var_name = None
 
 
-class VariableDeclaration(object):
+class VarDecl(object):
     def __init__(
         self,
         name,
-        expression=None,
+        expr=None,
         datatype=None,
         allocate_memory_on_stack=False,
     ):
         self.name = name
-        self.rvalue_expression = expression
+        self.rvalue_expr = expr
         self.datatype = datatype
         self.allocate_memory_on_stack = allocate_memory_on_stack
 
@@ -109,11 +109,11 @@ class Assign(object):
     def __init__(
         self,
         name,
-        expression=None,
+        expr=None,
         datatype=None,
     ):
         self.name = name
-        self.rvalue_expression = expression
+        self.rvalue_expr = expr
         self.datatype = datatype
 
 
@@ -131,8 +131,8 @@ class For(object):
 
 
 class Return(object):
-    def __init__(self, expression=None):
-        self.expression = expression
+    def __init__(self, expr=None):
+        self.expr = expr
 
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:

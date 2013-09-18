@@ -16,17 +16,17 @@ from misery import (
 
 
 class TestParser(unittest.TestCase):
-    ''' Test parse.make_parser() function. '''
+    ''' Test parse.make_parser() func. '''
 
     # Standart module.
     # Usage:
     #   expected_ast = copy.deepcopy(self._std_module)
     #   <add specific detaild to expected_ast>
     _std_module = ast.Module(
-        declaration_sequence=[
-            ast.FunctionDeclaration(
+        decl_seq=[
+            ast.FuncDecl(
                 name='start',
-                signature=ast.FunctionSignature(parameter_list=[]),
+                signature=ast.FuncSignature(par_list=[]),
                 body=[],
             )
         ]
@@ -43,42 +43,42 @@ class TestParser(unittest.TestCase):
         input_string = ''
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
-            declaration_sequence=[],
+            decl_seq=[],
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_empty_import(self):
-        ''' Parse empty import statement. '''
+        ''' Parse empty import stmt. '''
         input_string = 'import {}'
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
             import_list=[],
-            declaration_sequence=[],
+            decl_seq=[],
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_import(self):
-        ''' Parse import statement. '''
+        ''' Parse import stmt. '''
         input_string = 'import {module1}'
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
             import_list=['module1'],
-            declaration_sequence=[],
+            decl_seq=[],
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_import_2(self):
-        ''' Parse import statement with two modules. '''
+        ''' Parse import stmt with two modules. '''
         input_string = 'import {module1 module2}'
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
             import_list=['module1', 'module2'],
-            declaration_sequence=[],
+            decl_seq=[],
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
-    def test_struct_type_declaration(self):
-        ''' Parse struct type declaration. '''
+    def test_struct_type_decl(self):
+        ''' Parse struct type decl. '''
         input_string = (
             'MyStruct := struct {\n'
             '  field1: Int\n'
@@ -87,8 +87,8 @@ class TestParser(unittest.TestCase):
         )
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
-            declaration_sequence=[
-                ast.StructDeclaration(
+            decl_seq=[
+                ast.StructDecl(
                     name='MyStruct',
                     field_list=[
                         ast.Field(
@@ -105,30 +105,30 @@ class TestParser(unittest.TestCase):
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
-    def test_const_declaration(self):
-        ''' Parse constant declaration. '''
-        input_string = 'const importantIdentifier:Int := 10'
+    def test_const_decl(self):
+        ''' Parse constant decl. '''
+        input_string = 'const importantIdent:Int := 10'
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
-            declaration_sequence=[
-                ast.ConstDeclaration(
-                    name='importantIdentifier',
+            decl_seq=[
+                ast.ConstDecl(
+                    name='importantIdent',
                     datatype=datatype.SimpleDataType('Int'),
-                    expression=ast.Number(10),
+                    expr=ast.Number(10),
                 )
             ]
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_func(self):
-        ''' Parse minimal fnction declaration. '''
+        ''' Parse minimal fnction decl. '''
         input_string = 'testfunc2 := func() {}'
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
-            declaration_sequence=[
-                ast.FunctionDeclaration(
+            decl_seq=[
+                ast.FuncDecl(
                     name='testfunc2',
-                    signature=ast.FunctionSignature(parameter_list=[]),
+                    signature=ast.FuncSignature(par_list=[]),
                     body=[],
                 )
             ]
@@ -136,15 +136,15 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_func_with_return_value(self):
-        ''' Parse function that returns Int. '''
+        ''' Parse func that returns Int. '''
         input_string = 'testfunc2 := func () -> Int {}'
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
-            declaration_sequence=[
-                ast.FunctionDeclaration(
+            decl_seq=[
+                ast.FuncDecl(
                     name='testfunc2',
-                    signature=ast.FunctionSignature(
-                        parameter_list=[],
+                    signature=ast.FuncSignature(
+                        par_list=[],
                         return_type=datatype.SimpleDataType('Int'),
                     ),
                     body=[],
@@ -154,11 +154,11 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_func_with_parameter(self):
-        ''' Parse function that takes one parameter. '''
+        ''' Parse func that takes one parameter. '''
         input_string = 'testfunc := func (par:ParType) {}'
         real_ast = self._parse(input_string)
-        signature = ast.FunctionSignature(
-            parameter_list=[
+        signature = ast.FuncSignature(
+            par_list=[
                 ast.Parameter(
                     name='par',
                     datatype=datatype.SimpleDataType('ParType')
@@ -166,8 +166,8 @@ class TestParser(unittest.TestCase):
             ],
         )
         expected_ast = ast.Module(
-            declaration_sequence=[
-                ast.FunctionDeclaration(
+            decl_seq=[
+                ast.FuncDecl(
                     name='testfunc',
                     signature=signature,
                     body=[],
@@ -177,11 +177,11 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_func_with_2_parameters(self):
-        ''' Parse function that takes two parameters. '''
+        ''' Parse func that takes two parameters. '''
         input_string = 'testfunc := func (par1:ParType par2:ParType) {}'
         real_ast = self._parse(input_string)
-        signature = ast.FunctionSignature(
-            parameter_list=[
+        signature = ast.FuncSignature(
+            par_list=[
                 ast.Parameter(
                     name='par1',
                     datatype=datatype.SimpleDataType('ParType'),
@@ -193,8 +193,8 @@ class TestParser(unittest.TestCase):
             ]
         )
         expected_ast = ast.Module(
-            declaration_sequence=[
-                ast.FunctionDeclaration(
+            decl_seq=[
+                ast.FuncDecl(
                     name='testfunc',
                     signature=signature,
                     body=[],
@@ -208,113 +208,113 @@ class TestParser(unittest.TestCase):
         input_string = 'start := func () { {} {} }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
-        expected_ast.declaration_sequence[0].body = [[], []]
+        expected_ast.decl_seq[0].body = [[], []]
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_func_call(self):
-        ''' Parse simple function call. '''
+        ''' Parse simple func call. '''
         input_string = 'start := func () { fname2() }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
-        funccall = ast.FunctionCall(
-            expression=ast.Identifier('fname2'),
-            argument_list=[],
+        funccall = ast.FuncCall(
+            expr=ast.Ident('fname2'),
+            arg_list=[],
         )
-        expected_ast.declaration_sequence[0].body.append(funccall)
+        expected_ast.decl_seq[0].body.append(funccall)
         misc.assert_equal(self, expected_ast, real_ast)
 
-    def test_var_declaration_without_initialization(self):
-        ''' Parse variable declaration statement. '''
+    def test_var_decl_without_initialization(self):
+        ''' Parse var decl stmt. '''
         input_string = 'start := func () { testVar := Int() }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
-        var = ast.VariableDeclaration(
+        var = ast.VarDecl(
             name='testVar',
-            expression=ast.FunctionCall(
-                expression=ast.Identifier('Int'),
-                argument_list=[],
+            expr=ast.FuncCall(
+                expr=ast.Ident('Int'),
+                arg_list=[],
             )
         )
-        expected_ast.declaration_sequence[0].body.append(var)
+        expected_ast.decl_seq[0].body.append(var)
         misc.assert_equal(self, expected_ast, real_ast)
 
-    def test_var_declaration_with_type_and_initialization(self):
-        ''' Parse variable declaration statement with initiaization. '''
+    def test_var_decl_with_type_and_initialization(self):
+        ''' Parse var decl stmt with initiaization. '''
         input_string = 'start := func () { testVar := Int(666) }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
-        var = ast.VariableDeclaration(
+        var = ast.VarDecl(
             name='testVar',
-            expression=ast.FunctionCall(
-                expression=ast.Identifier('Int'),
-                argument_list=[
+            expr=ast.FuncCall(
+                expr=ast.Ident('Int'),
+                arg_list=[
                     ast.Number(666),
                 ],
             ),
         )
-        expected_ast.declaration_sequence[0].body.append(var)
+        expected_ast.decl_seq[0].body.append(var)
         misc.assert_equal(self, expected_ast, real_ast)
 
-    def test_var_declaration_with_initialization(self):
-        ''' Parse variable declaration statement with
+    def test_var_decl_with_initialization(self):
+        ''' Parse var decl stmt with
             initiaization and without explicit  type.
         '''
         input_string = 'start := func () { testVar := 666 }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
-        var = ast.VariableDeclaration(
+        var = ast.VarDecl(
             name='testVar',
-            expression=ast.Number(666),
+            expr=ast.Number(666),
         )
-        expected_ast.declaration_sequence[0].body.append(var)
+        expected_ast.decl_seq[0].body.append(var)
         misc.assert_equal(self, expected_ast, real_ast)
 
-    def test_var_declaration_with_ctor(self):
-        ''' Parse variable declaration statement with constructor call. '''
+    def test_var_decl_with_ctor(self):
+        ''' Parse var decl stmt with constructor call. '''
         input_string = 'start := func () { p := Parser() }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
-        var = ast.VariableDeclaration(
+        var = ast.VarDecl(
             name='p',
-            expression=ast.FunctionCall(
-                expression=ast.Identifier('Parser'),
-                argument_list=[],
+            expr=ast.FuncCall(
+                expr=ast.Ident('Parser'),
+                arg_list=[],
             ),
         )
-        expected_ast.declaration_sequence[0].body.append(var)
+        expected_ast.decl_seq[0].body.append(var)
         misc.assert_equal(self, expected_ast, real_ast)
 
-    def test_var_declaration_with_init_2(self):
-        ''' Parse variable declaration statement with
+    def test_var_decl_with_init_2(self):
+        ''' Parse var decl stmt with
             complex initiaization.
         '''
         input_string = 'start := func () { v2 := plus(1 2) }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
-        var = ast.VariableDeclaration(
+        var = ast.VarDecl(
             name='v2',
-            expression=ast.FunctionCall(
-                expression=ast.Identifier('plus'),
-                argument_list=[ast.Number(1), ast.Number(2)],
+            expr=ast.FuncCall(
+                expr=ast.Ident('plus'),
+                arg_list=[ast.Number(1), ast.Number(2)],
             ),
         )
-        expected_ast.declaration_sequence[0].body.append(var)
+        expected_ast.decl_seq[0].body.append(var)
         misc.assert_equal(self, expected_ast, real_ast)
 
-    def test_var_declaration_with_ctor_and_arguments(self):
-        ''' Parse variable declaration statement with
+    def test_var_decl_with_ctor_and_arguments(self):
+        ''' Parse var decl stmt with
             constructor call with arguments.
         '''
         input_string = 'start := func () { p := Parser(lexer 1) }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
-        expected_ast.declaration_sequence[0].body.append(
-            ast.VariableDeclaration(
+        expected_ast.decl_seq[0].body.append(
+            ast.VarDecl(
                 name='p',
-                expression=ast.FunctionCall(
-                    expression=ast.Identifier('Parser'),
-                    argument_list=[
-                        ast.Identifier('lexer'),
+                expr=ast.FuncCall(
+                    expr=ast.Ident('Parser'),
+                    arg_list=[
+                        ast.Ident('lexer'),
                         ast.Number(1),
                     ],
                 ),
@@ -323,11 +323,11 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_if(self):
-        ''' Parse if statement. '''
+        ''' Parse if stmt. '''
         input_string = 'start := func () { if 1 {} }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
-        expected_ast.declaration_sequence[0].body.append(
+        expected_ast.decl_seq[0].body.append(
             ast.If(
                 condition=ast.Number(1),
                 branch_if=[],
@@ -336,11 +336,11 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_if_else(self):
-        ''' Parse if-else statement. '''
+        ''' Parse if-else stmt. '''
         input_string = 'start := func () { if 1 {} else {} }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
-        expected_ast.declaration_sequence[0].body.append(
+        expected_ast.decl_seq[0].body.append(
             ast.If(
                 condition=ast.Number(1),
                 branch_if=[],
@@ -350,67 +350,67 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_nested_func_call_1(self):
-        ''' Parse nested function call. '''
+        ''' Parse nested func call. '''
         input_string = 'start := func () { a()() }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
-        expected_ast.declaration_sequence[0].body.append(
-            ast.FunctionCall(
-                expression=ast.FunctionCall(
-                    expression=ast.Identifier('a'),
-                    argument_list=[],
+        expected_ast.decl_seq[0].body.append(
+            ast.FuncCall(
+                expr=ast.FuncCall(
+                    expr=ast.Ident('a'),
+                    arg_list=[],
                 ),
-                argument_list=[],
+                arg_list=[],
             )
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_return_1(self):
-        ''' Parse return statement with integer. '''
+        ''' Parse return stmt with integer. '''
         input_string = 'start := func () { return 1 }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
-        expected_ast.declaration_sequence[0].body.append(
-            ast.Return(expression=ast.Number(1)),
+        expected_ast.decl_seq[0].body.append(
+            ast.Return(expr=ast.Number(1)),
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_return_2(self):
-        ''' Parse return statement without any value. '''
+        ''' Parse return stmt without any value. '''
         input_string = 'start := func () { return }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
-        expected_ast.declaration_sequence[0].body.append(
-            ast.Return(expression=None),
+        expected_ast.decl_seq[0].body.append(
+            ast.Return(expr=None),
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_return_3(self):
-        ''' Parse return statement with function call. '''
+        ''' Parse return stmt with func call. '''
         input_string = 'start := func () { return x() }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
-        expected_ast.declaration_sequence[0].body.append(
+        expected_ast.decl_seq[0].body.append(
             ast.Return(
-                expression=ast.FunctionCall(
-                    expression=ast.Identifier('x'),
-                    argument_list=[],
+                expr=ast.FuncCall(
+                    expr=ast.Ident('x'),
+                    arg_list=[],
                 ),
             ),
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_generic_func_1(self):
-        ''' First test of generic functions. '''
+        ''' First test of generic funcs. '''
         input_string = 'testFunc := func <Int> () {}'
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
-            declaration_sequence=[
-                ast.FunctionDeclaration(
+            decl_seq=[
+                ast.FuncDecl(
                     name='testFunc',
-                    signature=ast.FunctionSignature(
-                        parameter_list=[],
-                        generic_parameter_list=["Int"],
+                    signature=ast.FuncSignature(
+                        par_list=[],
+                        generic_par_list=["Int"],
                     ),
                     body=[],
                 )
@@ -423,9 +423,9 @@ class TestParser(unittest.TestCase):
         input_string = 'start := func () { return "hi" }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
-        expected_ast.declaration_sequence[0].body.append(
+        expected_ast.decl_seq[0].body.append(
             ast.Return(
-                expression=ast.String('hi')),
+                expr=ast.String('hi')),
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
@@ -451,7 +451,7 @@ class TestParser(unittest.TestCase):
 
 
 class TestFindColumn(unittest.TestCase):
-    ''' Test parse.find_column() function. '''
+    ''' Test parse.find_column() func. '''
 
     def test_one_line(self):
         ''' Call find_column with one-line string. '''

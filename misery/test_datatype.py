@@ -15,21 +15,21 @@ from misery import (
 
 class TestMarkOutDatatypes(unittest.TestCase):
 
-    def test_simple_function_declaration(self):
+    def test_simple_func_decl(self):
         input_ast = ast.Module(
-            declaration_sequence=[
-                ast.FunctionDeclaration(
+            decl_seq=[
+                ast.FuncDecl(
                     name='start',
-                    signature=ast.FunctionSignature(parameter_list=[]),
+                    signature=ast.FuncSignature(par_list=[]),
                     body=[],
                 )
             ]
         )
         expected_output = ast.Module(
-            declaration_sequence=[
-                ast.FunctionDeclaration(
+            decl_seq=[
+                ast.FuncDecl(
                     name='start',
-                    signature=ast.FunctionSignature(parameter_list=[]),
+                    signature=ast.FuncSignature(par_list=[]),
                     body=[],
                 )
             ]
@@ -39,37 +39,37 @@ class TestMarkOutDatatypes(unittest.TestCase):
 
     def test_copy(self):
         input_ast = ast.Module(
-            declaration_sequence=[],
+            decl_seq=[],
         )
         real_output = datatype.mark_out_datatypes(input_ast)
         # change original data
-        input_ast.declaration_sequence.append('hi')
-        self.assertEquals(len(real_output.declaration_sequence), 0)
+        input_ast.decl_seq.append('hi')
+        self.assertEquals(len(real_output.decl_seq), 0)
 
-    def test_simple_integer_variable_declaration(self):
+    def test_simple_integer_var_decl(self):
         input_ast = ast.Module(
-            declaration_sequence=[
-                ast.FunctionDeclaration(
+            decl_seq=[
+                ast.FuncDecl(
                     name='start',
-                    signature=ast.FunctionSignature(parameter_list=[]),
+                    signature=ast.FuncSignature(par_list=[]),
                     body=[
-                        ast.VariableDeclaration(
+                        ast.VarDecl(
                             name='testVar',
-                            expression=ast.Number(666),
+                            expr=ast.Number(666),
                         ),
                     ],
                 )
             ]
         )
         expected_output = ast.Module(
-            declaration_sequence=[
-                ast.FunctionDeclaration(
+            decl_seq=[
+                ast.FuncDecl(
                     name='start',
-                    signature=ast.FunctionSignature(parameter_list=[]),
+                    signature=ast.FuncSignature(par_list=[]),
                     body=[
-                        ast.VariableDeclaration(
+                        ast.VarDecl(
                             name='testVar',
-                            expression=ast.Number(666),
+                            expr=ast.Number(666),
                             datatype=datatype.SimpleDataType('Int'),
                         ),
                     ],
@@ -79,28 +79,28 @@ class TestMarkOutDatatypes(unittest.TestCase):
         real_output = datatype.mark_out_datatypes(input_ast)
         misc.assert_equal(self, expected_output, real_output)
 
-    def test_integer_variable_declaration_with_plus_integer(self):
+    def test_integer_var_decl_with_plus_integer(self):
         int_data_type = datatype.SimpleDataType('Int'),
-        std_identifier_list = {
-            'plusInt': ast.FunctionSignature(
+        std_ident_list = {
+            'plusInt': ast.FuncSignature(
                 return_type=datatype.SimpleDataType('Int'),
-                parameter_list=[
+                par_list=[
                     ast.Parameter(name='a', datatype=int_data_type),
                     ast.Parameter(name='b', datatype=int_data_type),
                 ],
             ),
         }
         input_ast = ast.Module(
-            declaration_sequence=[
-                ast.FunctionDeclaration(
+            decl_seq=[
+                ast.FuncDecl(
                     name='start',
-                    signature=ast.FunctionSignature(parameter_list=[]),
+                    signature=ast.FuncSignature(par_list=[]),
                     body=[
-                        ast.VariableDeclaration(
+                        ast.VarDecl(
                             name='testVar',
-                            expression=ast.FunctionCall(
-                                expression=ast.Identifier('plusInt'),
-                                argument_list=[
+                            expr=ast.FuncCall(
+                                expr=ast.Ident('plusInt'),
+                                arg_list=[
                                     ast.Number(1),
                                     ast.Number(2),
                                 ],
@@ -110,18 +110,18 @@ class TestMarkOutDatatypes(unittest.TestCase):
                 )
             ]
         )
-        input_ast.identifier_list = std_identifier_list
+        input_ast.ident_list = std_ident_list
         expected_output = ast.Module(
-            declaration_sequence=[
-                ast.FunctionDeclaration(
+            decl_seq=[
+                ast.FuncDecl(
                     name='start',
-                    signature=ast.FunctionSignature(parameter_list=[]),
+                    signature=ast.FuncSignature(par_list=[]),
                     body=[
-                        ast.VariableDeclaration(
+                        ast.VarDecl(
                             name='testVar',
-                            expression=ast.FunctionCall(
-                                expression=ast.Identifier('plusInt'),
-                                argument_list=[
+                            expr=ast.FuncCall(
+                                expr=ast.Ident('plusInt'),
+                                arg_list=[
                                     ast.Number(1),
                                     ast.Number(2),
                                 ],
@@ -132,48 +132,48 @@ class TestMarkOutDatatypes(unittest.TestCase):
                 )
             ]
         )
-        expected_output.identifier_list = std_identifier_list
+        expected_output.ident_list = std_ident_list
         real_output = datatype.mark_out_datatypes(input_ast)
         misc.assert_equal(self, expected_output, real_output)
 
     def test_bad_func_error(self):
         input_ast = ast.Module(
-            declaration_sequence=[
-                ast.FunctionDeclaration(
+            decl_seq=[
+                ast.FuncDecl(
                     name='start',
-                    signature=ast.FunctionSignature(parameter_list=[]),
+                    signature=ast.FuncSignature(par_list=[]),
                     body=[
-                        ast.VariableDeclaration(
+                        ast.VarDecl(
                             name='testVar',
-                            expression=ast.FunctionCall(
-                                expression=ast.Identifier('badFuncName'),
-                                argument_list=[],
+                            expr=ast.FuncCall(
+                                expr=ast.Ident('badFuncName'),
+                                arg_list=[],
                             ),
                         ),
                     ],
                 )
             ]
         )
-        input_ast.identifier_list = {}
+        input_ast.ident_list = {}
         self.assertRaisesRegexp(
             Exception,
-            'no function: \'badFuncName\'',
+            'no func: \'badFuncName\'',
             datatype.mark_out_datatypes,
             input_ast,
         )
 
-    def test_bad_expression_type_error(self):
-        class BadExpressionClass(object):
+    def test_bad_expr_type_error(self):
+        class BadExprClass(object):
             pass
         input_ast = ast.Module(
-            declaration_sequence=[
-                ast.FunctionDeclaration(
+            decl_seq=[
+                ast.FuncDecl(
                     name='start',
-                    signature=ast.FunctionSignature(parameter_list=[]),
+                    signature=ast.FuncSignature(par_list=[]),
                     body=[
-                        ast.VariableDeclaration(
+                        ast.VarDecl(
                             name='testVar',
-                            expression=BadExpressionClass(),
+                            expr=BadExprClass(),
                         ),
                     ],
                 )
@@ -181,43 +181,43 @@ class TestMarkOutDatatypes(unittest.TestCase):
         )
         self.assertRaisesRegexp(
             Exception,
-            'Bad type:.*BadExpressionClass',
+            'Bad type:.*BadExprClass',
             datatype.mark_out_datatypes,
             input_ast,
         )
 
-    def test_bad_statement_type_error(self):
-        class BadStatementClass(object):
+    def test_bad_stmt_type_error(self):
+        class BadStmtClass(object):
             pass
         input_ast = ast.Module(
-            declaration_sequence=[
-                ast.FunctionDeclaration(
+            decl_seq=[
+                ast.FuncDecl(
                     name='start',
-                    signature=ast.FunctionSignature(parameter_list=[]),
+                    signature=ast.FuncSignature(par_list=[]),
                     body=[
-                        BadStatementClass(),
+                        BadStmtClass(),
                     ],
                 )
             ]
         )
         self.assertRaisesRegexp(
             Exception,
-            'Bad type:.*BadStatementClass',
+            'Bad type:.*BadStmtClass',
             datatype.mark_out_datatypes,
             input_ast,
         )
 
-    def test_bad_declaration_type_error(self):
-        class BadDeclarationClass(object):
+    def test_bad_decl_type_error(self):
+        class BadDeclClass(object):
             pass
         input_ast = ast.Module(
-            declaration_sequence=[
-                BadDeclarationClass(),
+            decl_seq=[
+                BadDeclClass(),
             ]
         )
         self.assertRaisesRegexp(
             Exception,
-            'Bad type:.*BadDeclarationClass',
+            'Bad type:.*BadDeclClass',
             datatype.mark_out_datatypes,
             input_ast,
         )

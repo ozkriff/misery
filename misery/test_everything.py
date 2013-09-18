@@ -2,7 +2,7 @@
 # See LICENSE file for copyright and license details
 
 
-''' Functional tests. '''
+''' Funcal tests. '''
 
 
 import unittest
@@ -15,7 +15,7 @@ from misery import (
     generator,
     parse,
     datatype,
-    identifier_table,
+    ident_table,
 )
 
 
@@ -24,7 +24,7 @@ def get_generator(input_mis_code):
         input_mis_code,
         lexer=parse.make_lexer(),
     )
-    ast_.identifier_list = identifier_table.identifier_table(ast_)
+    ast_.ident_list = ident_table.ident_table(ast_)
     ast_ = datatype.mark_out_datatypes(ast_=ast_)
     generator.scan_vars(ast_)
     generator_ = generator.Generator(ast_=ast_)
@@ -32,7 +32,7 @@ def get_generator(input_mis_code):
 
 
 def translate_mis_to_c(input_mis_code):
-    ''' Helper function, compiles program in Mis to program in C. '''
+    ''' Helper func, compiles program in Mis to program in C. '''
     real_output = get_generator(input_mis_code).generate()
     return real_output
 
@@ -102,7 +102,7 @@ def check_translation(
     expected_c_code,
     expected_stdout='',
 ):
-    ''' Small helper function. '''
+    ''' Small helper func. '''
     real_output = translate_mis_to_c(textwrap.dedent(input_mis_code))
     misc.assert_equal(test_case, textwrap.dedent(expected_c_code), real_output)
     c_file_name = misc.get_caller_func_name().replace('test_', '') + '_out.c'
@@ -116,7 +116,7 @@ def check_translation(
 
 class TestTranslator(unittest.TestCase):
 
-    def test_var_declaration_with_integer_literal(self):
+    def test_var_decl_with_integer_literal(self):
         check_translation(
             test_case=self,
             input_mis_code='''
@@ -145,7 +145,7 @@ class TestTranslator(unittest.TestCase):
             ''',
         )
 
-    def test_integer_var_declaration_with_constructor(self):
+    def test_integer_var_decl_with_constructor(self):
         check_translation(
             test_case=self,
             input_mis_code='''
@@ -261,7 +261,7 @@ class TestTranslator(unittest.TestCase):
             ''',
         )
 
-    def test_var_declaration_with_string_literal(self):
+    def test_var_decl_with_string_literal(self):
         check_translation(
             test_case=self,
             input_mis_code='''
@@ -422,7 +422,7 @@ class TestTranslator(unittest.TestCase):
             ),
         )
 
-    def test_var_declaration_with_function_call_returning_string(self):
+    def test_var_decl_with_func_call_returning_string(self):
         check_translation(
             test_case=self,
             input_mis_code='''
@@ -501,7 +501,7 @@ class TestTranslator(unittest.TestCase):
             expected_stdout='hi\n',
         )
 
-    def test_var_declaration_with_function_call_returning_integer(self):
+    def test_var_decl_with_func_call_returning_integer(self):
         check_translation(
             test_case=self,
             input_mis_code='''
@@ -706,7 +706,7 @@ class TestTranslator(unittest.TestCase):
         )
 
     def test_some_bug(self):
-        ''' Process factorial function. '''
+        ''' Process factorial func. '''
         check_translation(
             test_case=self,
             input_mis_code='''
@@ -747,7 +747,7 @@ class TestTranslator(unittest.TestCase):
         )
 
     def test_fib_1(self):
-        ''' Process fib function. '''
+        ''' Process fib func. '''
         check_translation(
             test_case=self,
             input_mis_code='''
@@ -816,7 +816,7 @@ class TestTranslator(unittest.TestCase):
         )
 
     def test_factorial_1(self):
-        ''' Process factorial function. '''
+        ''' Process factorial func. '''
         check_translation(
             test_case=self,
             input_mis_code='''

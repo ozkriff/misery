@@ -21,64 +21,64 @@ class SimpleDataType(object):
 def _mark_out_datatypes(ast_):
     ''' Mark out 'datatype' fields to ast nodes. '''
 
-    def get_function_call_expression_datatype(function_call_expression):
-        function_name = function_call_expression.called_expression.name
-        if function_name not in ast_.identifier_list:
-            raise Exception('no function: \'' + function_name + '\'')
-        return ast_.identifier_list[function_name].return_type
+    def get_func_call_expr_datatype(func_call_expr):
+        func_name = func_call_expr.called_expr.name
+        if func_name not in ast_.ident_list:
+            raise Exception('no func: \'' + func_name + '\'')
+        return ast_.ident_list[func_name].return_type
 
-    def get_expression_datatype(expression):
-        if isinstance(expression, ast.Number):
+    def get_expr_datatype(expr):
+        if isinstance(expr, ast.Number):
             return SimpleDataType('Int')
-        if isinstance(expression, ast.String):
+        if isinstance(expr, ast.String):
             return SimpleDataType('String')
-        elif isinstance(expression, ast.FunctionCall):
-            return get_function_call_expression_datatype(expression)
+        elif isinstance(expr, ast.FuncCall):
+            return get_func_call_expr_datatype(expr)
         else:
-            raise Exception('Bad type: ' + str(type(expression)))
+            raise Exception('Bad type: ' + str(type(expr)))
 
-    def mark_out_variable_declaration_statement(
-        variable_declaration_statement,
+    def mark_out_var_decl_stmt(
+        var_decl_stmt,
     ):
-        datatype = get_expression_datatype(
-            variable_declaration_statement.rvalue_expression,
+        datatype = get_expr_datatype(
+            var_decl_stmt.rvalue_expr,
         )
-        variable_declaration_statement.datatype = datatype
+        var_decl_stmt.datatype = datatype
 
-    def mark_out_assign_statement(assign_statement):
-        datatype = get_expression_datatype(assign_statement.rvalue_expression)
-        assign_statement.datatype = datatype
+    def mark_out_assign_stmt(assign_stmt):
+        datatype = get_expr_datatype(assign_stmt.rvalue_expr)
+        assign_stmt.datatype = datatype
 
-    def mark_out_statement(statement):
-        ''' statement - current parsed statement in current parsed block
+    def mark_out_stmt(stmt):
+        ''' stmt - current parsed stmt in current parsed block
         '''
-        ignored_statement_type_tuple = (
-            ast.FunctionCall,
+        ignored_stmt_type_tuple = (
+            ast.FuncCall,
             ast.Return,
             ast.If,
             ast.For,
         )
-        if isinstance(statement, ast.VariableDeclaration):
-            mark_out_variable_declaration_statement(statement)
-        elif isinstance(statement, ast.Assign):
-            mark_out_assign_statement(statement)
-        elif isinstance(statement, ignored_statement_type_tuple):
-            pass  # do nothing for this statements
+        if isinstance(stmt, ast.VarDecl):
+            mark_out_var_decl_stmt(stmt)
+        elif isinstance(stmt, ast.Assign):
+            mark_out_assign_stmt(stmt)
+        elif isinstance(stmt, ignored_stmt_type_tuple):
+            pass  # do nothing for this stmts
         else:
-            raise Exception('Bad type: ' + str(type(statement)))
+            raise Exception('Bad type: ' + str(type(stmt)))
 
-    def mark_out_function_declaration(function_declaration):
-        block = function_declaration.body
-        for statement in block:
-            mark_out_statement(statement)
+    def mark_out_func_decl(func_decl):
+        block = func_decl.body
+        for stmt in block:
+            mark_out_stmt(stmt)
 
-    for declaration in ast_.declaration_sequence:
-        if isinstance(declaration, ast.FunctionDeclaration):
-            mark_out_function_declaration(declaration)
-        elif isinstance(declaration, ast.StructDeclaration):
+    for decl in ast_.decl_seq:
+        if isinstance(decl, ast.FuncDecl):
+            mark_out_func_decl(decl)
+        elif isinstance(decl, ast.StructDecl):
             pass
         else:
-            raise Exception('Bad type: ' + str(type(declaration)))
+            raise Exception('Bad type: ' + str(type(decl)))
 
 
 def mark_out_datatypes(ast_):

@@ -12,7 +12,7 @@ from misery import (
 
 
 class TestDiff(unittest.TestCase):
-    ''' Test misc.diff function. '''
+    ''' Test misc.diff func. '''
 
     def test_lists(self):
         ''' Diff lists. '''
@@ -37,7 +37,7 @@ class TestDiff(unittest.TestCase):
 
 
 class TestPrettyPrinter(unittest.TestCase):
-    ''' Test misc.pretty_print function. '''
+    ''' Test misc.pretty_print func. '''
 
     def test_none(self):
         ''' Print None. '''
@@ -186,7 +186,7 @@ class TestCaseMock:
 
 
 class TestAssertEqual(unittest.TestCase):
-    ''' Test misc.assert_equal function. '''
+    ''' Test misc.assert_equal func. '''
 
     def test_failed(self):
         ''' Test failed. '''
@@ -219,7 +219,7 @@ class TestGetCallerFuncName(unittest.TestCase):
 
 
 class TestFlattenTree(unittest.TestCase):
-    ''' TestSuite for misc.flatten_tree() function. '''
+    ''' TestSuite for misc.flatten_tree() func. '''
 
     def test_simple(self):
         ''' Basic misc.flatten_tree() test. '''

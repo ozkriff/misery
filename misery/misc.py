@@ -3,7 +3,7 @@
 
 
 '''
-Miscellaneous classes and functions.
+Miscellaneous classes and funcs.
 '''
 
 

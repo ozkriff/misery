@@ -118,47 +118,47 @@ def make_lexer():
 def make_parser():
 
     def p_module(p):
-        'module : import_list declaration_sequence'
-        p[0] = ast.Module(import_list=p[1], declaration_sequence=p[2])
+        'module : import_list decl_seq'
+        p[0] = ast.Module(import_list=p[1], decl_seq=p[2])
 
     def p_import_list_empty(p):
         'import_list :'
         p[0] = None
 
     def p_import_list(p):
-        'import_list : IMPORT LCURLY import_sequence RCURLY'
+        'import_list : IMPORT LCURLY import_seq RCURLY'
         p[0] = p[3]
 
-    def p_import_sequence_empty(p):
-        'import_sequence :'
+    def p_import_seq_empty(p):
+        'import_seq :'
         p[0] = []
 
-    def p_import_sequence(p):
-        'import_sequence : import_sequence IDENTIFIER'
+    def p_import_seq(p):
+        'import_seq : import_seq IDENTIFIER'
         p[1].append(p[2])
         p[0] = p[1]
 
-    def p_declaration_sequence_empty(p):
-        'declaration_sequence :'
+    def p_decl_seq_empty(p):
+        'decl_seq :'
         p[0] = []
 
-    def p_declaration_sequence(p):
-        'declaration_sequence : declaration_sequence declaration'
+    def p_decl_seq(p):
+        'decl_seq : decl_seq decl'
         p[1].append(p[2])
         p[0] = p[1]
 
     def p_block(p):
-        'block : LCURLY statement_sequence RCURLY'
+        'block : LCURLY stmt_seq RCURLY'
         p[0] = p[2]
 
     def p_block_2(p):
-        'block : LCURLY statement_sequence RETURN RCURLY'
-        p[2].append(ast.Return(expression=None))
+        'block : LCURLY stmt_seq RETURN RCURLY'
+        p[2].append(ast.Return(expr=None))
         p[0] = p[2]
 
     def p_block_3(p):
-        'block : LCURLY statement_sequence RETURN expression RCURLY'
-        p[2].append(ast.Return(expression=p[4]))
+        'block : LCURLY stmt_seq RETURN expr RCURLY'
+        p[2].append(ast.Return(expr=p[4]))
         p[0] = p[2]
 
     def p_generic_empty(p):
@@ -169,39 +169,39 @@ def make_parser():
         'generic : LT IDENTIFIER GT'
         p[0] = [p[2]]
 
-    def p_function_signature(p):
-        'function_signature : generic LPAREN parameter_list RPAREN ARROW type'
-        p[0] = ast.FunctionSignature(
-            parameter_list=p[3],
+    def p_func_signature(p):
+        'func_signature : generic LPAREN par_list RPAREN ARROW type'
+        p[0] = ast.FuncSignature(
+            par_list=p[3],
             return_type=p[6],
-            generic_parameter_list=p[1],
+            generic_par_list=p[1],
         )
 
-    def p_function_signature_without_return_type(p):
-        'function_signature : generic LPAREN parameter_list RPAREN'
-        p[0] = ast.FunctionSignature(
-            parameter_list=p[3],
-            generic_parameter_list=p[1],
+    def p_func_signature_without_return_type(p):
+        'func_signature : generic LPAREN par_list RPAREN'
+        p[0] = ast.FuncSignature(
+            par_list=p[3],
+            generic_par_list=p[1],
         )
 
-    def p_function_declaration(p):
-        'declaration : IDENTIFIER COLONASSIGN FUNC function_signature block'
-        p[0] = ast.FunctionDeclaration(
+    def p_func_decl(p):
+        'decl : IDENTIFIER COLONASSIGN FUNC func_signature block'
+        p[0] = ast.FuncDecl(
             name=p[1],
             signature=p[4],
             body=p[5],
         )
 
-    def p_struct_declaration(p):
-        'declaration : IDENTIFIER COLONASSIGN STRUCT LCURLY field_list RCURLY'
-        p[0] = ast.StructDeclaration(name=p[1], field_list=p[5])
+    def p_struct_decl(p):
+        'decl : IDENTIFIER COLONASSIGN STRUCT LCURLY field_list RCURLY'
+        p[0] = ast.StructDecl(name=p[1], field_list=p[5])
 
-    def p_const_declaration(p):
-        'declaration : CONST IDENTIFIER COLON type COLONASSIGN expression'
-        p[0] = ast.ConstDeclaration(
-            name=p[2], datatype=p[4], expression=p[6])
+    def p_const_decl(p):
+        'decl : CONST IDENTIFIER COLON type COLONASSIGN expr'
+        p[0] = ast.ConstDecl(
+            name=p[2], datatype=p[4], expr=p[6])
 
-    def p_type_identifier(p):
+    def p_type_ident(p):
         'type : IDENTIFIER'
         p[0] = datatype.SimpleDataType(name=p[1])
 
@@ -218,12 +218,12 @@ def make_parser():
         'field : IDENTIFIER COLON type'
         p[0] = ast.Field(name=p[1], datatype=p[3])
 
-    def p_parameter_list_1(p):
-        'parameter_list :'
+    def p_par_list_1(p):
+        'par_list :'
         p[0] = []
 
-    def p_parameter_list_2(p):
-        'parameter_list : parameter_list parameter'
+    def p_par_list_2(p):
+        'par_list : par_list parameter'
         p[1].append(p[2])
         p[0] = p[1]
 
@@ -231,81 +231,81 @@ def make_parser():
         'parameter : IDENTIFIER COLON type'
         p[0] = ast.Parameter(name=p[1], datatype=p[3])
 
-    def p_statement_sequence_empty(p):
-        'statement_sequence :'
+    def p_stmt_seq_empty(p):
+        'stmt_seq :'
         p[0] = []
 
-    def p_statement_sequence(p):
-        'statement_sequence : statement_sequence statement'
+    def p_stmt_seq(p):
+        'stmt_seq : stmt_seq stmt'
         p[1].append(p[2])
         p[0] = p[1]
 
-    def p_statement_block(p):
-        'statement : block'
+    def p_stmt_block(p):
+        'stmt : block'
         p[0] = p[1]
 
-    def p_statement_function_call(p):
-        'statement : function_call'
+    def p_stmt_func_call(p):
+        'stmt : func_call'
         p[0] = p[1]
 
-    def p_statement_variable_declaration_1(p):
-        'statement : IDENTIFIER COLONASSIGN expression'
-        p[0] = ast.VariableDeclaration(name=p[1], expression=p[3])
+    def p_stmt_var_decl_1(p):
+        'stmt : IDENTIFIER COLONASSIGN expr'
+        p[0] = ast.VarDecl(name=p[1], expr=p[3])
 
-    def p_statement_variable_declaration_2(p):
-        'statement : IDENTIFIER DOUBLECOLONASSIGN expression'
-        p[0] = ast.VariableDeclaration(
+    def p_stmt_var_decl_2(p):
+        'stmt : IDENTIFIER DOUBLECOLONASSIGN expr'
+        p[0] = ast.VarDecl(
             name=p[1],
-            expression=p[3],
+            expr=p[3],
             allocate_memory_on_stack=True,
         )
 
-    def p_statement_assignment(p):
-        'statement : IDENTIFIER ASSIGN expression'
-        p[0] = ast.Assign(name=p[1], expression=p[3])
+    def p_stmt_assignment(p):
+        'stmt : IDENTIFIER ASSIGN expr'
+        p[0] = ast.Assign(name=p[1], expr=p[3])
 
-    def p_statement_if(p):
-        'statement : IF expression block'
+    def p_stmt_if(p):
+        'stmt : IF expr block'
         p[0] = ast.If(condition=p[2], branch_if=p[3])
 
-    def p_statement_for(p):
-        'statement : FOR expression block'
+    def p_stmt_for(p):
+        'stmt : FOR expr block'
         p[0] = ast.For(condition=p[2], branch=p[3])
 
-    def p_statement_if_else(p):
-        'statement : IF expression block ELSE block'
+    def p_stmt_if_else(p):
+        'stmt : IF expr block ELSE block'
         p[0] = ast.If(condition=p[2], branch_if=p[3], branch_else=p[5])
 
-    def p_expression_list_1(p):
-        'expression_list :'
+    def p_expr_list_1(p):
+        'expr_list :'
         p[0] = []
 
-    def p_expression_list_2(p):
-        'expression_list : expression_list expression'
+    def p_expr_list_2(p):
+        'expr_list : expr_list expr'
         p[1].append(p[2])
         p[0] = p[1]
 
-    def p_function_call(p):
-        'function_call : expression LPAREN expression_list RPAREN'
-        p[0] = ast.FunctionCall(expression=p[1], argument_list=p[3])
+    def p_func_call(p):
+        'func_call : expr LPAREN expr_list RPAREN'
+        p[0] = ast.FuncCall(expr=p[1], arg_list=p[3])
 
-    def p_expression_string(p):
-        'expression : STRING'
+    def p_expr_string(p):
+        'expr : STRING'
         def remove_quotation_marks(s):
             assert s[0] == '\"' and s[-1] == '\"'
             return s[1:-1]
         p[0] = ast.String(value=remove_quotation_marks(p[1]))
 
-    def p_expression_identifier(p):
-        'expression : IDENTIFIER'
-        p[0] = ast.Identifier(name=p[1])
+    def p_expr_ident(p):
+        'expr : IDENTIFIER'
+        p[0] = ast.Ident(name=p[1])
 
-    def p_expression_number(p):
-        'expression : NUMBER'
+    def p_expr_number(p):
+        'expr : NUMBER'
         p[0] = ast.Number(value=p[1])
 
-    def p_expression_function_call(p):
-        'expression : function_call'
+    def p_expr_func_call(p):
+        'expr : func_call'
         p[0] = p[1]
 
     def p_error(p):

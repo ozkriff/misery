@@ -12,13 +12,13 @@ from misery import (
     misc,
     generator,
     datatype,
-    identifier_table,
+    ident_table,
 )
 
 
 def check_translation(test_case, input_ast, expected_output):
-    ''' Small helper function. '''
-    input_ast.identifier_list = identifier_table.identifier_table(input_ast)
+    ''' Small helper func. '''
+    input_ast.ident_list = ident_table.ident_table(input_ast)
     generator.scan_vars(input_ast)
     generator_ = generator.Generator(input_ast)
     real_output = generator_.generate()
@@ -31,16 +31,16 @@ class TestGenerator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_ast=ast.Module(
-                declaration_sequence=[
-                    ast.FunctionDeclaration(
+                decl_seq=[
+                    ast.FuncDecl(
                         name='start',
-                        signature=ast.FunctionSignature(
-                            parameter_list=[],
+                        signature=ast.FuncSignature(
+                            par_list=[],
                         ),
                         body=[
-                            ast.FunctionCall(
-                                expression=ast.Identifier('printInt'),
-                                argument_list=[ast.Number(1)],
+                            ast.FuncCall(
+                                expr=ast.Ident('printInt'),
+                                arg_list=[ast.Number(1)],
                             ),
                         ]
                     )
@@ -62,12 +62,12 @@ class TestGenerator(unittest.TestCase):
 
     def test_print_plus_int_result(self):
         body = [
-            ast.FunctionCall(
-                expression=ast.Identifier('printInt'),
-                argument_list=[
-                    ast.FunctionCall(
-                        expression=ast.Identifier('plusInt'),
-                        argument_list=[ast.Number(1), ast.Number(2)],
+            ast.FuncCall(
+                expr=ast.Ident('printInt'),
+                arg_list=[
+                    ast.FuncCall(
+                        expr=ast.Ident('plusInt'),
+                        arg_list=[ast.Number(1), ast.Number(2)],
                     ),
                 ],
             ),
@@ -75,10 +75,10 @@ class TestGenerator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_ast=ast.Module(
-                declaration_sequence=[
-                    ast.FunctionDeclaration(
+                decl_seq=[
+                    ast.FuncDecl(
                         name='start',
-                        signature=ast.FunctionSignature(parameter_list=[]),
+                        signature=ast.FuncSignature(par_list=[]),
                         body=body,
                     )
                 ]
@@ -103,16 +103,16 @@ class TestGenerator(unittest.TestCase):
 
     def test_print_result_of_nested_calls(self):
         body = [
-            ast.FunctionCall(
-                expression=ast.Identifier('printInt'),
-                argument_list=[
-                    ast.FunctionCall(
-                        expression=ast.Identifier('plusInt'),
-                        argument_list=[
+            ast.FuncCall(
+                expr=ast.Ident('printInt'),
+                arg_list=[
+                    ast.FuncCall(
+                        expr=ast.Ident('plusInt'),
+                        arg_list=[
                             ast.Number(1),
-                            ast.FunctionCall(
-                                expression=ast.Identifier('plusInt'),
-                                argument_list=[
+                            ast.FuncCall(
+                                expr=ast.Ident('plusInt'),
+                                arg_list=[
                                     ast.Number(2),
                                     ast.Number(3),
                                 ],
@@ -125,10 +125,10 @@ class TestGenerator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_ast=ast.Module(
-                declaration_sequence=[
-                    ast.FunctionDeclaration(
+                decl_seq=[
+                    ast.FuncDecl(
                         name='start',
-                        signature=ast.FunctionSignature(parameter_list=[]),
+                        signature=ast.FuncSignature(par_list=[]),
                         body=body,
                     )
                 ]
@@ -160,7 +160,7 @@ class TestGenerator(unittest.TestCase):
             test_case=self,
             input_ast=ast.Module(
                 import_list=['module1', 'module2'],
-                declaration_sequence=[],
+                decl_seq=[],
             ),
             expected_output='''
                 // import: module1
@@ -174,41 +174,41 @@ class TestGenerator(unittest.TestCase):
         ''' Just generate something '''
         input_ast = ast.Module(
             import_list=[],
-            declaration_sequence=[],
+            decl_seq=[],
         )
         marked_out_ast = datatype.mark_out_datatypes(input_ast)
         generator_ = generator.Generator(marked_out_ast)
         real_output = generator_.generate_full()
         assert real_output != ''
 
-    def test_multiply_function_parameters(self):
+    def test_multiply_func_parameters(self):
         check_translation(
             test_case=self,
             input_ast=ast.Module(
-                declaration_sequence=[
-                    ast.FunctionDeclaration(
+                decl_seq=[
+                    ast.FuncDecl(
                         name='testFunc',
-                        signature=ast.FunctionSignature(
-                            parameter_list=[
+                        signature=ast.FuncSignature(
+                            par_list=[
                                 ast.Parameter(
                                     name='n1',
-                                    datatype=ast.Identifier('Int')
+                                    datatype=ast.Ident('Int')
                                 ),
                                 ast.Parameter(
                                     name='n2',
-                                    datatype=ast.Identifier('Int')
+                                    datatype=ast.Ident('Int')
                                 ),
                             ],
                         ),
                         body=[],
                     ),
-                    ast.FunctionDeclaration(
+                    ast.FuncDecl(
                         name='start',
-                        signature=ast.FunctionSignature(parameter_list=[]),
+                        signature=ast.FuncSignature(par_list=[]),
                         body=[
-                            ast.FunctionCall(
-                                expression=ast.Identifier('testFunc'),
-                                argument_list=[ast.Number(1), ast.Number(2)],
+                            ast.FuncCall(
+                                expr=ast.Ident('testFunc'),
+                                arg_list=[ast.Number(1), ast.Number(2)],
                             ),
                         ]
                     )
@@ -239,17 +239,17 @@ class TestGenerator(unittest.TestCase):
             def __init__(self):
                 pass
         input_ast = ast.Module(
-            declaration_sequence=[
-                ast.FunctionDeclaration(
+            decl_seq=[
+                ast.FuncDecl(
                     name='start',
-                    signature=ast.FunctionSignature(parameter_list=[]),
+                    signature=ast.FuncSignature(par_list=[]),
                     body=[],
                 )
             ]
         )
-        constants = input_ast.declaration_sequence[0].constants  # shortcut
+        constants = input_ast.decl_seq[0].constants  # shortcut
         constants['badConst'] = BadConstantClass()
-        input_ast.identifier_list = {}
+        input_ast.ident_list = {}
         generator_ = generator.Generator(input_ast)
         self.assertRaisesRegexp(
             Exception,
@@ -257,73 +257,73 @@ class TestGenerator(unittest.TestCase):
             generator_.generate,
         )
 
-    def test_bad_expression_type_error(self):
-        class BadExpressionClass(object):
+    def test_bad_expr_type_error(self):
+        class BadExprClass(object):
             def __init__(self):
-                self.binded_variable_name = 'xxx'
+                self.binded_var_name = 'xxx'
         input_ast = ast.Module(
-            declaration_sequence=[
-                ast.FunctionDeclaration(
+            decl_seq=[
+                ast.FuncDecl(
                     name='start',
-                    signature=ast.FunctionSignature(parameter_list=[]),
+                    signature=ast.FuncSignature(par_list=[]),
                     body=[
-                        ast.VariableDeclaration(
+                        ast.VarDecl(
                             name='testVar',
-                            expression=BadExpressionClass(),
+                            expr=BadExprClass(),
                             datatype=datatype.SimpleDataType('Int'),
                         ),
                     ],
                 )
             ]
         )
-        input_ast.identifier_list = \
-            identifier_table.identifier_table(input_ast)
+        input_ast.ident_list = \
+            ident_table.ident_table(input_ast)
         generator_ = generator.Generator(input_ast)
         self.assertRaisesRegexp(
             Exception,
-            'Bad expression type:.*BadExpressionClass',
+            'Bad expr type:.*BadExprClass',
             generator_.generate,
         )
 
-    def test_bad_declaration_type_error(self):
-        class BadDeclarationClass(object):
+    def test_bad_decl_type_error(self):
+        class BadDeclClass(object):
             def __init__(self):
                 pass
         input_ast = ast.Module(
-            declaration_sequence=[
-                BadDeclarationClass(),
+            decl_seq=[
+                BadDeclClass(),
             ],
         )
-        input_ast.identifier_list = \
-            identifier_table.identifier_table(input_ast)
+        input_ast.ident_list = \
+            ident_table.ident_table(input_ast)
         generator_ = generator.Generator(input_ast)
         self.assertRaisesRegexp(
             Exception,
-            'Bad type:.*BadDeclarationClass',
+            'Bad type:.*BadDeclClass',
             generator_.generate,
         )
 
-    def test_bad_statement_type_error(self):
-        class BadStatementClass(object):
+    def test_bad_stmt_type_error(self):
+        class BadStmtClass(object):
             def __init__(self):
                 pass
         input_ast = ast.Module(
-            declaration_sequence=[
-                ast.FunctionDeclaration(
+            decl_seq=[
+                ast.FuncDecl(
                     name='start',
-                    signature=ast.FunctionSignature(parameter_list=[]),
+                    signature=ast.FuncSignature(par_list=[]),
                     body=[
-                        BadStatementClass(),
+                        BadStmtClass(),
                     ],
                 )
             ]
         )
-        input_ast.identifier_list = \
-            identifier_table.identifier_table(input_ast)
+        input_ast.ident_list = \
+            ident_table.ident_table(input_ast)
         generator_ = generator.Generator(input_ast)
         self.assertRaisesRegexp(
             Exception,
-            'Bad statement type:.*BadStatementClass',
+            'Bad stmt type:.*BadStmtClass',
             generator_.generate,
         )
 
