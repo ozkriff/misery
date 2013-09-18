@@ -350,7 +350,7 @@ class Generator(object):
             out += ';' + '\n'
         return out
 
-    def _generate_constats_initialization_code(self):
+    def _generate_constants_initialization_code(self):
         fd = self._func_decl  # shortcut
         out = ''
         for name, expr in sorted(fd.constants.items()):
@@ -380,7 +380,7 @@ class Generator(object):
             out += self._generate_local_vars()
             out += '\n'
             if func_decl.constants:
-                out += self._generate_constats_initialization_code()
+                out += self._generate_constants_initialization_code()
                 out += '\n'
         out += self._generate_block(func_decl.body)
         self._decrenent_indent()
