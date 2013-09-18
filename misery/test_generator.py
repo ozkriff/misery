@@ -31,7 +31,7 @@ class TestGenerator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_ast=ast.Module(
-                decl_seq=[
+                decl_list=[
                     ast.FuncDecl(
                         name='start',
                         signature=ast.FuncSignature(
@@ -75,7 +75,7 @@ class TestGenerator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_ast=ast.Module(
-                decl_seq=[
+                decl_list=[
                     ast.FuncDecl(
                         name='start',
                         signature=ast.FuncSignature(par_list=[]),
@@ -125,7 +125,7 @@ class TestGenerator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_ast=ast.Module(
-                decl_seq=[
+                decl_list=[
                     ast.FuncDecl(
                         name='start',
                         signature=ast.FuncSignature(par_list=[]),
@@ -160,7 +160,7 @@ class TestGenerator(unittest.TestCase):
             test_case=self,
             input_ast=ast.Module(
                 import_list=['module1', 'module2'],
-                decl_seq=[],
+                decl_list=[],
             ),
             expected_output='''
                 // import: module1
@@ -174,7 +174,7 @@ class TestGenerator(unittest.TestCase):
         ''' Just generate something '''
         input_ast = ast.Module(
             import_list=[],
-            decl_seq=[],
+            decl_list=[],
         )
         marked_out_ast = datatype.mark_out_datatypes(input_ast)
         generator_ = generator.Generator(marked_out_ast)
@@ -185,7 +185,7 @@ class TestGenerator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_ast=ast.Module(
-                decl_seq=[
+                decl_list=[
                     ast.FuncDecl(
                         name='testFunc',
                         signature=ast.FuncSignature(
@@ -239,7 +239,7 @@ class TestGenerator(unittest.TestCase):
             def __init__(self):
                 pass
         input_ast = ast.Module(
-            decl_seq=[
+            decl_list=[
                 ast.FuncDecl(
                     name='start',
                     signature=ast.FuncSignature(par_list=[]),
@@ -247,7 +247,7 @@ class TestGenerator(unittest.TestCase):
                 )
             ]
         )
-        constants = input_ast.decl_seq[0].constants  # shortcut
+        constants = input_ast.decl_list[0].constants  # shortcut
         constants['badConst'] = BadConstantClass()
         input_ast.ident_list = {}
         generator_ = generator.Generator(input_ast)
@@ -262,7 +262,7 @@ class TestGenerator(unittest.TestCase):
             def __init__(self):
                 self.binded_var_name = 'xxx'
         input_ast = ast.Module(
-            decl_seq=[
+            decl_list=[
                 ast.FuncDecl(
                     name='start',
                     signature=ast.FuncSignature(par_list=[]),
@@ -290,7 +290,7 @@ class TestGenerator(unittest.TestCase):
             def __init__(self):
                 pass
         input_ast = ast.Module(
-            decl_seq=[
+            decl_list=[
                 BadDeclClass(),
             ],
         )
@@ -308,7 +308,7 @@ class TestGenerator(unittest.TestCase):
             def __init__(self):
                 pass
         input_ast = ast.Module(
-            decl_seq=[
+            decl_list=[
                 ast.FuncDecl(
                     name='start',
                     signature=ast.FuncSignature(par_list=[]),

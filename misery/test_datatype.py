@@ -17,7 +17,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
 
     def test_simple_func_decl(self):
         input_ast = ast.Module(
-            decl_seq=[
+            decl_list=[
                 ast.FuncDecl(
                     name='start',
                     signature=ast.FuncSignature(par_list=[]),
@@ -26,7 +26,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
             ]
         )
         expected_output = ast.Module(
-            decl_seq=[
+            decl_list=[
                 ast.FuncDecl(
                     name='start',
                     signature=ast.FuncSignature(par_list=[]),
@@ -39,16 +39,16 @@ class TestMarkOutDatatypes(unittest.TestCase):
 
     def test_copy(self):
         input_ast = ast.Module(
-            decl_seq=[],
+            decl_list=[],
         )
         real_output = datatype.mark_out_datatypes(input_ast)
         # change original data
-        input_ast.decl_seq.append('hi')
-        self.assertEquals(len(real_output.decl_seq), 0)
+        input_ast.decl_list.append('hi')
+        self.assertEquals(len(real_output.decl_list), 0)
 
     def test_simple_integer_var_decl(self):
         input_ast = ast.Module(
-            decl_seq=[
+            decl_list=[
                 ast.FuncDecl(
                     name='start',
                     signature=ast.FuncSignature(par_list=[]),
@@ -62,7 +62,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
             ]
         )
         expected_output = ast.Module(
-            decl_seq=[
+            decl_list=[
                 ast.FuncDecl(
                     name='start',
                     signature=ast.FuncSignature(par_list=[]),
@@ -91,7 +91,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
             ),
         }
         input_ast = ast.Module(
-            decl_seq=[
+            decl_list=[
                 ast.FuncDecl(
                     name='start',
                     signature=ast.FuncSignature(par_list=[]),
@@ -112,7 +112,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
         )
         input_ast.ident_list = std_ident_list
         expected_output = ast.Module(
-            decl_seq=[
+            decl_list=[
                 ast.FuncDecl(
                     name='start',
                     signature=ast.FuncSignature(par_list=[]),
@@ -138,7 +138,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
 
     def test_bad_func_error(self):
         input_ast = ast.Module(
-            decl_seq=[
+            decl_list=[
                 ast.FuncDecl(
                     name='start',
                     signature=ast.FuncSignature(par_list=[]),
@@ -166,7 +166,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
         class BadExprClass(object):
             pass
         input_ast = ast.Module(
-            decl_seq=[
+            decl_list=[
                 ast.FuncDecl(
                     name='start',
                     signature=ast.FuncSignature(par_list=[]),
@@ -190,7 +190,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
         class BadStmtClass(object):
             pass
         input_ast = ast.Module(
-            decl_seq=[
+            decl_list=[
                 ast.FuncDecl(
                     name='start',
                     signature=ast.FuncSignature(par_list=[]),
@@ -211,7 +211,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
         class BadDeclClass(object):
             pass
         input_ast = ast.Module(
-            decl_seq=[
+            decl_list=[
                 BadDeclClass(),
             ]
         )

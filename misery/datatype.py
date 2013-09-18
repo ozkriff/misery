@@ -72,7 +72,7 @@ def _mark_out_datatypes(ast_):
         for stmt in block:
             mark_out_stmt(stmt)
 
-    for decl in ast_.decl_seq:
+    for decl in ast_.decl_list:
         if isinstance(decl, ast.FuncDecl):
             mark_out_func_decl(decl)
         elif isinstance(decl, ast.StructDecl):

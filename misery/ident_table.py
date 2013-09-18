@@ -51,10 +51,10 @@ def ident_table(ast_):
         return ident_list
 
     ident_list = {}
-    for decl in ast_.decl_seq:
+    for decl in ast_.decl_list:
         if isinstance(decl, ast.FuncDecl):
             ident_list[decl.name] = decl.signature
-    for decl in ast_.decl_seq:
+    for decl in ast_.decl_list:
         if isinstance(decl, ast.StructDecl):
             # create constructor
             ident_list[decl.name] = ast.FuncSignature(

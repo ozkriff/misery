@@ -118,46 +118,46 @@ def make_lexer():
 def make_parser():
 
     def p_module(p):
-        'module : import_list decl_seq'
-        p[0] = ast.Module(import_list=p[1], decl_seq=p[2])
+        'module : import_section decl_list'
+        p[0] = ast.Module(import_list=p[1], decl_list=p[2])
+
+    def p_import_section_empty(p):
+        'import_section :'
+        p[0] = None
+
+    def p_import_section(p):
+        'import_section : IMPORT LCURLY import_list RCURLY'
+        p[0] = p[3]
 
     def p_import_list_empty(p):
         'import_list :'
-        p[0] = None
-
-    def p_import_list(p):
-        'import_list : IMPORT LCURLY import_seq RCURLY'
-        p[0] = p[3]
-
-    def p_import_seq_empty(p):
-        'import_seq :'
         p[0] = []
 
-    def p_import_seq(p):
-        'import_seq : import_seq IDENTIFIER'
+    def p_import_list(p):
+        'import_list : import_list IDENTIFIER'
         p[1].append(p[2])
         p[0] = p[1]
 
-    def p_decl_seq_empty(p):
-        'decl_seq :'
+    def p_decl_list_empty(p):
+        'decl_list :'
         p[0] = []
 
-    def p_decl_seq(p):
-        'decl_seq : decl_seq decl'
+    def p_decl_list(p):
+        'decl_list : decl_list decl'
         p[1].append(p[2])
         p[0] = p[1]
 
     def p_block(p):
-        'block : LCURLY stmt_seq RCURLY'
+        'block : LCURLY stmt_list RCURLY'
         p[0] = p[2]
 
     def p_block_2(p):
-        'block : LCURLY stmt_seq RETURN RCURLY'
+        'block : LCURLY stmt_list RETURN RCURLY'
         p[2].append(ast.Return(expr=None))
         p[0] = p[2]
 
     def p_block_3(p):
-        'block : LCURLY stmt_seq RETURN expr RCURLY'
+        'block : LCURLY stmt_list RETURN expr RCURLY'
         p[2].append(ast.Return(expr=p[4]))
         p[0] = p[2]
 
@@ -231,12 +231,12 @@ def make_parser():
         'parameter : IDENTIFIER COLON type'
         p[0] = ast.Parameter(name=p[1], datatype=p[3])
 
-    def p_stmt_seq_empty(p):
-        'stmt_seq :'
+    def p_stmt_list_empty(p):
+        'stmt_list :'
         p[0] = []
 
-    def p_stmt_seq(p):
-        'stmt_seq : stmt_seq stmt'
+    def p_stmt_list(p):
+        'stmt_list : stmt_list stmt'
         p[1].append(p[2])
         p[0] = p[1]
 

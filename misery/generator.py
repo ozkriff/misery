@@ -405,7 +405,7 @@ class Generator(object):
 
     def _generate_forward_decls(self):
         out = ''
-        for decl in self._ast.decl_seq:
+        for decl in self._ast.decl_list:
             if isinstance(decl, ast.FuncDecl):
                 out += self._generate_func_header(
                     name=decl.name,
@@ -443,7 +443,7 @@ class Generator(object):
 
     def _generate_decls(self):
         out = ''
-        for decl in self._ast.decl_seq:
+        for decl in self._ast.decl_list:
             out += self._generate_decl(decl)
             out += '\n'
         return out
@@ -525,7 +525,7 @@ def scan_vars(ast_):
         for stmt in block:
             scan_stmt_vars(ast_, func_decl, stmt)
 
-    for decl in ast_.decl_seq:
+    for decl in ast_.decl_list:
         if isinstance(decl, ast.FuncDecl):
             scan_block_vars(
                 ast_=ast_,

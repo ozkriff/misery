@@ -7,12 +7,12 @@ Asbtract Syntax Tree
 
 
 class Module(object):
-    def __init__(self, import_list=None, decl_seq=None):
+    def __init__(self, import_list=None, decl_list=None):
         assert import_list is None or isinstance(import_list, list)
-        assert (decl_seq is None or
-                isinstance(decl_seq, list))
+        assert (decl_list is None or
+                isinstance(decl_list, list))
         self.import_list = import_list
-        self.decl_seq = decl_seq
+        self.decl_list = decl_list
         self.ident_list = None
 
 

@@ -23,7 +23,7 @@ class TestParser(unittest.TestCase):
     #   expected_ast = copy.deepcopy(self._std_module)
     #   <add specific detaild to expected_ast>
     _std_module = ast.Module(
-        decl_seq=[
+        decl_list=[
             ast.FuncDecl(
                 name='start',
                 signature=ast.FuncSignature(par_list=[]),
@@ -43,7 +43,7 @@ class TestParser(unittest.TestCase):
         input_string = ''
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
-            decl_seq=[],
+            decl_list=[],
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
@@ -53,7 +53,7 @@ class TestParser(unittest.TestCase):
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
             import_list=[],
-            decl_seq=[],
+            decl_list=[],
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
@@ -63,7 +63,7 @@ class TestParser(unittest.TestCase):
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
             import_list=['module1'],
-            decl_seq=[],
+            decl_list=[],
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
@@ -73,7 +73,7 @@ class TestParser(unittest.TestCase):
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
             import_list=['module1', 'module2'],
-            decl_seq=[],
+            decl_list=[],
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
@@ -87,7 +87,7 @@ class TestParser(unittest.TestCase):
         )
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
-            decl_seq=[
+            decl_list=[
                 ast.StructDecl(
                     name='MyStruct',
                     field_list=[
@@ -110,7 +110,7 @@ class TestParser(unittest.TestCase):
         input_string = 'const importantIdent:Int := 10'
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
-            decl_seq=[
+            decl_list=[
                 ast.ConstDecl(
                     name='importantIdent',
                     datatype=datatype.SimpleDataType('Int'),
@@ -125,7 +125,7 @@ class TestParser(unittest.TestCase):
         input_string = 'testfunc2 := func() {}'
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
-            decl_seq=[
+            decl_list=[
                 ast.FuncDecl(
                     name='testfunc2',
                     signature=ast.FuncSignature(par_list=[]),
@@ -140,7 +140,7 @@ class TestParser(unittest.TestCase):
         input_string = 'testfunc2 := func () -> Int {}'
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
-            decl_seq=[
+            decl_list=[
                 ast.FuncDecl(
                     name='testfunc2',
                     signature=ast.FuncSignature(
@@ -166,7 +166,7 @@ class TestParser(unittest.TestCase):
             ],
         )
         expected_ast = ast.Module(
-            decl_seq=[
+            decl_list=[
                 ast.FuncDecl(
                     name='testfunc',
                     signature=signature,
@@ -193,7 +193,7 @@ class TestParser(unittest.TestCase):
             ]
         )
         expected_ast = ast.Module(
-            decl_seq=[
+            decl_list=[
                 ast.FuncDecl(
                     name='testfunc',
                     signature=signature,
@@ -208,7 +208,7 @@ class TestParser(unittest.TestCase):
         input_string = 'start := func () { {} {} }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
-        expected_ast.decl_seq[0].body = [[], []]
+        expected_ast.decl_list[0].body = [[], []]
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_func_call(self):
@@ -220,7 +220,7 @@ class TestParser(unittest.TestCase):
             expr=ast.Ident('fname2'),
             arg_list=[],
         )
-        expected_ast.decl_seq[0].body.append(funccall)
+        expected_ast.decl_list[0].body.append(funccall)
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_decl_without_initialization(self):
@@ -235,7 +235,7 @@ class TestParser(unittest.TestCase):
                 arg_list=[],
             )
         )
-        expected_ast.decl_seq[0].body.append(var)
+        expected_ast.decl_list[0].body.append(var)
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_decl_with_type_and_initialization(self):
@@ -252,7 +252,7 @@ class TestParser(unittest.TestCase):
                 ],
             ),
         )
-        expected_ast.decl_seq[0].body.append(var)
+        expected_ast.decl_list[0].body.append(var)
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_decl_with_initialization(self):
@@ -266,7 +266,7 @@ class TestParser(unittest.TestCase):
             name='testVar',
             expr=ast.Number(666),
         )
-        expected_ast.decl_seq[0].body.append(var)
+        expected_ast.decl_list[0].body.append(var)
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_decl_with_ctor(self):
@@ -281,7 +281,7 @@ class TestParser(unittest.TestCase):
                 arg_list=[],
             ),
         )
-        expected_ast.decl_seq[0].body.append(var)
+        expected_ast.decl_list[0].body.append(var)
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_decl_with_init_2(self):
@@ -298,7 +298,7 @@ class TestParser(unittest.TestCase):
                 arg_list=[ast.Number(1), ast.Number(2)],
             ),
         )
-        expected_ast.decl_seq[0].body.append(var)
+        expected_ast.decl_list[0].body.append(var)
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_var_decl_with_ctor_and_arguments(self):
@@ -308,7 +308,7 @@ class TestParser(unittest.TestCase):
         input_string = 'start := func () { p := Parser(lexer 1) }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
-        expected_ast.decl_seq[0].body.append(
+        expected_ast.decl_list[0].body.append(
             ast.VarDecl(
                 name='p',
                 expr=ast.FuncCall(
@@ -327,7 +327,7 @@ class TestParser(unittest.TestCase):
         input_string = 'start := func () { if 1 {} }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
-        expected_ast.decl_seq[0].body.append(
+        expected_ast.decl_list[0].body.append(
             ast.If(
                 condition=ast.Number(1),
                 branch_if=[],
@@ -340,7 +340,7 @@ class TestParser(unittest.TestCase):
         input_string = 'start := func () { if 1 {} else {} }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
-        expected_ast.decl_seq[0].body.append(
+        expected_ast.decl_list[0].body.append(
             ast.If(
                 condition=ast.Number(1),
                 branch_if=[],
@@ -354,7 +354,7 @@ class TestParser(unittest.TestCase):
         input_string = 'start := func () { a()() }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
-        expected_ast.decl_seq[0].body.append(
+        expected_ast.decl_list[0].body.append(
             ast.FuncCall(
                 expr=ast.FuncCall(
                     expr=ast.Ident('a'),
@@ -370,7 +370,7 @@ class TestParser(unittest.TestCase):
         input_string = 'start := func () { return 1 }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
-        expected_ast.decl_seq[0].body.append(
+        expected_ast.decl_list[0].body.append(
             ast.Return(expr=ast.Number(1)),
         )
         misc.assert_equal(self, expected_ast, real_ast)
@@ -380,7 +380,7 @@ class TestParser(unittest.TestCase):
         input_string = 'start := func () { return }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
-        expected_ast.decl_seq[0].body.append(
+        expected_ast.decl_list[0].body.append(
             ast.Return(expr=None),
         )
         misc.assert_equal(self, expected_ast, real_ast)
@@ -390,7 +390,7 @@ class TestParser(unittest.TestCase):
         input_string = 'start := func () { return x() }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
-        expected_ast.decl_seq[0].body.append(
+        expected_ast.decl_list[0].body.append(
             ast.Return(
                 expr=ast.FuncCall(
                     expr=ast.Ident('x'),
@@ -405,7 +405,7 @@ class TestParser(unittest.TestCase):
         input_string = 'testFunc := func <Int> () {}'
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
-            decl_seq=[
+            decl_list=[
                 ast.FuncDecl(
                     name='testFunc',
                     signature=ast.FuncSignature(
@@ -423,7 +423,7 @@ class TestParser(unittest.TestCase):
         input_string = 'start := func () { return "hi" }'
         real_ast = self._parse(input_string)
         expected_ast = copy.deepcopy(self._std_module)
-        expected_ast.decl_seq[0].body.append(
+        expected_ast.decl_list[0].body.append(
             ast.Return(
                 expr=ast.String('hi')),
         )
