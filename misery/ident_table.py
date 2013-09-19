@@ -48,16 +48,17 @@ def ident_table(ast_):
         ident_list['multiplyInt'] = std_signature
         return ident_list
 
+    def create_constructor_func(struct_decl):
+        return ast.FuncSignature(
+            return_type=datatype.SimpleDataType(struct_decl.name),
+        )
+
     ident_list = {}
     for decl in ast_.decl_list:
         if isinstance(decl, ast.FuncDecl):
             ident_list[decl.name] = decl.signature
-    for decl in ast_.decl_list:
-        if isinstance(decl, ast.StructDecl):
-            # create constructor
-            ident_list[decl.name] = ast.FuncSignature(
-                return_type=datatype.SimpleDataType(decl.name),
-            )
+        elif isinstance(decl, ast.StructDecl):
+            ident_list[decl.name] = create_constructor_func(decl)
     ident_list.update(standart_funcs())
     return ident_list
 
