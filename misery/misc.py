@@ -143,4 +143,10 @@ def remove_quotation_marks(s):
     return s[1:-1]
 
 
+def tolist(obj):
+    if obj is None:
+        obj = []
+    return obj
+
+
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:

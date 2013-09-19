@@ -255,4 +255,25 @@ class TestRemoveQuotationMarks(unittest.TestCase):
         )
 
 
+class TestTolist(unittest.TestCase):
+
+    def test_1(self):
+        self.assertEqual(
+            misc.tolist(None),
+            [],
+        )
+
+    def test_2(self):
+        self.assertEqual(
+            misc.tolist([]),
+            [],
+        )
+
+    def test_2(self):
+        self.assertEqual(
+            misc.tolist([1, 2]),
+            [1, 2],
+        )
+
+
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:

@@ -34,9 +34,7 @@ class TestGenerator(unittest.TestCase):
                 decl_list=[
                     ast.FuncDecl(
                         name='start',
-                        signature=ast.FuncSignature(
-                            par_list=[],
-                        ),
+                        signature=ast.FuncSignature(),
                         body=[
                             ast.FuncCall(
                                 expr=ast.Ident('printInt'),
@@ -78,7 +76,7 @@ class TestGenerator(unittest.TestCase):
                 decl_list=[
                     ast.FuncDecl(
                         name='start',
-                        signature=ast.FuncSignature(par_list=[]),
+                        signature=ast.FuncSignature(),
                         body=body,
                     )
                 ]
@@ -128,7 +126,7 @@ class TestGenerator(unittest.TestCase):
                 decl_list=[
                     ast.FuncDecl(
                         name='start',
-                        signature=ast.FuncSignature(par_list=[]),
+                        signature=ast.FuncSignature(),
                         body=body,
                     )
                 ]
@@ -160,7 +158,6 @@ class TestGenerator(unittest.TestCase):
             test_case=self,
             input_ast=ast.Module(
                 import_list=['module1', 'module2'],
-                decl_list=[],
             ),
             expected_output='''
                 // import: module1
@@ -172,10 +169,7 @@ class TestGenerator(unittest.TestCase):
 
     def test_generate_full(self):
         ''' Just generate something '''
-        input_ast = ast.Module(
-            import_list=[],
-            decl_list=[],
-        )
+        input_ast = ast.Module()
         marked_out_ast = datatype.mark_out_datatypes(input_ast)
         generator_ = generator.Generator(marked_out_ast)
         real_output = generator_.generate_full()
@@ -200,11 +194,10 @@ class TestGenerator(unittest.TestCase):
                                 ),
                             ],
                         ),
-                        body=[],
                     ),
                     ast.FuncDecl(
                         name='start',
-                        signature=ast.FuncSignature(par_list=[]),
+                        signature=ast.FuncSignature(),
                         body=[
                             ast.FuncCall(
                                 expr=ast.Ident('testFunc'),
@@ -242,8 +235,7 @@ class TestGenerator(unittest.TestCase):
             decl_list=[
                 ast.FuncDecl(
                     name='start',
-                    signature=ast.FuncSignature(par_list=[]),
-                    body=[],
+                    signature=ast.FuncSignature(),
                 )
             ]
         )
@@ -265,7 +257,7 @@ class TestGenerator(unittest.TestCase):
             decl_list=[
                 ast.FuncDecl(
                     name='start',
-                    signature=ast.FuncSignature(par_list=[]),
+                    signature=ast.FuncSignature(),
                     body=[
                         ast.VarDecl(
                             name='testVar',
@@ -311,7 +303,7 @@ class TestGenerator(unittest.TestCase):
             decl_list=[
                 ast.FuncDecl(
                     name='start',
-                    signature=ast.FuncSignature(par_list=[]),
+                    signature=ast.FuncSignature(),
                     body=[
                         BadStmtClass(),
                     ],

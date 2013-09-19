@@ -423,7 +423,7 @@ class Generator(object):
         return out
 
     def _generate_imports(self):
-        if self._ast.import_list is None:
+        if not self._ast.import_list:
             return ''
         out = ''
         out += '\n'

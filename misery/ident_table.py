@@ -29,9 +29,7 @@ def ident_table(ast_):
                 ast.Parameter(name='n', datatype=datatype_int),
             ],
         )
-        ident_list['printNewLine'] = ast.FuncSignature(
-            par_list=[],
-        )
+        ident_list['printNewLine'] = ast.FuncSignature()
         ident_list['printString'] = ast.FuncSignature(
             par_list=[
                 ast.Parameter(name='s', datatype=datatype_string),
@@ -59,7 +57,6 @@ def ident_table(ast_):
             # create constructor
             ident_list[decl.name] = ast.FuncSignature(
                 return_type=datatype.SimpleDataType(decl.name),
-                par_list=[],
             )
     ident_list.update(standart_funcs())
     return ident_list

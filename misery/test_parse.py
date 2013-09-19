@@ -24,10 +24,7 @@ def _std_module():
         decl_list=[
             ast.FuncDecl(
                 name='start',
-                signature=ast.FuncSignature(
-                    par_list=[],
-                ),
-                body=[],
+                signature=ast.FuncSignature(),
             )
         ]
     )
@@ -46,19 +43,14 @@ class TestParser(unittest.TestCase):
         ''' Parse empty string. '''
         input_string = ''
         real_ast = self._parse(input_string)
-        expected_ast = ast.Module(
-            decl_list=[],
-        )
+        expected_ast = ast.Module()
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_empty_import(self):
         ''' Parse empty import stmt. '''
         input_string = 'import {}'
         real_ast = self._parse(input_string)
-        expected_ast = ast.Module(
-            import_list=[],
-            decl_list=[],
-        )
+        expected_ast = ast.Module()
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_simple_import(self):
@@ -67,7 +59,6 @@ class TestParser(unittest.TestCase):
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
             import_list=['module1'],
-            decl_list=[],
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
@@ -77,7 +68,6 @@ class TestParser(unittest.TestCase):
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
             import_list=['module1', 'module2'],
-            decl_list=[],
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
@@ -132,8 +122,7 @@ class TestParser(unittest.TestCase):
             decl_list=[
                 ast.FuncDecl(
                     name='testfunc2',
-                    signature=ast.FuncSignature(par_list=[]),
-                    body=[],
+                    signature=ast.FuncSignature(),
                 )
             ]
         )
@@ -148,10 +137,8 @@ class TestParser(unittest.TestCase):
                 ast.FuncDecl(
                     name='testfunc2',
                     signature=ast.FuncSignature(
-                        par_list=[],
                         return_type=datatype.SimpleDataType('Int'),
                     ),
-                    body=[],
                 )
             ]
         )
@@ -174,7 +161,6 @@ class TestParser(unittest.TestCase):
                 ast.FuncDecl(
                     name='testfunc',
                     signature=signature,
-                    body=[],
                 )
             ]
         )
@@ -201,7 +187,6 @@ class TestParser(unittest.TestCase):
                 ast.FuncDecl(
                     name='testfunc',
                     signature=signature,
-                    body=[],
                 )
             ]
         )
@@ -222,7 +207,6 @@ class TestParser(unittest.TestCase):
         expected_ast = _std_module()
         funccall = ast.FuncCall(
             expr=ast.Ident('fname2'),
-            arg_list=[],
         )
         expected_ast.decl_list[0].body.append(funccall)
         misc.assert_equal(self, expected_ast, real_ast)
@@ -236,7 +220,6 @@ class TestParser(unittest.TestCase):
             name='testVar',
             expr=ast.FuncCall(
                 expr=ast.Ident('Int'),
-                arg_list=[],
             )
         )
         expected_ast.decl_list[0].body.append(var)
@@ -282,7 +265,6 @@ class TestParser(unittest.TestCase):
             name='p',
             expr=ast.FuncCall(
                 expr=ast.Ident('Parser'),
-                arg_list=[],
             ),
         )
         expected_ast.decl_list[0].body.append(var)
@@ -362,9 +344,7 @@ class TestParser(unittest.TestCase):
             ast.FuncCall(
                 expr=ast.FuncCall(
                     expr=ast.Ident('a'),
-                    arg_list=[],
                 ),
-                arg_list=[],
             )
         )
         misc.assert_equal(self, expected_ast, real_ast)
@@ -398,7 +378,6 @@ class TestParser(unittest.TestCase):
             ast.Return(
                 expr=ast.FuncCall(
                     expr=ast.Ident('x'),
-                    arg_list=[],
                 ),
             ),
         )
@@ -413,10 +392,8 @@ class TestParser(unittest.TestCase):
                 ast.FuncDecl(
                     name='testFunc',
                     signature=ast.FuncSignature(
-                        par_list=[],
                         generic_par_list=["Int"],
                     ),
-                    body=[],
                 )
             ]
         )

@@ -20,8 +20,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
             decl_list=[
                 ast.FuncDecl(
                     name='start',
-                    signature=ast.FuncSignature(par_list=[]),
-                    body=[],
+                    signature=ast.FuncSignature(),
                 )
             ]
         )
@@ -29,8 +28,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
             decl_list=[
                 ast.FuncDecl(
                     name='start',
-                    signature=ast.FuncSignature(par_list=[]),
-                    body=[],
+                    signature=ast.FuncSignature(),
                 )
             ]
         )
@@ -38,9 +36,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
         misc.assert_equal(self, expected_output, real_output)
 
     def test_copy(self):
-        input_ast = ast.Module(
-            decl_list=[],
-        )
+        input_ast = ast.Module()
         real_output = datatype.mark_out_datatypes(input_ast)
         # change original data
         input_ast.decl_list.append('hi')
@@ -51,7 +47,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
             decl_list=[
                 ast.FuncDecl(
                     name='start',
-                    signature=ast.FuncSignature(par_list=[]),
+                    signature=ast.FuncSignature(),
                     body=[
                         ast.VarDecl(
                             name='testVar',
@@ -65,7 +61,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
             decl_list=[
                 ast.FuncDecl(
                     name='start',
-                    signature=ast.FuncSignature(par_list=[]),
+                    signature=ast.FuncSignature(),
                     body=[
                         ast.VarDecl(
                             name='testVar',
@@ -94,7 +90,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
             decl_list=[
                 ast.FuncDecl(
                     name='start',
-                    signature=ast.FuncSignature(par_list=[]),
+                    signature=ast.FuncSignature(),
                     body=[
                         ast.VarDecl(
                             name='testVar',
@@ -115,7 +111,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
             decl_list=[
                 ast.FuncDecl(
                     name='start',
-                    signature=ast.FuncSignature(par_list=[]),
+                    signature=ast.FuncSignature(),
                     body=[
                         ast.VarDecl(
                             name='testVar',
@@ -141,13 +137,12 @@ class TestMarkOutDatatypes(unittest.TestCase):
             decl_list=[
                 ast.FuncDecl(
                     name='start',
-                    signature=ast.FuncSignature(par_list=[]),
+                    signature=ast.FuncSignature(),
                     body=[
                         ast.VarDecl(
                             name='testVar',
                             expr=ast.FuncCall(
                                 expr=ast.Ident('badFuncName'),
-                                arg_list=[],
                             ),
                         ),
                     ],
@@ -169,7 +164,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
             decl_list=[
                 ast.FuncDecl(
                     name='start',
-                    signature=ast.FuncSignature(par_list=[]),
+                    signature=ast.FuncSignature(),
                     body=[
                         ast.VarDecl(
                             name='testVar',
@@ -193,7 +188,7 @@ class TestMarkOutDatatypes(unittest.TestCase):
             decl_list=[
                 ast.FuncDecl(
                     name='start',
-                    signature=ast.FuncSignature(par_list=[]),
+                    signature=ast.FuncSignature(),
                     body=[
                         BadStmtClass(),
                     ],

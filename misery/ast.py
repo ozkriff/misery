@@ -1,18 +1,25 @@
 # -*- coding: utf-8 -*-
 # See LICENSE file for copyright and license details
 
+
 '''
 Asbtract Syntax Tree
 '''
 
 
+from misery import (
+    misc,
+)
+
+
 class Module(object):
-    def __init__(self, import_list=None, decl_list=None):
-        assert import_list is None or isinstance(import_list, list)
-        assert (decl_list is None or
-                isinstance(decl_list, list))
-        self.import_list = import_list
-        self.decl_list = decl_list
+    def __init__(
+        self,
+        import_list=None,
+        decl_list=None,
+    ):
+        self.import_list = misc.tolist(import_list)
+        self.decl_list = misc.tolist(decl_list)
         self.ident_list = None
 
 
@@ -53,10 +60,10 @@ class String(object):
 
 
 class FuncDecl(object):
-    def __init__(self, name, signature, body):
+    def __init__(self, name, signature, body=None):
         self.name = name
         self.signature = signature
-        self.body = body
+        self.body = misc.tolist(body)
         # TODO: move to ast.Block ...
         self.vars = {}
         self.tmp_vars = {}
@@ -66,12 +73,12 @@ class FuncDecl(object):
 class FuncSignature(object):
     def __init__(
         self,
-        par_list,
+        par_list=None,
         generic_par_list=None,
         return_type=None,
     ):
-        self.par_list = par_list
-        self.generic_par_list = generic_par_list
+        self.par_list = misc.tolist(par_list)
+        self.generic_par_list = misc.tolist(generic_par_list)
         self.return_type = return_type
 
 
@@ -82,9 +89,9 @@ class Parameter(object):
 
 
 class FuncCall(object):
-    def __init__(self, expr, arg_list):
+    def __init__(self, expr, arg_list=None):
         self.called_expr = expr
-        self.arg_list = arg_list
+        self.arg_list = misc.tolist(arg_list)
         self.binded_var_name = None
 
 
@@ -115,7 +122,12 @@ class Assign(object):
 
 
 class If(object):
-    def __init__(self, condition, branch_if, branch_else=None):
+    def __init__(
+        self,
+        condition,
+        branch_if,
+        branch_else=None,
+    ):
         self.condition = condition
         self.branch_if = branch_if
         self.branch_else = branch_else
