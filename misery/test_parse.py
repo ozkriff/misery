@@ -6,7 +6,6 @@
 
 
 import unittest
-import copy
 from misery import (
     ast,
     datatype,
@@ -15,22 +14,27 @@ from misery import (
 )
 
 
-class TestParser(unittest.TestCase):
-    ''' Test parse.make_parser() func. '''
-
-    # Standart module.
-    # Usage:
-    #   expected_ast = copy.deepcopy(self._std_module)
-    #   <add specific detaild to expected_ast>
-    _std_module = ast.Module(
+def _std_module():
+    ''' Return basic ast.
+        Usage:
+            expected_ast = _std_module()
+            <add specific detaild to expected_ast>
+    '''
+    return ast.Module(
         decl_list=[
             ast.FuncDecl(
                 name='start',
-                signature=ast.FuncSignature(par_list=[]),
+                signature=ast.FuncSignature(
+                    par_list=[],
+                ),
                 body=[],
             )
         ]
     )
+
+
+class TestParser(unittest.TestCase):
+    ''' Test parse.make_parser() func. '''
 
     def _parse(self, input_string):
         real_ast = parse.make_parser().parse(
@@ -207,7 +211,7 @@ class TestParser(unittest.TestCase):
         ''' Parse fnction with empty blocks. '''
         input_string = 'start := func () { {} {} }'
         real_ast = self._parse(input_string)
-        expected_ast = copy.deepcopy(self._std_module)
+        expected_ast = _std_module()
         expected_ast.decl_list[0].body = [[], []]
         misc.assert_equal(self, expected_ast, real_ast)
 
@@ -215,7 +219,7 @@ class TestParser(unittest.TestCase):
         ''' Parse simple func call. '''
         input_string = 'start := func () { fname2() }'
         real_ast = self._parse(input_string)
-        expected_ast = copy.deepcopy(self._std_module)
+        expected_ast = _std_module()
         funccall = ast.FuncCall(
             expr=ast.Ident('fname2'),
             arg_list=[],
@@ -227,7 +231,7 @@ class TestParser(unittest.TestCase):
         ''' Parse var decl stmt. '''
         input_string = 'start := func () { testVar := Int() }'
         real_ast = self._parse(input_string)
-        expected_ast = copy.deepcopy(self._std_module)
+        expected_ast = _std_module()
         var = ast.VarDecl(
             name='testVar',
             expr=ast.FuncCall(
@@ -242,7 +246,7 @@ class TestParser(unittest.TestCase):
         ''' Parse var decl stmt with initiaization. '''
         input_string = 'start := func () { testVar := Int(666) }'
         real_ast = self._parse(input_string)
-        expected_ast = copy.deepcopy(self._std_module)
+        expected_ast = _std_module()
         var = ast.VarDecl(
             name='testVar',
             expr=ast.FuncCall(
@@ -261,7 +265,7 @@ class TestParser(unittest.TestCase):
         '''
         input_string = 'start := func () { testVar := 666 }'
         real_ast = self._parse(input_string)
-        expected_ast = copy.deepcopy(self._std_module)
+        expected_ast = _std_module()
         var = ast.VarDecl(
             name='testVar',
             expr=ast.Number(666),
@@ -273,7 +277,7 @@ class TestParser(unittest.TestCase):
         ''' Parse var decl stmt with constructor call. '''
         input_string = 'start := func () { p := Parser() }'
         real_ast = self._parse(input_string)
-        expected_ast = copy.deepcopy(self._std_module)
+        expected_ast = _std_module()
         var = ast.VarDecl(
             name='p',
             expr=ast.FuncCall(
@@ -290,7 +294,7 @@ class TestParser(unittest.TestCase):
         '''
         input_string = 'start := func () { v2 := plus(1 2) }'
         real_ast = self._parse(input_string)
-        expected_ast = copy.deepcopy(self._std_module)
+        expected_ast = _std_module()
         var = ast.VarDecl(
             name='v2',
             expr=ast.FuncCall(
@@ -307,7 +311,7 @@ class TestParser(unittest.TestCase):
         '''
         input_string = 'start := func () { p := Parser(lexer 1) }'
         real_ast = self._parse(input_string)
-        expected_ast = copy.deepcopy(self._std_module)
+        expected_ast = _std_module()
         expected_ast.decl_list[0].body.append(
             ast.VarDecl(
                 name='p',
@@ -326,7 +330,7 @@ class TestParser(unittest.TestCase):
         ''' Parse if stmt. '''
         input_string = 'start := func () { if 1 {} }'
         real_ast = self._parse(input_string)
-        expected_ast = copy.deepcopy(self._std_module)
+        expected_ast = _std_module()
         expected_ast.decl_list[0].body.append(
             ast.If(
                 condition=ast.Number(1),
@@ -339,7 +343,7 @@ class TestParser(unittest.TestCase):
         ''' Parse if-else stmt. '''
         input_string = 'start := func () { if 1 {} else {} }'
         real_ast = self._parse(input_string)
-        expected_ast = copy.deepcopy(self._std_module)
+        expected_ast = _std_module()
         expected_ast.decl_list[0].body.append(
             ast.If(
                 condition=ast.Number(1),
@@ -353,7 +357,7 @@ class TestParser(unittest.TestCase):
         ''' Parse nested func call. '''
         input_string = 'start := func () { a()() }'
         real_ast = self._parse(input_string)
-        expected_ast = copy.deepcopy(self._std_module)
+        expected_ast = _std_module()
         expected_ast.decl_list[0].body.append(
             ast.FuncCall(
                 expr=ast.FuncCall(
@@ -369,7 +373,7 @@ class TestParser(unittest.TestCase):
         ''' Parse return stmt with integer. '''
         input_string = 'start := func () { return 1 }'
         real_ast = self._parse(input_string)
-        expected_ast = copy.deepcopy(self._std_module)
+        expected_ast = _std_module()
         expected_ast.decl_list[0].body.append(
             ast.Return(expr=ast.Number(1)),
         )
@@ -379,7 +383,7 @@ class TestParser(unittest.TestCase):
         ''' Parse return stmt without any value. '''
         input_string = 'start := func () { return }'
         real_ast = self._parse(input_string)
-        expected_ast = copy.deepcopy(self._std_module)
+        expected_ast = _std_module()
         expected_ast.decl_list[0].body.append(
             ast.Return(expr=None),
         )
@@ -389,7 +393,7 @@ class TestParser(unittest.TestCase):
         ''' Parse return stmt with func call. '''
         input_string = 'start := func () { return x() }'
         real_ast = self._parse(input_string)
-        expected_ast = copy.deepcopy(self._std_module)
+        expected_ast = _std_module()
         expected_ast.decl_list[0].body.append(
             ast.Return(
                 expr=ast.FuncCall(
@@ -422,7 +426,7 @@ class TestParser(unittest.TestCase):
         ''' Parse anythong with string. '''
         input_string = 'start := func () { return "hi" }'
         real_ast = self._parse(input_string)
-        expected_ast = copy.deepcopy(self._std_module)
+        expected_ast = _std_module()
         expected_ast.decl_list[0].body.append(
             ast.Return(
                 expr=ast.String('hi')),
