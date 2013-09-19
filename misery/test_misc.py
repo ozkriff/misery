@@ -181,7 +181,8 @@ class TestCaseMock:
     def assertEqual(self, expected, real):
         return expected == real
 
-    def fail(self, msg=''):
+    def fail(self, msg):
+        assert msg != ''
         self.is_ok = False
 
 
