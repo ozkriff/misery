@@ -8,6 +8,7 @@ from ply import (
 )
 from misery import (
     ast,
+    misc,
     datatype,
 )
 
@@ -291,10 +292,7 @@ def make_parser():
 
     def p_expr_string(p):
         'expr : STRING'
-        def remove_quotation_marks(s):
-            assert s[0] == '\"' and s[-1] == '\"'
-            return s[1:-1]
-        p[0] = ast.String(value=remove_quotation_marks(p[1]))
+        p[0] = ast.String(value=misc.remove_quotation_marks(p[1]))
 
     def p_expr_ident(p):
         'expr : IDENT'

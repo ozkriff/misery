@@ -246,4 +246,13 @@ class TestFlattenTree(unittest.TestCase):
         )
 
 
+class TestRemoveQuotationMarks(unittest.TestCase):
+
+    def test_1(self):
+        self.assertEqual(
+            misc.remove_quotation_marks('"hi"'),
+            'hi',
+        )
+
+
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:

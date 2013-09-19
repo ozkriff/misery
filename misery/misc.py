@@ -138,4 +138,9 @@ def get_caller_func_name():
     return caller_func_name
 
 
+def remove_quotation_marks(s):
+    assert s[0] == '\"' and s[-1] == '\"'
+    return s[1:-1]
+
+
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:
