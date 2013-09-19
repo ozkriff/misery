@@ -164,7 +164,7 @@ def make_parser():
 
     def p_generic_empty(p):
         'generic :'
-        p[0] = []
+        p[0] = None
 
     def p_generic(p):
         'generic : LT IDENT GT'

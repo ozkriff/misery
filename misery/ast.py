@@ -71,10 +71,7 @@ class FuncSignature(object):
         return_type=None,
     ):
         self.par_list = par_list
-        if generic_par_list:
-            self.generic_par_list = generic_par_list
-        else:
-            self.generic_par_list = []
+        self.generic_par_list = generic_par_list
         self.return_type = return_type
 
 
