@@ -186,16 +186,16 @@ def make_parser():
         )
 
     def p_func_decl(p):
-        'decl : IDENT COLONASSIGN FUNC func_signature block'
+        'decl : FUNC IDENT func_signature block'
         p[0] = ast.FuncDecl(
-            name=p[1],
-            signature=p[4],
-            body=p[5],
+            name=p[2],
+            signature=p[3],
+            body=p[4],
         )
 
     def p_struct_decl(p):
-        'decl : IDENT COLONASSIGN STRUCT LCURLY field_list RCURLY'
-        p[0] = ast.StructDecl(name=p[1], field_list=p[5])
+        'decl : STRUCT IDENT LCURLY field_list RCURLY'
+        p[0] = ast.StructDecl(name=p[2], field_list=p[4])
 
     def p_const_decl(p):
         'decl : CONST IDENT COLON type COLONASSIGN expr'

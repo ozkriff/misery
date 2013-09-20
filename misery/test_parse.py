@@ -74,7 +74,7 @@ class TestParser(unittest.TestCase):
     def test_struct_type_decl(self):
         ''' Parse struct type decl. '''
         input_string = (
-            'MyStruct := struct {\n'
+            'struct MyStruct {\n'
             '  field1: Int\n'
             '  field2: Float\n'
             '}\n'
@@ -116,7 +116,7 @@ class TestParser(unittest.TestCase):
 
     def test_simple_func(self):
         ''' Parse minimal fnction decl. '''
-        input_string = 'testfunc2 := func() {}'
+        input_string = 'func testfunc2 () {}'
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
             decl_list=[
@@ -130,7 +130,7 @@ class TestParser(unittest.TestCase):
 
     def test_simple_func_with_return_value(self):
         ''' Parse func that returns Int. '''
-        input_string = 'testfunc2 := func () -> Int {}'
+        input_string = 'func testfunc2 () -> Int {}'
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
             decl_list=[
@@ -146,7 +146,7 @@ class TestParser(unittest.TestCase):
 
     def test_simple_func_with_parameter(self):
         ''' Parse func that takes one parameter. '''
-        input_string = 'testfunc := func (par:ParType) {}'
+        input_string = 'func testfunc (par:ParType) {}'
         real_ast = self._parse(input_string)
         signature = ast.FuncSignature(
             par_list=[
@@ -168,7 +168,7 @@ class TestParser(unittest.TestCase):
 
     def test_simple_func_with_2_parameters(self):
         ''' Parse func that takes two parameters. '''
-        input_string = 'testfunc := func (par1:ParType par2:ParType) {}'
+        input_string = 'func testfunc (par1:ParType par2:ParType) {}'
         real_ast = self._parse(input_string)
         signature = ast.FuncSignature(
             par_list=[
@@ -194,7 +194,7 @@ class TestParser(unittest.TestCase):
 
     def test_func_body_2_empty_blocks(self):
         ''' Parse fnction with empty blocks. '''
-        input_string = 'start := func () { {} {} }'
+        input_string = 'func start () { {} {} }'
         real_ast = self._parse(input_string)
         expected_ast = _std_module()
         expected_ast.decl_list[0].body = [[], []]
@@ -202,7 +202,7 @@ class TestParser(unittest.TestCase):
 
     def test_simple_func_call(self):
         ''' Parse simple func call. '''
-        input_string = 'start := func () { fname2() }'
+        input_string = 'func start () { fname2() }'
         real_ast = self._parse(input_string)
         expected_ast = _std_module()
         funccall = ast.FuncCall(
@@ -213,7 +213,7 @@ class TestParser(unittest.TestCase):
 
     def test_var_decl_without_initialization(self):
         ''' Parse var decl stmt. '''
-        input_string = 'start := func () { testVar := Int() }'
+        input_string = 'func start () { testVar := Int() }'
         real_ast = self._parse(input_string)
         expected_ast = _std_module()
         var = ast.VarDecl(
@@ -227,7 +227,7 @@ class TestParser(unittest.TestCase):
 
     def test_var_decl_with_type_and_initialization(self):
         ''' Parse var decl stmt with initiaization. '''
-        input_string = 'start := func () { testVar := Int(666) }'
+        input_string = 'func start () { testVar := Int(666) }'
         real_ast = self._parse(input_string)
         expected_ast = _std_module()
         var = ast.VarDecl(
@@ -246,7 +246,7 @@ class TestParser(unittest.TestCase):
         ''' Parse var decl stmt with
             initiaization and without explicit  type.
         '''
-        input_string = 'start := func () { testVar := 666 }'
+        input_string = 'func start () { testVar := 666 }'
         real_ast = self._parse(input_string)
         expected_ast = _std_module()
         var = ast.VarDecl(
@@ -258,7 +258,7 @@ class TestParser(unittest.TestCase):
 
     def test_var_decl_with_ctor(self):
         ''' Parse var decl stmt with constructor call. '''
-        input_string = 'start := func () { p := Parser() }'
+        input_string = 'func start () { p := Parser() }'
         real_ast = self._parse(input_string)
         expected_ast = _std_module()
         var = ast.VarDecl(
@@ -274,7 +274,7 @@ class TestParser(unittest.TestCase):
         ''' Parse var decl stmt with
             complex initiaization.
         '''
-        input_string = 'start := func () { v2 := plus(1 2) }'
+        input_string = 'func start () { v2 := plus(1 2) }'
         real_ast = self._parse(input_string)
         expected_ast = _std_module()
         var = ast.VarDecl(
@@ -291,7 +291,7 @@ class TestParser(unittest.TestCase):
         ''' Parse var decl stmt with
             constructor call with arguments.
         '''
-        input_string = 'start := func () { p := Parser(lexer 1) }'
+        input_string = 'func start () { p := Parser(lexer 1) }'
         real_ast = self._parse(input_string)
         expected_ast = _std_module()
         expected_ast.decl_list[0].body.append(
@@ -310,7 +310,7 @@ class TestParser(unittest.TestCase):
 
     def test_simple_if(self):
         ''' Parse if stmt. '''
-        input_string = 'start := func () { if 1 {} }'
+        input_string = 'func start () { if 1 {} }'
         real_ast = self._parse(input_string)
         expected_ast = _std_module()
         expected_ast.decl_list[0].body.append(
@@ -323,7 +323,7 @@ class TestParser(unittest.TestCase):
 
     def test_simple_if_else(self):
         ''' Parse if-else stmt. '''
-        input_string = 'start := func () { if 1 {} else {} }'
+        input_string = 'func start () { if 1 {} else {} }'
         real_ast = self._parse(input_string)
         expected_ast = _std_module()
         expected_ast.decl_list[0].body.append(
@@ -337,7 +337,7 @@ class TestParser(unittest.TestCase):
 
     def test_nested_func_call_1(self):
         ''' Parse nested func call. '''
-        input_string = 'start := func () { a()() }'
+        input_string = 'func start () { a()() }'
         real_ast = self._parse(input_string)
         expected_ast = _std_module()
         expected_ast.decl_list[0].body.append(
@@ -351,7 +351,7 @@ class TestParser(unittest.TestCase):
 
     def test_simple_return_1(self):
         ''' Parse return stmt with integer. '''
-        input_string = 'start := func () { return 1 }'
+        input_string = 'func start () { return 1 }'
         real_ast = self._parse(input_string)
         expected_ast = _std_module()
         expected_ast.decl_list[0].body.append(
@@ -361,7 +361,7 @@ class TestParser(unittest.TestCase):
 
     def test_simple_return_2(self):
         ''' Parse return stmt without any value. '''
-        input_string = 'start := func () { return }'
+        input_string = 'func start () { return }'
         real_ast = self._parse(input_string)
         expected_ast = _std_module()
         expected_ast.decl_list[0].body.append(
@@ -371,7 +371,7 @@ class TestParser(unittest.TestCase):
 
     def test_simple_return_3(self):
         ''' Parse return stmt with func call. '''
-        input_string = 'start := func () { return x() }'
+        input_string = 'func start () { return x() }'
         real_ast = self._parse(input_string)
         expected_ast = _std_module()
         expected_ast.decl_list[0].body.append(
@@ -385,7 +385,7 @@ class TestParser(unittest.TestCase):
 
     def test_generic_func_1(self):
         ''' First test of generic funcs. '''
-        input_string = 'testFunc := func <Int> () {}'
+        input_string = 'func testFunc <Int> () {}'
         real_ast = self._parse(input_string)
         expected_ast = ast.Module(
             decl_list=[
@@ -401,7 +401,7 @@ class TestParser(unittest.TestCase):
 
     def test_string(self):
         ''' Parse anythong with string. '''
-        input_string = 'start := func () { return "hi" }'
+        input_string = 'func start () { return "hi" }'
         real_ast = self._parse(input_string)
         expected_ast = _std_module()
         expected_ast.decl_list[0].body.append(
@@ -412,7 +412,7 @@ class TestParser(unittest.TestCase):
 
     def test_lex_error(self):
         ''' Check lexer error reporting. '''
-        input_string = 'start := &'
+        input_string = 'func start &'
         self.assertRaisesRegexp(
             Exception,
             'Lexer error: Illegal character',
@@ -422,7 +422,7 @@ class TestParser(unittest.TestCase):
 
     def test_parse_error(self):
         ''' Check parser error reporting. '''
-        input_string = 'start := func 666 () {}'
+        input_string = 'func start 666 () {}'
         self.assertRaisesRegexp(
             Exception,
             'Parser error: unexpected token',

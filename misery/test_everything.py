@@ -120,7 +120,7 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                start := func () {
+                func start () {
                   testVar ::= 1
                   testVar = 2
                 }
@@ -149,7 +149,7 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                start := func () {
+                func start () {
                   testVar := Int(1)
                   printInt(testVar)
                   printNewLine()
@@ -179,11 +179,11 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                MyStruct := struct {
+                struct MyStruct {
                   field1: Int
                   field2: Int
                 }
-                start := func () {
+                func start () {
                   t := MyStruct()
                 }
             ''',
@@ -215,14 +215,14 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                MyStruct := struct {
+                struct MyStruct {
                   field1: Int
                   field2: Int
                 }
-                someFunc := func (x:MyStruct) -> MyStruct{
+                func someFunc (x:MyStruct) -> MyStruct{
                   return x
                 }
-                start := func () {
+                func start () {
                   t := MyStruct()
                   t2 := someFunc(t)
                 }
@@ -265,7 +265,7 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                start := func () {
+                func start () {
                   testVar ::= "some string"
                 }
             ''',
@@ -290,7 +290,7 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                start := func () {
+                func start () {
                   printString("hello")
                   printNewLine()
                 }
@@ -315,7 +315,7 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                start := func () {
+                func start () {
                   testVar ::= "print this to console, please"
                   printString(testVar)
                   printNewLine()
@@ -345,7 +345,7 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                start := func () {
+                func start () {
                   testVar ::= 1 testVar = 2
                 }
             ''',
@@ -373,7 +373,7 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                start := func () {
+                func start () {
                   i ::= 0
                   for isLessInt(i 5) {
                     printInt(i)
@@ -426,10 +426,10 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                someString := func () -> String {
+                func someString () -> String {
                   return "hi"
                 }
-                start := func () {
+                func start () {
                   s ::= someString()
                   printString(s)
                   printNewLine()
@@ -468,10 +468,10 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                someString := func () -> String {
+                func someString () -> String {
                   return "hi"
                 }
-                start := func () {
+                func start () {
                   printString(someString())
                   printNewLine()
                 }
@@ -505,10 +505,10 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                someNumber := func () -> Int {
+                func someNumber () -> Int {
                   return 99
                 }
-                start := func () {
+                func start () {
                   testVar ::= someNumber()
                 }
             ''',
@@ -542,7 +542,7 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                start := func () {
+                func start () {
                   printInt(minusInt(666 99))
                   printNewLine()
                 }
@@ -571,10 +571,10 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                someNumber := func () -> Int {
+                func someNumber () -> Int {
                   return 99
                 }
-                start := func () {
+                func start () {
                   printInt(minusInt(666 someNumber()))
                   printNewLine()
                 }
@@ -613,10 +613,10 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                someNumber := func () -> Int {
+                func someNumber () -> Int {
                   return minusInt(100 1)
                 }
-                start := func () {
+                func start () {
                   printInt(
                     minusInt(666 someNumber())
                   )
@@ -661,10 +661,10 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                someNumber := func (xxx:Int) -> Int {
+                func someNumber (xxx:Int) -> Int {
                   return minusInt(100 xxx)
                 }
-                start := func () {
+                func start () {
                   printInt(
                     minusInt(666 someNumber(1))
                   )
@@ -710,12 +710,12 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                start := func () {
+                func start () {
                     printInt(fac())
                     printNewLine()
                     fac()
                 }
-                fac := func () -> Int {
+                func fac () -> Int {
                     return 1
                 }
             ''',
@@ -751,11 +751,11 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                start := func () {
+                func start () {
                   printInt(fib(10))
                   printNewLine()
                 }
-                fib := func (n:Int) -> Int {
+                func fib (n:Int) -> Int {
                   if isLessInt(n 2) {
                     return n
                   } else {
@@ -820,11 +820,11 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                start := func () {
+                func start () {
                   printInt(fac(3))
                   printNewLine()
                 }
-                fac := func (n:Int) -> Int {
+                func fac (n:Int) -> Int {
                   if isEqualInt(n 0) {
                     return 1
                   }
