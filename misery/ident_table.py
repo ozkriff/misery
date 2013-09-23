@@ -31,22 +31,24 @@ def ident_table(ast_):
             ],
         )
         ident_list['printNewLine'] = ast.FuncSignature()
-        ident_list['printString'] = ast.FuncSignature(
-            par_list=[
-                ast.Parameter(name='s', datatype=datatype_string),
-            ],
-        )
-        ident_list['printInt'] = ast.FuncSignature(
-            par_list=[
-                ast.Parameter(name='n', datatype=datatype_int),
-            ],
-        )
-        ident_list['isEqualInt'] = std_signature
-        ident_list['isLessInt'] = std_signature
-        ident_list['isGreaterInt'] = std_signature
-        ident_list['minusInt'] = std_signature
-        ident_list['plusInt'] = std_signature
-        ident_list['multiplyInt'] = std_signature
+        ident_list['print'] = [
+            ast.FuncSignature(
+                par_list=[
+                    ast.Parameter(name='s', datatype=datatype_string),
+                ],
+            ),
+            ast.FuncSignature(
+                par_list=[
+                    ast.Parameter(name='n', datatype=datatype_int),
+                ],
+            ),
+        ]
+        ident_list['isEqual'] = std_signature
+        ident_list['isLess'] = std_signature
+        ident_list['isGreater'] = std_signature
+        ident_list['minus'] = std_signature
+        ident_list['plus'] = std_signature
+        ident_list['multiply'] = std_signature
         return ident_list
 
     def create_constructor_func(struct_decl):

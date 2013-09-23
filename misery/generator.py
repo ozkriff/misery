@@ -31,11 +31,11 @@ class Generator(object):
           *__result = *n;
         }
 
-        void printInt_Int(Int* n) {
+        void print_Int(Int* n) {
           printf("%d", *n);
         }
 
-        void printString_String(String* s) {
+        void print_String(String* s) {
           printf("%s", *s);
         }
 
@@ -43,27 +43,27 @@ class Generator(object):
           printf("\\n");
         }
 
-        void isLessInt_Int_Int(Int* __result, Int* a, Int* b) {
+        void isLess_Int_Int(Int* __result, Int* a, Int* b) {
           *__result = (*a < *b);
         }
 
-        void isGreaterInt_Int_Int(Int* __result, Int* a, Int* b) {
+        void isGreater_Int_Int(Int* __result, Int* a, Int* b) {
           *__result = (*a < *b);
         }
 
-        void isEqualInt_Int_Int(Int* __result, Int* a, Int* b) {
+        void isEqual_Int_Int(Int* __result, Int* a, Int* b) {
           *__result = (*a == *b);
         }
 
-        void minusInt_Int_Int(Int* __result, Int* a, Int* b) {
+        void minus_Int_Int(Int* __result, Int* a, Int* b) {
           *__result = (*a - *b);
         }
 
-        void plusInt_Int_Int(Int* __result, Int* a, Int* b) {
+        void plus_Int_Int(Int* __result, Int* a, Int* b) {
           *__result = (*a + *b);
         }
 
-        void multiplyInt_Int_Int(Int* __result, Int* a, Int* b) {
+        void multiply_Int_Int(Int* __result, Int* a, Int* b) {
           *__result = (*a * *b);
         }
 

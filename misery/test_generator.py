@@ -37,7 +37,7 @@ class TestGenerator(unittest.TestCase):
                         signature=ast.FuncSignature(),
                         body=[
                             ast.FuncCall(
-                                expr=ast.Ident('printInt'),
+                                expr=ast.Ident('print'),
                                 arg_list=[ast.Number(1)],
                             ),
                         ]
@@ -52,7 +52,7 @@ class TestGenerator(unittest.TestCase):
 
                   const_0 = 1;
 
-                  printInt_Int(&const_0);
+                  print_Int(&const_0);
                 }
 
             ''',
@@ -61,10 +61,10 @@ class TestGenerator(unittest.TestCase):
     def test_print_plus_int_result(self):
         body = [
             ast.FuncCall(
-                expr=ast.Ident('printInt'),
+                expr=ast.Ident('print'),
                 arg_list=[
                     ast.FuncCall(
-                        expr=ast.Ident('plusInt'),
+                        expr=ast.Ident('plus'),
                         arg_list=[ast.Number(1), ast.Number(2)],
                     ),
                 ],
@@ -92,8 +92,8 @@ class TestGenerator(unittest.TestCase):
                   const_0 = 1;
                   const_1 = 2;
 
-                  plusInt_Int_Int(&tmp_0, &const_0, &const_1);
-                  printInt_Int(&tmp_0);
+                  plus_Int_Int(&tmp_0, &const_0, &const_1);
+                  print_Int(&tmp_0);
                 }
 
             ''',
@@ -102,14 +102,14 @@ class TestGenerator(unittest.TestCase):
     def test_print_result_of_nested_calls(self):
         body = [
             ast.FuncCall(
-                expr=ast.Ident('printInt'),
+                expr=ast.Ident('print'),
                 arg_list=[
                     ast.FuncCall(
-                        expr=ast.Ident('plusInt'),
+                        expr=ast.Ident('plus'),
                         arg_list=[
                             ast.Number(1),
                             ast.FuncCall(
-                                expr=ast.Ident('plusInt'),
+                                expr=ast.Ident('plus'),
                                 arg_list=[
                                     ast.Number(2),
                                     ast.Number(3),
@@ -145,9 +145,9 @@ class TestGenerator(unittest.TestCase):
                   const_1 = 2;
                   const_2 = 3;
 
-                  plusInt_Int_Int(&tmp_0, &const_1, &const_2);
-                  plusInt_Int_Int(&tmp_1, &const_0, &tmp_0);
-                  printInt_Int(&tmp_1);
+                  plus_Int_Int(&tmp_0, &const_1, &const_2);
+                  plus_Int_Int(&tmp_1, &const_0, &tmp_0);
+                  print_Int(&tmp_1);
                 }
 
             ''',
