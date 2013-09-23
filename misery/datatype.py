@@ -35,7 +35,7 @@ def _mark_out_datatypes(ast_):
                 called_func_name = expr.called_expr.name
                 ident_list = ast_.ident_list
                 return_type = ident_list[called_func_name].return_type
-                if return_type is not None:
+                if return_type:
                     var_name = 'tmp_' + str(len(fd.tmp_vars))
                     fd.tmp_vars[var_name] = return_type
                     expr.binded_var_name = var_name

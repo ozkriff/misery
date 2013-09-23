@@ -149,7 +149,7 @@ class Generator(object):
         )
         called_func_name = func_call_expr.called_expr.name
         ident_list = self._ast.ident_list
-        if ident_list[called_func_name].return_type is not None:
+        if ident_list[called_func_name].return_type:
             out += '&' + func_call_expr.binded_var_name
             is_first = False
         for argument in func_call_expr.arg_list:
