@@ -22,13 +22,15 @@ class SimpleDataType(object):
 def _mark_out_datatypes(ast_):
     ''' Mark out 'datatype' fields to ast nodes. '''
 
-    def scan_stmt_vars(func_decl, stmt):
+    func_decl = None
 
-        def scan_expr_vars(func_decl, expr):
+    def scan_stmt_vars(stmt):
+
+        def scan_expr_vars(expr):
             fd = func_decl  # shortcut
             if isinstance(expr, ast.FuncCall):
                 for argument in expr.arg_list:
-                    scan_expr_vars(fd, argument)
+                    scan_expr_vars(argument)
                 assert isinstance(expr.called_expr, ast.Ident)
                 called_func_name = expr.called_expr.name
                 ident_list = ast_.ident_list
@@ -50,29 +52,28 @@ def _mark_out_datatypes(ast_):
             else:
                 raise Exception('Bad expr type: ' + str(type(expr)))
 
-        fd = func_decl  # shortcut
         if isinstance(stmt, ast.FuncCall):
-            scan_expr_vars(fd, stmt)
+            scan_expr_vars(stmt)
         elif isinstance(stmt, ast.VarDecl):
             datatype_ = copy.deepcopy(stmt.datatype)
-            fd.vars[stmt.name] = datatype_
+            func_decl.vars[stmt.name] = datatype_
             if stmt.allocate_memory_on_stack:
-                var_name = 'tmp_' + str(len(fd.tmp_vars))
-                fd.tmp_vars[var_name] = copy.deepcopy(stmt.datatype)
+                var_name = 'tmp_' + str(len(func_decl.tmp_vars))
+                func_decl.tmp_vars[var_name] = copy.deepcopy(stmt.datatype)
                 stmt.binded_var_name = var_name
-            scan_expr_vars(fd, stmt.rvalue_expr)
+            scan_expr_vars(stmt.rvalue_expr)
         elif isinstance(stmt, ast.Return):
-            scan_expr_vars(fd, stmt.expr)
+            scan_expr_vars(stmt.expr)
         elif isinstance(stmt, ast.Assign):
-            scan_expr_vars(fd, stmt.rvalue_expr)
+            scan_expr_vars(stmt.rvalue_expr)
         elif isinstance(stmt, ast.If):
-            scan_expr_vars(fd, stmt.condition)
-            mark_out_block(fd, stmt.branch_if)
+            scan_expr_vars(stmt.condition)
+            mark_out_block(stmt.branch_if)
             if stmt.branch_else:
-                mark_out_block(fd, stmt.branch_else)
+                mark_out_block(stmt.branch_else)
         elif isinstance(stmt, ast.For):
-            scan_expr_vars(fd, stmt.condition)
-            mark_out_block(fd, stmt.branch)
+            scan_expr_vars(stmt.condition)
+            mark_out_block(stmt.branch)
         else:
             raise Exception('Bad stmt type: ' + str(type(stmt)))
 
@@ -119,14 +120,15 @@ def _mark_out_datatypes(ast_):
         else:
             raise Exception('Bad type: ' + str(type(stmt)))
 
-    def mark_out_block(func_decl, block):
+    def mark_out_block(block):
         for stmt in block:
             mark_out_stmt(stmt)
-            scan_stmt_vars(func_decl, stmt)
+            scan_stmt_vars(stmt)
 
     for decl in ast_.decl_list:
         if isinstance(decl, ast.FuncDecl):
-            mark_out_block(decl, decl.body)
+            func_decl = decl
+            mark_out_block(decl.body)
         elif isinstance(decl, ast.StructDecl):
             pass
         else:
