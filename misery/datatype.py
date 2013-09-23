@@ -22,7 +22,7 @@ class SimpleDataType(object):
 def _mark_out_datatypes(ast_):
     ''' Mark out 'datatype' fields to ast nodes. '''
 
-    def scan_stmt_vars(ast_, func_decl, stmt):
+    def scan_stmt_vars(func_decl, stmt):
 
         def scan_expr_vars(func_decl, expr):
             fd = func_decl  # shortcut
@@ -122,7 +122,7 @@ def _mark_out_datatypes(ast_):
     def mark_out_block(func_decl, block):
         for stmt in block:
             mark_out_stmt(stmt)
-            scan_stmt_vars(ast_, func_decl, stmt)
+            scan_stmt_vars(func_decl, stmt)
 
     for decl in ast_.decl_list:
         if isinstance(decl, ast.FuncDecl):
