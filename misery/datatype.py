@@ -10,12 +10,75 @@ Data types.
 import copy
 from misery import (
     ast,
+    misc,
 )
 
 
 class SimpleDataType(object):
     def __init__(self, name):
         self.name = name
+
+
+def find_var_datatype(func_decl, var_name):
+    for parameter in func_decl.signature.par_list:
+        if parameter.name == var_name:
+            return parameter.datatype
+    for local_var_name in func_decl.vars.keys():
+        if local_var_name == var_name:
+            return func_decl.vars[local_var_name]
+    raise Exception('Bad var name: \'' + var_name + '\'')
+
+
+def ast_node_to_datatype(func_decl, ast_node):
+    if isinstance(ast_node, ast.Number):
+        return SimpleDataType('Int')
+    elif isinstance(ast_node, ast.String):
+        return SimpleDataType('String')
+    elif isinstance(ast_node, ast.Ident):
+        return find_var_datatype(func_decl, ast_node.name)
+    else:
+        raise Exception('Bad type: ' + str(type(ast_node)))
+
+
+def get_func_call_expr_datatype(func_decl, ident_list, func_call_expr):
+    ''' Get datatype of function call expr. '''
+    func_name = func_call_expr.called_expr.name  # shortcut
+    if func_name not in ident_list:
+        raise Exception('no func: \'' + func_name + '\'')
+    return find_func_signature(
+        ident_list,
+        func_decl,
+        func_call_expr,
+    ).return_type
+
+
+def find_func_signature(ident_list, func_decl, func_call_expr):
+    expr = func_call_expr  # shortcut
+    assert isinstance(expr.called_expr, ast.Ident)
+    func_name = expr.called_expr.name
+    signature_list = ident_list[func_name]
+    if not signature_list:
+        raise Exception('Can not find any signatures')
+    signature_list = misc.tolist(signature_list)
+    for signature in signature_list:
+        par_count = len(signature.par_list)
+        arg_count = len(expr.arg_list)
+        if par_count == 0 and arg_count == 0:
+            return signature
+        if par_count != arg_count:
+            continue
+        for arg, par in zip(expr.arg_list, signature.par_list):
+            if isinstance(arg, ast.FuncCall):
+                arg_type = find_func_signature(
+                    ident_list,
+                    func_decl,
+                    arg,
+                ).return_type
+            else:
+                arg_type = ast_node_to_datatype(func_decl, arg)
+            if arg_type.name == par.datatype.name:
+                return signature
+    raise Exception('Can not find matching signature')
 
 
 # TODO: split statement processing phases
@@ -33,8 +96,11 @@ def _mark_out_datatypes(ast_):
                     scan_expr_vars(argument)
                 assert isinstance(expr.called_expr, ast.Ident)
                 called_func_name = expr.called_expr.name
-                ident_list = ast_.ident_list
-                return_type = ident_list[called_func_name].return_type
+                return_type = find_func_signature(
+                    ast_.ident_list,
+                    func_decl,
+                    expr,
+                ).return_type
                 if return_type:
                     var_name = 'tmp_' + str(len(fd.tmp_vars))
                     fd.tmp_vars[var_name] = return_type
@@ -77,21 +143,19 @@ def _mark_out_datatypes(ast_):
         else:
             raise Exception('Bad stmt type: ' + str(type(stmt)))
 
-    def get_func_call_expr_datatype(func_call_expr):
-        func_name = func_call_expr.called_expr.name
-        if func_name not in ast_.ident_list:
-            raise Exception('no func: \'' + func_name + '\'')
-        return ast_.ident_list[func_name].return_type
-
     def get_expr_datatype(expr):
         if isinstance(expr, ast.Number):
             return SimpleDataType('Int')
         if isinstance(expr, ast.String):
             return SimpleDataType('String')
         elif isinstance(expr, ast.FuncCall):
-            return get_func_call_expr_datatype(expr)
+            return get_func_call_expr_datatype(
+                func_decl,
+                ast_.ident_list,
+                expr,
+            )
         elif isinstance(expr, ast.Ident):
-            return SimpleDataType('Int')  # TODO: get actual type
+            return ast_node_to_datatype(func_decl, expr)
         else:
             raise Exception('Bad type: ' + str(type(expr)))
 

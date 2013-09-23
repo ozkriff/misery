@@ -5,6 +5,7 @@
 from misery import (
     ast,
     datatype,
+    misc,
 )
 
 
@@ -56,7 +57,13 @@ def ident_table(ast_):
     ident_list = {}
     for decl in ast_.decl_list:
         if isinstance(decl, ast.FuncDecl):
-            ident_list[decl.name] = decl.signature
+            if decl.name in ident_list:
+                ident_list[decl.name] = misc.tolist(ident_list[decl.name])
+                ident_list[decl.name].append(decl.signature)
+            else:
+                ident_list[decl.name] = [
+                    decl.signature,
+                ]
         elif isinstance(decl, ast.StructDecl):
             ident_list[decl.name] = create_constructor_func(decl)
     ident_list.update(standart_funcs())

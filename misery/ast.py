@@ -71,6 +71,7 @@ class FuncDecl(object):
 
 
 class FuncSignature(object):
+
     def __init__(
         self,
         par_list=None,
@@ -80,6 +81,9 @@ class FuncSignature(object):
         self.par_list = misc.tolist(par_list)
         self.generic_par_list = misc.tolist(generic_par_list)
         self.return_type = return_type
+
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
 
 
 class Parameter(object):

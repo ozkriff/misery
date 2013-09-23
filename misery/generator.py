@@ -6,7 +6,17 @@ import copy
 import textwrap
 from misery import (
     ast,
+    datatype,
 )
+
+
+def func_signature_to_mangled_name(func_name, func_signature):
+    out = ''
+    out += func_name
+    for par in func_signature.par_list:
+        out += '_'
+        out += par.datatype.name
+    return out
 
 
 class Generator(object):
@@ -17,15 +27,15 @@ class Generator(object):
         typedef int Int;
         typedef char* String;
 
-        void Int_init(Int* __result, Int* n) {
+        void Int_Int_init(Int* __result, Int* n) {
           *__result = *n;
         }
 
-        void printInt(Int* n) {
+        void printInt_Int(Int* n) {
           printf("%d", *n);
         }
 
-        void printString(String* s) {
+        void printString_String(String* s) {
           printf("%s", *s);
         }
 
@@ -33,27 +43,27 @@ class Generator(object):
           printf("\\n");
         }
 
-        void isLessInt(Int* __result, Int* a, Int* b) {
+        void isLessInt_Int_Int(Int* __result, Int* a, Int* b) {
           *__result = (*a < *b);
         }
 
-        void isGreaterInt(Int* __result, Int* a, Int* b) {
+        void isGreaterInt_Int_Int(Int* __result, Int* a, Int* b) {
           *__result = (*a < *b);
         }
 
-        void isEqualInt(Int* __result, Int* a, Int* b) {
+        void isEqualInt_Int_Int(Int* __result, Int* a, Int* b) {
           *__result = (*a == *b);
         }
 
-        void minusInt(Int* __result, Int* a, Int* b) {
+        void minusInt_Int_Int(Int* __result, Int* a, Int* b) {
           *__result = (*a - *b);
         }
 
-        void plusInt(Int* __result, Int* a, Int* b) {
+        void plusInt_Int_Int(Int* __result, Int* a, Int* b) {
           *__result = (*a + *b);
         }
 
-        void multiplyInt(Int* __result, Int* a, Int* b) {
+        void multiplyInt_Int_Int(Int* __result, Int* a, Int* b) {
           *__result = (*a * *b);
         }
 
@@ -94,7 +104,12 @@ class Generator(object):
 
     def _generate_func_header(self, name, signature):
         out = ''
-        out += 'void ' + name + '('
+        out += 'void '
+        out += func_signature_to_mangled_name(
+            func_name=name,
+            func_signature=signature,
+        )
+        out += '('
         if signature.return_type:
             out += signature.return_type.name + '*' + ' ' + '__result'
         if len(signature.par_list) != 0:
@@ -148,8 +163,11 @@ class Generator(object):
             ast.Ident,
         )
         called_func_name = func_call_expr.called_expr.name
-        ident_list = self._ast.ident_list
-        if ident_list[called_func_name].return_type:
+        if datatype.find_func_signature(
+            self._ast.ident_list,
+            self._func_decl,
+            func_call_expr
+        ).return_type:
             out += '&' + func_call_expr.binded_var_name
             is_first = False
         for argument in func_call_expr.arg_list:
@@ -171,7 +189,15 @@ class Generator(object):
             func_call_expr.called_expr,
             ast.Ident,
         )
-        called_func_name = func_call_expr.called_expr.name
+        func_signature = datatype.find_func_signature(
+            self._ast.ident_list,
+            self._func_decl,
+            func_call_expr
+        )
+        called_func_name = func_signature_to_mangled_name(
+            func_name=func_call_expr.called_expr.name,
+            func_signature=func_signature,
+        )
         out += self._generate_expr_dependencies(
             func_call_expr=func_call_expr,
         )

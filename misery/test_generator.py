@@ -52,7 +52,7 @@ class TestGenerator(unittest.TestCase):
 
                   const_0 = 1;
 
-                  printInt(&const_0);
+                  printInt_Int(&const_0);
                 }
 
             ''',
@@ -92,8 +92,8 @@ class TestGenerator(unittest.TestCase):
                   const_0 = 1;
                   const_1 = 2;
 
-                  plusInt(&tmp_0, &const_0, &const_1);
-                  printInt(&tmp_0);
+                  plusInt_Int_Int(&tmp_0, &const_0, &const_1);
+                  printInt_Int(&tmp_0);
                 }
 
             ''',
@@ -145,9 +145,9 @@ class TestGenerator(unittest.TestCase):
                   const_1 = 2;
                   const_2 = 3;
 
-                  plusInt(&tmp_0, &const_1, &const_2);
-                  plusInt(&tmp_1, &const_0, &tmp_0);
-                  printInt(&tmp_1);
+                  plusInt_Int_Int(&tmp_0, &const_1, &const_2);
+                  plusInt_Int_Int(&tmp_1, &const_0, &tmp_0);
+                  printInt_Int(&tmp_1);
                 }
 
             ''',
@@ -208,10 +208,10 @@ class TestGenerator(unittest.TestCase):
                 ]
             ),
             expected_output='''
-                void testFunc(Int* n1, Int* n2);
+                void testFunc_Int_Int(Int* n1, Int* n2);
                 void start(void);
 
-                void testFunc(Int* n1, Int* n2) {
+                void testFunc_Int_Int(Int* n1, Int* n2) {
                 }
 
                 void start(void) {
@@ -221,7 +221,7 @@ class TestGenerator(unittest.TestCase):
                   const_0 = 1;
                   const_1 = 2;
 
-                  testFunc(&const_0, &const_1);
+                  testFunc_Int_Int(&const_0, &const_1);
                 }
 
             ''',
