@@ -15,7 +15,6 @@ def ident_table(ast_):
     def standart_funcs():
         datatype_int = datatype.SimpleDataType('Int')
         datatype_string = datatype.SimpleDataType('String')
-        ident_list = {}
         std_signature = ast.FuncSignature(
             return_type=datatype.SimpleDataType('Int'),
             par_list=[
@@ -23,32 +22,34 @@ def ident_table(ast_):
                 ast.Parameter(name='b', datatype=datatype_int),
             ],
         )
-        # Int constructor
-        ident_list['Int'] = ast.FuncSignature(
-            return_type=datatype_int,
-            par_list=[
-                ast.Parameter(name='n', datatype=datatype_int),
-            ],
-        )
-        ident_list['printNewLine'] = ast.FuncSignature()
-        ident_list['print'] = [
-            ast.FuncSignature(
-                par_list=[
-                    ast.Parameter(name='s', datatype=datatype_string),
-                ],
-            ),
-            ast.FuncSignature(
+        ident_list = {
+            # Int constructor
+            'Int': ast.FuncSignature(
+                return_type=datatype_int,
                 par_list=[
                     ast.Parameter(name='n', datatype=datatype_int),
                 ],
             ),
-        ]
-        ident_list['isEqual'] = std_signature
-        ident_list['isLess'] = std_signature
-        ident_list['isGreater'] = std_signature
-        ident_list['minus'] = std_signature
-        ident_list['plus'] = std_signature
-        ident_list['multiply'] = std_signature
+            'printNewLine': ast.FuncSignature(),
+            'print': [
+                ast.FuncSignature(
+                    par_list=[
+                        ast.Parameter(name='s', datatype=datatype_string),
+                    ],
+                ),
+                ast.FuncSignature(
+                    par_list=[
+                        ast.Parameter(name='n', datatype=datatype_int),
+                    ],
+                ),
+            ],
+            'isEqual': std_signature,
+            'isLess': std_signature,
+            'isGreater': std_signature,
+            'minus': std_signature,
+            'plus': std_signature,
+            'multiply': std_signature,
+        }
         return ident_list
 
     def create_constructor_func(struct_decl):
