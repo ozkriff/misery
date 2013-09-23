@@ -745,6 +745,56 @@ class TestTranslator(unittest.TestCase):
             expected_stdout='1\n',
         )
 
+    def test_two_vars_for_one_memory_location(self):
+        ''' Try to create two variables for one memory location. '''
+        check_translation(
+            test_case=self,
+            input_mis_code='''
+                func start () {
+                    a := Int(1)
+                    printInt(a)
+                    printNewLine()
+                    b := a
+                    printInt(b)
+                    printNewLine()
+                    b = 2
+                    printInt(a)
+                    printNewLine()
+                }
+            ''',
+            expected_c_code='''
+                void start(void);
+
+                void start(void) {
+                  Int* a;
+                  Int* b;
+                  Int tmp_0;
+                  Int const_0;
+                  Int const_1;
+
+                  const_0 = 1;
+                  const_1 = 2;
+
+                  a = &tmp_0;
+                  Int_init(&tmp_0, &const_0);
+                  printInt(a);
+                  printNewLine();
+                  b = a;
+                  printInt(b);
+                  printNewLine();
+                  *b = const_1;
+                  printInt(a);
+                  printNewLine();
+                }
+
+            ''',
+            expected_stdout=(
+                '1\n'
+                '1\n'
+                '2\n'
+            ),
+        )
+
     def test_fib_1(self):
         ''' Process fib func. '''
         check_translation(

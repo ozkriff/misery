@@ -89,6 +89,8 @@ def _mark_out_datatypes(ast_):
             return SimpleDataType('String')
         elif isinstance(expr, ast.FuncCall):
             return get_func_call_expr_datatype(expr)
+        elif isinstance(expr, ast.Ident):
+            return SimpleDataType('Int')  # TODO: get actual type
         else:
             raise Exception('Bad type: ' + str(type(expr)))
 

@@ -192,6 +192,8 @@ class Generator(object):
         out = ''
         if isinstance(expr, ast.FuncCall):
             out += self._generate_func_call_expr(expr)
+        elif isinstance(expr, ast.Ident):
+            pass  # ok
         else:
             raise Exception('Bad expr type: ' + str(type(expr)))
         return out
@@ -303,7 +305,10 @@ class Generator(object):
                 out += self._indent()
                 out += stmt.name
                 out += ' = '
-                out += '&' + stmt.rvalue_expr.binded_var_name
+                if isinstance(stmt.rvalue_expr, ast.Ident):
+                    out += stmt.rvalue_expr.name
+                else:
+                    out += '&' + stmt.rvalue_expr.binded_var_name
                 out += ';\n'
                 out += self._generate_expr(stmt.rvalue_expr)
         elif isinstance(stmt, ast.Assign):
