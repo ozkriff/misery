@@ -57,26 +57,40 @@ class TestMarkOutDatatypes(unittest.TestCase):
                 )
             ]
         )
-        expected_output = ast.Module(
-            decl_list=[
-                ast.FuncDecl(
-                    name='start',
-                    signature=ast.FuncSignature(),
-                    body=[
-                        ast.VarDecl(
-                            name='testVar',
-                            expr=ast.Number(666),
-                            datatype=datatype.SimpleDataType('Int'),
-                        ),
-                    ],
-                )
-            ]
-        )
+
+        def get_expected_output():
+            expected_output = ast.Module(
+                decl_list=[
+                    ast.FuncDecl(
+                        name='start',
+                        signature=ast.FuncSignature(),
+                        body=[
+                            ast.VarDecl(
+                                name='testVar',
+                                expr=ast.Number(666),
+                                datatype=datatype.SimpleDataType('Int'),
+                            ),
+                        ],
+                    )
+                ]
+            )
+            expected_start_func = expected_output.decl_list[0]
+            expected_start_func.constants = {
+                'const_0': ast.Number(value=666),
+            }
+            expected_start_func.vars = {
+                'testVar': datatype.SimpleDataType('Int'),
+            }
+            var_decl = expected_start_func.body[0]
+            var_decl.rvalue_expr.binded_var_name = 'const_0'
+            return expected_output
+
+        expected_output = get_expected_output()
         real_output = datatype.mark_out_datatypes(input_ast)
         misc.assert_equal(self, expected_output, real_output)
 
     def test_integer_var_decl_with_plus_integer(self):
-        int_data_type = datatype.SimpleDataType('Int'),
+        int_data_type = datatype.SimpleDataType('Int')
         std_ident_list = {
             'plusInt': ast.FuncSignature(
                 return_type=datatype.SimpleDataType('Int'),
@@ -107,28 +121,49 @@ class TestMarkOutDatatypes(unittest.TestCase):
             ]
         )
         input_ast.ident_list = std_ident_list
-        expected_output = ast.Module(
-            decl_list=[
-                ast.FuncDecl(
-                    name='start',
-                    signature=ast.FuncSignature(),
-                    body=[
-                        ast.VarDecl(
-                            name='testVar',
-                            expr=ast.FuncCall(
-                                expr=ast.Ident('plusInt'),
-                                arg_list=[
-                                    ast.Number(1),
-                                    ast.Number(2),
-                                ],
+
+        def get_expected_output():
+            expected_output = ast.Module(
+                decl_list=[
+                    ast.FuncDecl(
+                        name='start',
+                        signature=ast.FuncSignature(),
+                        body=[
+                            ast.VarDecl(
+                                name='testVar',
+                                expr=ast.FuncCall(
+                                    expr=ast.Ident('plusInt'),
+                                    arg_list=[
+                                        ast.Number(1),
+                                        ast.Number(2),
+                                    ],
+                                ),
+                                datatype=int_data_type,
                             ),
-                            datatype=datatype.SimpleDataType('Int'),
-                        ),
-                    ],
-                )
-            ]
-        )
-        expected_output.ident_list = std_ident_list
+                        ],
+                    ),
+                ]
+            )
+            expected_start_func = expected_output.decl_list[0]
+            expected_start_func.constants = {
+                'const_0': ast.Number(value=1),
+                'const_1': ast.Number(value=2),
+            }
+            expected_start_func.tmp_vars = {
+                'tmp_0': int_data_type,
+            }
+            expected_start_func.vars = {
+                'testVar': int_data_type,
+            }
+            var_decl = expected_start_func.body[0]
+            var_decl.rvalue_expr.binded_var_name = 'tmp_0'
+            arg_list = var_decl.rvalue_expr.arg_list
+            arg_list[0].binded_var_name = 'const_0'
+            arg_list[1].binded_var_name = 'const_1'
+            expected_output.ident_list = std_ident_list
+            return expected_output
+
+        expected_output = get_expected_output()
         real_output = datatype.mark_out_datatypes(input_ast)
         misc.assert_equal(self, expected_output, real_output)
 

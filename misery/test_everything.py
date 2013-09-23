@@ -26,7 +26,6 @@ def get_generator(input_mis_code):
     )
     ast_.ident_list = ident_table.ident_table(ast_)
     ast_ = datatype.mark_out_datatypes(ast_=ast_)
-    generator.scan_vars(ast_)
     generator_ = generator.Generator(ast_=ast_)
     return generator_
 
