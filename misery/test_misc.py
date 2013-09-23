@@ -269,11 +269,18 @@ class TestTolist(unittest.TestCase):
             [],
         )
 
-    def test_2(self):
+    def test_3(self):
         self.assertEqual(
             misc.tolist([1, 2]),
             [1, 2],
         )
+
+    def test_obj_to_list(self):
+        self.assertEqual(
+            misc.tolist(1),
+            [1],
+        )
+
 
 
 # vim: set tabstop=4 shiftwidth=4 softtabstop=4 expandtab:

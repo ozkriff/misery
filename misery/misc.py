@@ -146,6 +146,8 @@ def remove_quotation_marks(s):
 def tolist(obj):
     if obj is None:
         obj = []
+    elif not isinstance(obj, list):
+        obj = [obj]
     return obj
 
 
