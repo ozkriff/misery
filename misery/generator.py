@@ -19,6 +19,11 @@ def func_signature_to_mangled_name(func_name, func_signature):
     return out
 
 
+def _is_constructor(func_name):
+    first_letter = func_name[0]
+    return first_letter.istitle()
+
+
 class Generator(object):
 
     prefix = '''
@@ -174,10 +179,6 @@ class Generator(object):
             out += self._generate_argument(argument)
         return out
 
-    def _is_constructor(self, func_name):
-        first_letter = func_name[0]
-        return first_letter.istitle()
-
     def _generate_func_call_expr(self, func_call_expr):
         out = ''
         # TODO: implement other exprs
@@ -198,7 +199,7 @@ class Generator(object):
             func_call_expr=func_call_expr,
         )
         out += self._indent()
-        if self._is_constructor(called_func_name):
+        if _is_constructor(called_func_name):
             out += called_func_name + '_init'
         else:
             out += called_func_name
