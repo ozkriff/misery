@@ -74,14 +74,7 @@ def find_func_signature(ident_list, func_decl, func_call_expr):
         if par_count != arg_count:
             continue
         for arg, param in zip(expr.arg_list, signature.param_list):
-            if isinstance(arg, ast.FuncCall):
-                arg_type = find_func_signature(
-                    ident_list,
-                    func_decl,
-                    arg,
-                ).return_type
-            else:
-                arg_type = get_expr_datatype(ident_list, func_decl, arg)
+            arg_type = get_expr_datatype(ident_list, func_decl, arg)
             if arg_type.name == param.datatype.name:
                 return signature
     raise Exception('Can not find matching signature')
