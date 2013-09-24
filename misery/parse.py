@@ -77,7 +77,7 @@ def make_lexer():
     # t_DOT = r'\.'
     t_STRING = r'"[^"]*"'
 
-    def t_IDENTIFIER(t):
+    def t_IDENT(t):
         r'[a-zA-Z_][a-zA-Z0-9_]*'
         t.type = reserved.get(t.value, 'IDENT')
         return t
