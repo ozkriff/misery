@@ -400,6 +400,24 @@ class TestParser(unittest.TestCase):
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
+    def test_type_prefix_1(self):
+        input_string = 'func testFunc () -> R:Int {}'
+        real_ast = _parse(input_string)
+        expected_ast = ast.Module(
+            decl_list=[
+                ast.FuncDecl(
+                    name='testFunc',
+                    signature=ast.FuncSignature(
+                        return_type=datatype.SimpleDataType(
+                            name='Int',
+                            prefix_list=['R'],
+                        ),
+                    ),
+                )
+            ]
+        )
+        misc.assert_equal(self, expected_ast, real_ast)
+
     def test_string(self):
         ''' Parse anythong with string. '''
         input_string = 'func start () { return "hi" }'

@@ -39,7 +39,7 @@ tokens = [
     'LT',
     'GT',
     'COMMA',
-    # 'COLON',
+    'COLON',
     'ARROW',
     # 'DOT',
 ] + list(reserved.values())
@@ -73,7 +73,7 @@ def make_lexer():
     t_LT = r'<'
     t_GT = r'>'
     t_COMMA = r','
-    # t_COLON = r':'
+    t_COLON = r':'
     # t_DOT = r'\.'
     t_STRING = r'"[^"]*"'
 
@@ -205,9 +205,18 @@ def make_parser():
             expr=p[5],
         )
 
-    def p_type_ident(p):
+    def p_type_ident_1(p):
         'type : IDENT'
         p[0] = datatype.SimpleDataType(name=p[1])
+
+    def p_type_ident_2(p):
+        'type : IDENT COLON IDENT'
+        p[0] = datatype.SimpleDataType(
+            name=p[3],
+            prefix_list=[
+                p[1],
+            ],
+        )
 
     def p_field_list_1(p):
         'field_list : field'
@@ -282,7 +291,11 @@ def make_parser():
 
     def p_stmt_if_else(p):
         'stmt : IF expr block ELSE block'
-        p[0] = ast.If(condition=p[2], branch_if=p[3], branch_else=p[5])
+        p[0] = ast.If(
+            condition=p[2],
+            branch_if=p[3],
+            branch_else=p[5],
+        )
 
     def p_expr_list_1(p):
         'expr_list :'

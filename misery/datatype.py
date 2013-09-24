@@ -15,8 +15,9 @@ from misery import (
 
 
 class SimpleDataType(object):
-    def __init__(self, name):
+    def __init__(self, name, prefix_list=None):
         self.name = name
+        self.prefix_list = misc.tolist(prefix_list)
 
 
 def find_var_datatype(func_decl, var_name):
