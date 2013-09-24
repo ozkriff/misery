@@ -200,7 +200,10 @@ def make_parser():
     def p_const_decl(p):
         'decl : CONST IDENT type COLONASSIGN expr'
         p[0] = ast.ConstDecl(
-            name=p[2], datatype=p[3], expr=p[5])
+            name=p[2],
+            datatype=p[3],
+            expr=p[5],
+        )
 
     def p_type_ident(p):
         'type : IDENT'
