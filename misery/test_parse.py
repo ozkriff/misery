@@ -393,7 +393,7 @@ class TestParser(unittest.TestCase):
                 ast.FuncDecl(
                     name='testFunc',
                     signature=ast.FuncSignature(
-                        generic_par_list=["Int"],
+                        generic_par_list=['Int'],
                     ),
                 )
             ]
