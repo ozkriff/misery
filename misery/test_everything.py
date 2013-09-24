@@ -179,8 +179,8 @@ class TestTranslator(unittest.TestCase):
             test_case=self,
             input_mis_code='''
                 struct MyStruct {
-                  field1: Int
-                  field2: Int
+                  field1 Int
+                  field2 Int
                 }
                 func start () {
                   t := MyStruct()
@@ -215,10 +215,10 @@ class TestTranslator(unittest.TestCase):
             test_case=self,
             input_mis_code='''
                 struct MyStruct {
-                  field1: Int
-                  field2: Int
+                  field1 Int
+                  field2 Int
                 }
-                func someFunc (x:MyStruct) -> MyStruct{
+                func someFunc (x MyStruct) -> MyStruct{
                   return x
                 }
                 func start () {
@@ -660,7 +660,7 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                func someNumber (xxx:Int) -> Int {
+                func someNumber (xxx Int) -> Int {
                   return minus(100 xxx)
                 }
                 func start () {
@@ -799,10 +799,10 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                func pr(n:Int) {
+                func pr(n Int) {
                   print(n)
                 }
-                func pr(s:String) {
+                func pr(s String) {
                   print(s)
                 }
                 func start () {
@@ -854,7 +854,7 @@ class TestTranslator(unittest.TestCase):
                   print(fib(10))
                   printNewLine()
                 }
-                func fib (n:Int) -> Int {
+                func fib (n Int) -> Int {
                   if isLess(n 2) {
                     return n
                   } else {
@@ -923,7 +923,7 @@ class TestTranslator(unittest.TestCase):
                   print(fac(3))
                   printNewLine()
                 }
-                func fac (n:Int) -> Int {
+                func fac (n Int) -> Int {
                   if isEqual(n 0) {
                     return 1
                   }

@@ -76,8 +76,8 @@ class TestParser(unittest.TestCase):
         ''' Parse struct type decl. '''
         input_string = (
             'struct MyStruct {\n'
-            '  field1: Int\n'
-            '  field2: Float\n'
+            '  field1 Int\n'
+            '  field2 Float\n'
             '}\n'
         )
         real_ast = _parse(input_string)
@@ -102,7 +102,7 @@ class TestParser(unittest.TestCase):
 
     def test_const_decl(self):
         ''' Parse constant decl. '''
-        input_string = 'const importantIdent:Int := 10'
+        input_string = 'const importantIdent Int := 10'
         real_ast = _parse(input_string)
         expected_ast = ast.Module(
             decl_list=[
@@ -147,7 +147,7 @@ class TestParser(unittest.TestCase):
 
     def test_simple_func_with_param(self):
         ''' Parse func that takes one param. '''
-        input_string = 'func testfunc (param:ParamType) {}'
+        input_string = 'func testfunc (param ParamType) {}'
         real_ast = _parse(input_string)
         signature = ast.FuncSignature(
             param_list=[
@@ -169,7 +169,7 @@ class TestParser(unittest.TestCase):
 
     def test_simple_func_with_2_params(self):
         ''' Parse func that takes two params. '''
-        input_string = 'func testfunc (par1:ParamType par2:ParamType) {}'
+        input_string = 'func testfunc (par1 ParamType, par2 ParamType) {}'
         real_ast = _parse(input_string)
         signature = ast.FuncSignature(
             param_list=[

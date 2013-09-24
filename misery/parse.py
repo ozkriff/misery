@@ -38,8 +38,8 @@ tokens = [
     'RCURLY',
     'LT',
     'GT',
-    # 'COMMA',
-    'COLON',
+    'COMMA',
+    # 'COLON',
     'ARROW',
     # 'DOT',
 ] + list(reserved.values())
@@ -72,8 +72,8 @@ def make_lexer():
     t_RCURLY = r'\}'
     t_LT = r'<'
     t_GT = r'>'
-    # t_COMMA = r','
-    t_COLON = r':'
+    t_COMMA = r','
+    # t_COLON = r':'
     # t_DOT = r'\.'
     t_STRING = r'"[^"]*"'
 
@@ -198,9 +198,9 @@ def make_parser():
         p[0] = ast.StructDecl(name=p[2], field_list=p[4])
 
     def p_const_decl(p):
-        'decl : CONST IDENT COLON type COLONASSIGN expr'
+        'decl : CONST IDENT type COLONASSIGN expr'
         p[0] = ast.ConstDecl(
-            name=p[2], datatype=p[4], expr=p[6])
+            name=p[2], datatype=p[3], expr=p[5])
 
     def p_type_ident(p):
         'type : IDENT'
@@ -216,21 +216,25 @@ def make_parser():
         p[0] = p[1]
 
     def p_field(p):
-        'field : IDENT COLON type'
-        p[0] = ast.Field(name=p[1], datatype=p[3])
+        'field : IDENT type'
+        p[0] = ast.Field(name=p[1], datatype=p[2])
 
     def p_param_list_1(p):
         'param_list :'
         p[0] = []
 
     def p_param_list_2(p):
-        'param_list : param_list param'
-        p[1].append(p[2])
+        'param_list : param'
+        p[0] = [p[1]]
+
+    def p_param_list_3(p):
+        'param_list : param_list COMMA param'
+        p[1].append(p[3])
         p[0] = p[1]
 
     def p_param(p):
-        'param : IDENT COLON type'
-        p[0] = ast.Param(name=p[1], datatype=p[3])
+        'param : IDENT type'
+        p[0] = ast.Param(name=p[1], datatype=p[2])
 
     def p_stmt_list_empty(p):
         'stmt_list :'
