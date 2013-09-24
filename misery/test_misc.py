@@ -134,7 +134,7 @@ class TestPrettyPrinter(unittest.TestCase):
         self.assertEqual(expected_output, real_output)
 
     def test_empty_object(self):
-        ''' Print object wothout fields. '''
+        ''' Print object without fields. '''
         class TestClass:
             def __init__(self):
                 pass
@@ -144,7 +144,7 @@ class TestPrettyPrinter(unittest.TestCase):
         self.assertEqual(expected_output, real_output)
 
     def test_object_with_one_field(self):
-        ''' Print object wothout fields. '''
+        ''' Print object without fields. '''
         class TestClass:
             def __init__(self):
                 self.field = 0
@@ -155,7 +155,7 @@ class TestPrettyPrinter(unittest.TestCase):
         self.assertEqual(expected_output, real_output)
 
     def test_object_with_two_field(self):
-        ''' Print object wothout fields. '''
+        ''' Print object without fields. '''
         class TestClass:
             def __init__(self):
                 self.field1 = 0
