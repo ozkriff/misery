@@ -105,11 +105,7 @@ def _mark_out_datatypes(ast_):
                     var_name = 'tmp_' + str(len(fd.tmp_vars))
                     fd.tmp_vars[var_name] = return_type
                     expr.binded_var_name = var_name
-            elif isinstance(expr, ast.Number):
-                var_name = 'const_' + str(len(fd.constants))
-                fd.constants[var_name] = copy.deepcopy(expr)
-                expr.binded_var_name = var_name
-            elif isinstance(expr, ast.String):
+            elif isinstance(expr, (ast.Number, ast.String)):
                 var_name = 'const_' + str(len(fd.constants))
                 fd.constants[var_name] = copy.deepcopy(expr)
                 expr.binded_var_name = var_name
