@@ -73,16 +73,16 @@ class FuncDecl(object):
 class FuncSignature(object):
     def __init__(
         self,
-        par_list=None,
-        generic_par_list=None,
+        param_list=None,
+        generic_param_list=None,
         return_type=None,
     ):
-        self.par_list = misc.tolist(par_list)
-        self.generic_par_list = misc.tolist(generic_par_list)
+        self.param_list = misc.tolist(param_list)
+        self.generic_param_list = misc.tolist(generic_param_list)
         self.return_type = return_type
 
 
-class Parameter(object):
+class Param(object):
     def __init__(self, name, datatype):
         self.name = name
         self.datatype = datatype

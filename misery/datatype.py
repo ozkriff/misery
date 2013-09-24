@@ -20,9 +20,9 @@ class SimpleDataType(object):
 
 
 def find_var_datatype(func_decl, var_name):
-    for parameter in func_decl.signature.par_list:
-        if parameter.name == var_name:
-            return parameter.datatype
+    for param in func_decl.signature.param_list:
+        if param.name == var_name:
+            return param.datatype
     for local_var_name in func_decl.vars.keys():
         if local_var_name == var_name:
             return func_decl.vars[local_var_name]
@@ -67,13 +67,13 @@ def find_func_signature(ident_list, func_decl, func_call_expr):
         raise Exception('Can not find any signatures')
     signature_list = misc.tolist(signature_list)
     for signature in signature_list:
-        par_count = len(signature.par_list)
+        par_count = len(signature.param_list)
         arg_count = len(expr.arg_list)
         if par_count == 0 and arg_count == 0:
             return signature
         if par_count != arg_count:
             continue
-        for arg, par in zip(expr.arg_list, signature.par_list):
+        for arg, param in zip(expr.arg_list, signature.param_list):
             if isinstance(arg, ast.FuncCall):
                 arg_type = find_func_signature(
                     ident_list,
@@ -82,7 +82,7 @@ def find_func_signature(ident_list, func_decl, func_call_expr):
                 ).return_type
             else:
                 arg_type = get_expr_datatype(ident_list, func_decl, arg)
-            if arg_type.name == par.datatype.name:
+            if arg_type.name == param.datatype.name:
                 return signature
     raise Exception('Can not find matching signature')
 

@@ -94,9 +94,9 @@ class TestMarkOutDatatypes(unittest.TestCase):
         std_ident_list = {
             'plusInt': ast.FuncSignature(
                 return_type=datatype.SimpleDataType('Int'),
-                par_list=[
-                    ast.Parameter(name='a', datatype=int_data_type),
-                    ast.Parameter(name='b', datatype=int_data_type),
+                param_list=[
+                    ast.Param(name='a', datatype=int_data_type),
+                    ast.Param(name='b', datatype=int_data_type),
                 ],
             ),
         }

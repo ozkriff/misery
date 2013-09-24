@@ -145,15 +145,15 @@ class TestParser(unittest.TestCase):
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
-    def test_simple_func_with_parameter(self):
-        ''' Parse func that takes one parameter. '''
-        input_string = 'func testfunc (par:ParType) {}'
+    def test_simple_func_with_param(self):
+        ''' Parse func that takes one param. '''
+        input_string = 'func testfunc (param:ParamType) {}'
         real_ast = _parse(input_string)
         signature = ast.FuncSignature(
-            par_list=[
-                ast.Parameter(
-                    name='par',
-                    datatype=datatype.SimpleDataType('ParType')
+            param_list=[
+                ast.Param(
+                    name='param',
+                    datatype=datatype.SimpleDataType('ParamType')
                 )
             ],
         )
@@ -167,19 +167,19 @@ class TestParser(unittest.TestCase):
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
-    def test_simple_func_with_2_parameters(self):
-        ''' Parse func that takes two parameters. '''
-        input_string = 'func testfunc (par1:ParType par2:ParType) {}'
+    def test_simple_func_with_2_params(self):
+        ''' Parse func that takes two params. '''
+        input_string = 'func testfunc (par1:ParamType par2:ParamType) {}'
         real_ast = _parse(input_string)
         signature = ast.FuncSignature(
-            par_list=[
-                ast.Parameter(
+            param_list=[
+                ast.Param(
                     name='par1',
-                    datatype=datatype.SimpleDataType('ParType'),
+                    datatype=datatype.SimpleDataType('ParamType'),
                 ),
-                ast.Parameter(
+                ast.Param(
                     name='par2',
-                    datatype=datatype.SimpleDataType('ParType'),
+                    datatype=datatype.SimpleDataType('ParamType'),
                 )
             ]
         )
@@ -393,7 +393,7 @@ class TestParser(unittest.TestCase):
                 ast.FuncDecl(
                     name='testFunc',
                     signature=ast.FuncSignature(
-                        generic_par_list=['Int'],
+                        generic_param_list=['Int'],
                     ),
                 )
             ]

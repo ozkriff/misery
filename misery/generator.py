@@ -13,9 +13,9 @@ from misery import (
 def func_signature_to_mangled_name(func_name, func_signature):
     out = ''
     out += func_name
-    for par in func_signature.par_list:
+    for param in func_signature.param_list:
         out += '_'
-        out += par.datatype.name
+        out += param.datatype.name
     return out
 
 
@@ -98,15 +98,15 @@ class Generator(object):
 
     def _generate_func_header(self, name, signature):
 
-        def generate_func_parameters(par_list):
+        def generate_func_params(param_list):
             out = ''
             is_first = True
-            for parameter in par_list:
+            for param in param_list:
                 if is_first:
                     is_first = False
                 else:
                     out += ', '
-                out += parameter.datatype.name + '*' + ' ' + parameter.name
+                out += param.datatype.name + '*' + ' ' + param.name
             return out
 
         out = ''
@@ -118,10 +118,10 @@ class Generator(object):
         out += '('
         if signature.return_type:
             out += signature.return_type.name + '*' + ' ' + '__result'
-        if len(signature.par_list) != 0:
+        if len(signature.param_list) != 0:
             if signature.return_type:
                 out += ', '
-            out += generate_func_parameters(signature.par_list)
+            out += generate_func_params(signature.param_list)
         elif not signature.return_type:
             out += 'void'
         out += ')'

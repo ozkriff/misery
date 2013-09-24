@@ -171,18 +171,18 @@ def make_parser():
         p[0] = [p[2]]
 
     def p_func_signature(p):
-        'func_signature : generic LPAREN par_list RPAREN ARROW type'
+        'func_signature : generic LPAREN param_list RPAREN ARROW type'
         p[0] = ast.FuncSignature(
-            par_list=p[3],
+            param_list=p[3],
             return_type=p[6],
-            generic_par_list=p[1],
+            generic_param_list=p[1],
         )
 
     def p_func_signature_without_return_type(p):
-        'func_signature : generic LPAREN par_list RPAREN'
+        'func_signature : generic LPAREN param_list RPAREN'
         p[0] = ast.FuncSignature(
-            par_list=p[3],
-            generic_par_list=p[1],
+            param_list=p[3],
+            generic_param_list=p[1],
         )
 
     def p_func_decl(p):
@@ -219,18 +219,18 @@ def make_parser():
         'field : IDENT COLON type'
         p[0] = ast.Field(name=p[1], datatype=p[3])
 
-    def p_par_list_1(p):
-        'par_list :'
+    def p_param_list_1(p):
+        'param_list :'
         p[0] = []
 
-    def p_par_list_2(p):
-        'par_list : par_list parameter'
+    def p_param_list_2(p):
+        'param_list : param_list param'
         p[1].append(p[2])
         p[0] = p[1]
 
-    def p_parameter(p):
-        'parameter : IDENT COLON type'
-        p[0] = ast.Parameter(name=p[1], datatype=p[3])
+    def p_param(p):
+        'param : IDENT COLON type'
+        p[0] = ast.Param(name=p[1], datatype=p[3])
 
     def p_stmt_list_empty(p):
         'stmt_list :'

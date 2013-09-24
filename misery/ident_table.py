@@ -17,29 +17,29 @@ def ident_table(ast_):
         datatype_string = datatype.SimpleDataType('String')
         std_signature = ast.FuncSignature(
             return_type=datatype.SimpleDataType('Int'),
-            par_list=[
-                ast.Parameter(name='a', datatype=datatype_int),
-                ast.Parameter(name='b', datatype=datatype_int),
+            param_list=[
+                ast.Param(name='a', datatype=datatype_int),
+                ast.Param(name='b', datatype=datatype_int),
             ],
         )
         ident_list = {
             # Int constructor
             'Int': ast.FuncSignature(
                 return_type=datatype_int,
-                par_list=[
-                    ast.Parameter(name='n', datatype=datatype_int),
+                param_list=[
+                    ast.Param(name='n', datatype=datatype_int),
                 ],
             ),
             'printNewLine': ast.FuncSignature(),
             'print': [
                 ast.FuncSignature(
-                    par_list=[
-                        ast.Parameter(name='s', datatype=datatype_string),
+                    param_list=[
+                        ast.Param(name='s', datatype=datatype_string),
                     ],
                 ),
                 ast.FuncSignature(
-                    par_list=[
-                        ast.Parameter(name='n', datatype=datatype_int),
+                    param_list=[
+                        ast.Param(name='n', datatype=datatype_int),
                     ],
                 ),
             ],

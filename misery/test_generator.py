@@ -175,7 +175,7 @@ class TestGenerator(unittest.TestCase):
         real_output = generator_.generate_full()
         self.assertNotEqual('', real_output)
 
-    def test_multiply_func_parameters(self):
+    def test_multiply_func_params(self):
         check_translation(
             test_case=self,
             input_ast=ast.Module(
@@ -183,12 +183,12 @@ class TestGenerator(unittest.TestCase):
                     ast.FuncDecl(
                         name='testFunc',
                         signature=ast.FuncSignature(
-                            par_list=[
-                                ast.Parameter(
+                            param_list=[
+                                ast.Param(
                                     name='n1',
                                     datatype=ast.Ident('Int')
                                 ),
-                                ast.Parameter(
+                                ast.Param(
                                     name='n2',
                                     datatype=ast.Ident('Int')
                                 ),
