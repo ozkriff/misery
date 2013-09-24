@@ -131,12 +131,8 @@ class Generator(object):
     def _is_correct_ident(self, name):
         ''' Check if this is correct ident '''
         fd = self._func_decl  # shortcut
-        for parameter in fd.signature.par_list:
-            if parameter.name == name:
-                return True
-        for var_name in fd.vars.keys():
-            if var_name == name:
-                return True
+        if datatype.find_var_datatype(fd, name):
+            return True
         return False
 
     def _generate_argument(self, argument):
