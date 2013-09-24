@@ -139,13 +139,6 @@ def _mark_out_datatypes(ast_):
         else:
             raise Exception('Bad stmt type: ' + str(type(stmt)))
 
-    def mark_out_var_decl_stmt(var_decl_stmt):
-        var_decl_stmt.datatype = get_expr_datatype(
-            ast_.ident_list,
-            func_decl,
-            var_decl_stmt.rvalue_expr,
-        )
-
     def mark_out_assign_stmt(assign_stmt):
         assign_stmt.datatype = get_expr_datatype(
             ast_.ident_list,
@@ -162,7 +155,7 @@ def _mark_out_datatypes(ast_):
             ast.For,
         )
         if isinstance(stmt, ast.VarDecl):
-            mark_out_var_decl_stmt(stmt)
+            mark_out_assign_stmt(stmt)
         elif isinstance(stmt, ast.Assign):
             mark_out_assign_stmt(stmt)
         elif isinstance(stmt, ignored_stmt_type_tuple):
