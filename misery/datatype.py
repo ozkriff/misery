@@ -29,15 +29,21 @@ def find_var_datatype(func_decl, var_name):
     raise Exception('Bad var name: \'' + var_name + '\'')
 
 
-def ast_node_to_datatype(func_decl, ast_node):
-    if isinstance(ast_node, ast.Number):
+def get_expr_datatype(ident_list, func_decl, expr):
+    if isinstance(expr, ast.Number):
         return SimpleDataType('Int')
-    elif isinstance(ast_node, ast.String):
+    elif isinstance(expr, ast.String):
         return SimpleDataType('String')
-    elif isinstance(ast_node, ast.Ident):
-        return find_var_datatype(func_decl, ast_node.name)
+    elif isinstance(expr, ast.Ident):
+        return find_var_datatype(func_decl, expr.name)
+    elif isinstance(expr, ast.FuncCall):
+        return get_func_call_expr_datatype(
+            func_decl,
+            ident_list,
+            expr,
+        )
     else:
-        raise Exception('Bad type: ' + str(type(ast_node)))
+        raise Exception('Bad type: ' + str(type(expr)))
 
 
 def get_func_call_expr_datatype(func_decl, ident_list, func_call_expr):
@@ -75,7 +81,7 @@ def find_func_signature(ident_list, func_decl, func_call_expr):
                     arg,
                 ).return_type
             else:
-                arg_type = ast_node_to_datatype(func_decl, arg)
+                arg_type = get_expr_datatype(ident_list, func_decl, arg)
             if arg_type.name == par.datatype.name:
                 return signature
     raise Exception('Can not find matching signature')
@@ -139,29 +145,19 @@ def _mark_out_datatypes(ast_):
         else:
             raise Exception('Bad stmt type: ' + str(type(stmt)))
 
-    def get_expr_datatype(expr):
-        if isinstance(expr, ast.Number):
-            return SimpleDataType('Int')
-        if isinstance(expr, ast.String):
-            return SimpleDataType('String')
-        elif isinstance(expr, ast.FuncCall):
-            return get_func_call_expr_datatype(
-                func_decl,
-                ast_.ident_list,
-                expr,
-            )
-        elif isinstance(expr, ast.Ident):
-            return ast_node_to_datatype(func_decl, expr)
-        else:
-            raise Exception('Bad type: ' + str(type(expr)))
-
     def mark_out_var_decl_stmt(var_decl_stmt):
-        datatype = get_expr_datatype(var_decl_stmt.rvalue_expr)
-        var_decl_stmt.datatype = datatype
+        var_decl_stmt.datatype = get_expr_datatype(
+            ast_.ident_list,
+            func_decl,
+            var_decl_stmt.rvalue_expr,
+        )
 
     def mark_out_assign_stmt(assign_stmt):
-        datatype = get_expr_datatype(assign_stmt.rvalue_expr)
-        assign_stmt.datatype = datatype
+        assign_stmt.datatype = get_expr_datatype(
+            ast_.ident_list,
+            func_decl,
+            assign_stmt.rvalue_expr,
+        )
 
     def mark_out_stmt(stmt):
         ''' stmt - current parsed stmt in current parsed block '''
