@@ -288,9 +288,9 @@ class TestParser(unittest.TestCase):
         expected_ast.decl_list[0].body.append(var)
         misc.assert_equal(self, expected_ast, real_ast)
 
-    def test_var_decl_with_ctor_and_arguments(self):
+    def test_var_decl_with_ctor_and_args(self):
         ''' Parse var decl stmt with
-            constructor call with arguments.
+            constructor call with args.
         '''
         input_string = 'func start () { p := Parser(lexer 1) }'
         real_ast = _parse(input_string)

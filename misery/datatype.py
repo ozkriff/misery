@@ -98,8 +98,8 @@ def _mark_out_datatypes(ast_):
         def scan_expr_vars(expr):
             fd = func_decl  # shortcut
             if isinstance(expr, ast.FuncCall):
-                for argument in expr.arg_list:
-                    scan_expr_vars(argument)
+                for arg in expr.arg_list:
+                    scan_expr_vars(arg)
                 assert isinstance(expr.called_expr, ast.Ident)
                 called_func_name = expr.called_expr.name
                 return_type = find_func_signature(

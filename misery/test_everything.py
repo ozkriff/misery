@@ -210,7 +210,7 @@ class TestTranslator(unittest.TestCase):
             ''',
         )
 
-    def test_struct_as_func_argument(self):
+    def test_struct_as_func_arg(self):
         check_translation(
             test_case=self,
             input_mis_code='''

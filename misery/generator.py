@@ -129,9 +129,9 @@ class Generator(object):
 
     def _generate_expr_dependencies(self, func_call_expr):
         out = ''
-        for argument in func_call_expr.arg_list:
-            if isinstance(argument, ast.FuncCall):
-                out += self._generate_expr(argument)
+        for arg in func_call_expr.arg_list:
+            if isinstance(arg, ast.FuncCall):
+                out += self._generate_expr(arg)
         return out
 
     def _is_correct_ident(self, name):
@@ -141,20 +141,20 @@ class Generator(object):
             return True
         return False
 
-    def _generate_argument(self, argument):
+    def _generate_arg(self, arg):
         out = ''
-        if isinstance(argument, (ast.Number, ast.String)):
-            out += '&' + argument.binded_var_name
-        elif isinstance(argument, ast.Ident):
-            assert self._is_correct_ident(argument.name)
-            out += argument.name
-        elif isinstance(argument, ast.FuncCall):
-            out += '&' + argument.binded_var_name
+        if isinstance(arg, (ast.Number, ast.String)):
+            out += '&' + arg.binded_var_name
+        elif isinstance(arg, ast.Ident):
+            assert self._is_correct_ident(arg.name)
+            out += arg.name
+        elif isinstance(arg, ast.FuncCall):
+            out += '&' + arg.binded_var_name
         else:
-            raise Exception('Wrong argument type: ' + str(type(argument)))
+            raise Exception('Wrong arg type: ' + str(type(arg)))
         return out
 
-    def _generate_func_call_expr_arguments(
+    def _generate_func_call_expr_args(
         self,
         func_call_expr,
     ):
@@ -172,12 +172,12 @@ class Generator(object):
         ).return_type:
             out += '&' + func_call_expr.binded_var_name
             is_first = False
-        for argument in func_call_expr.arg_list:
+        for arg in func_call_expr.arg_list:
             if is_first:
                 is_first = False
             else:
                 out += ', '
-            out += self._generate_argument(argument)
+            out += self._generate_arg(arg)
         return out
 
     def _generate_func_call_expr(self, func_call_expr):
@@ -205,7 +205,7 @@ class Generator(object):
         else:
             out += called_func_name
         out += '('
-        out += self._generate_func_call_expr_arguments(
+        out += self._generate_func_call_expr_args(
             func_call_expr,
         )
         out += ');\n'
