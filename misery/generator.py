@@ -96,18 +96,19 @@ class Generator(object):
     def _decrenent_indent(self):
         self._indent_level -= 1
 
-    def _generate_func_parameters(self, par_list):
-        out = ''
-        is_first = True
-        for parameter in par_list:
-            if is_first:
-                is_first = False
-            else:
-                out += ', '
-            out += parameter.datatype.name + '*' + ' ' + parameter.name
-        return out
-
     def _generate_func_header(self, name, signature):
+
+        def generate_func_parameters(par_list):
+            out = ''
+            is_first = True
+            for parameter in par_list:
+                if is_first:
+                    is_first = False
+                else:
+                    out += ', '
+                out += parameter.datatype.name + '*' + ' ' + parameter.name
+            return out
+
         out = ''
         out += 'void '
         out += func_signature_to_mangled_name(
@@ -120,7 +121,7 @@ class Generator(object):
         if len(signature.par_list) != 0:
             if signature.return_type:
                 out += ', '
-            out += self._generate_func_parameters(signature.par_list)
+            out += generate_func_parameters(signature.par_list)
         elif not signature.return_type:
             out += 'void'
         out += ')'
