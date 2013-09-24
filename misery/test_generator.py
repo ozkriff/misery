@@ -173,7 +173,7 @@ class TestGenerator(unittest.TestCase):
         marked_out_ast = datatype.mark_out_datatypes(input_ast)
         generator_ = generator.Generator(marked_out_ast)
         real_output = generator_.generate_full()
-        assert real_output != ''
+        self.assertNotEqual('', real_output)
 
     def test_multiply_func_parameters(self):
         check_translation(
