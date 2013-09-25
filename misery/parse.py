@@ -89,6 +89,8 @@ def make_lexer():
 
     def t_error(t):
         column = find_column(t.lexer.lexdata, t.lexpos)
+        lines =  t.lexer.lexdata.split('\n')
+        line = lines[t.lineno - 1]
         message = (
             '\n' +
             (
@@ -99,7 +101,7 @@ def make_lexer():
                 'column': column - 1,
             } +
             '\n' +
-            '  ' + t.lexer.lexdata.split('\n')[t.lineno - 1] + '\n' +
+            '  ' + line + '\n' +
             '  ' + (' ' * (column)) + '^' + '\n'
         )
         raise Exception(message)
@@ -319,6 +321,8 @@ def make_parser():
     def p_error(p):
         toklen = len(str(p.value))
         column = find_column(p.lexer.lexdata, p.lexpos)
+        lines = p.lexer.lexdata.split('\n')
+        line = lines[p.lineno - 1]
         message = (
             '\n' +
             (
@@ -329,7 +333,7 @@ def make_parser():
                 'column': column - 1,
             } +
             '\n' +
-            '  ' + p.lexer.lexdata.split('\n')[p.lineno - 1] + '\n' +
+            '  ' + line + '\n' +
             '  ' + (' ' * column) + ('^' * toklen) + '\n'
         )
         raise Exception(message)
