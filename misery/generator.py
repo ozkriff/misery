@@ -386,12 +386,11 @@ class Generator(object):
             out += ';' + '\n'
         for name, expr in sorted(fd.constants.items()):
             out += self._indent()
-            if isinstance(expr, ast.String):
-                out += 'String'
-            elif isinstance(expr, ast.Number):
-                out += 'Int'
-            else:
-                raise Exception('bad type: ' + str(type(expr)))
+            out += datatype.get_expr_datatype(
+                self._ast.ident_list,
+                fd,
+                expr,
+            ).name
             out += ' '
             out += name
             out += ';' + '\n'
@@ -409,7 +408,7 @@ class Generator(object):
             elif isinstance(expr, ast.Number):
                 out += str(expr.value)
             else:
-                raise Exception('bad type: ' + str(type(expr)))
+                raise Exception('Bad type: ' + str(type(expr)))
             out += ';' + '\n'
         return out
 

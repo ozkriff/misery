@@ -245,7 +245,7 @@ class TestGenerator(unittest.TestCase):
         generator_ = generator.Generator(input_ast)
         self.assertRaisesRegexp(
             Exception,
-            'bad type:.*BadConstantClass',
+            'Bad type:.*BadConstantClass',
             generator_.generate,
         )
 
