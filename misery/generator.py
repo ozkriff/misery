@@ -72,6 +72,9 @@ class Generator(object):
           *__result = (*a * *b);
         }
 
+        void allocInt(Int** __result) {
+          *__result = (Int*)calloc(1, sizeof(Int));
+        }
     '''
 
     postfix = '''
@@ -165,12 +168,17 @@ class Generator(object):
             ast.Ident,
         )
         called_func_name = func_call_expr.called_expr.name
-        if datatype.find_func_signature(
+        return_type = datatype.find_func_signature(
             self._ast.ident_list,
             self._func_decl,
             func_call_expr
-        ).return_type:
-            out += '&' + func_call_expr.binded_var_name
+        ).return_type
+        if return_type:
+            prefix_list = return_type.prefix_list
+            if prefix_list and 'R' in prefix_list:
+                out += '&' + func_call_expr.binded_var_name
+            else:
+                out += '&' + func_call_expr.binded_var_name
             is_first = False
         for arg in func_call_expr.arg_list:
             if is_first:
@@ -326,15 +334,19 @@ class Generator(object):
                 out += ';\n'
                 out += self._generate_assign_stmt(stmt)
             else:
+                out += self._generate_expr(stmt.rvalue_expr)
                 out += self._indent()
                 out += stmt.name
                 out += ' = '
                 if isinstance(stmt.rvalue_expr, ast.Ident):
                     out += stmt.rvalue_expr.name
                 else:
-                    out += '&' + stmt.rvalue_expr.binded_var_name
+                    prefix_list = stmt.datatype.prefix_list
+                    if prefix_list and 'R' in prefix_list:
+                        out += stmt.rvalue_expr.binded_var_name
+                    else:
+                        out += '&' + stmt.rvalue_expr.binded_var_name
                 out += ';\n'
-                out += self._generate_expr(stmt.rvalue_expr)
         elif isinstance(stmt, ast.Assign):
             out += self._generate_assign_stmt(stmt)
         elif isinstance(stmt, ast.If):
@@ -366,6 +378,9 @@ class Generator(object):
         for name, datatype_ in sorted(fd.tmp_vars.items()):
             out += self._indent()
             out += datatype_.name
+            prefix_list = datatype_.prefix_list
+            if prefix_list and 'R' in prefix_list:
+                out += '*'
             out += ' '
             out += name
             out += ';' + '\n'

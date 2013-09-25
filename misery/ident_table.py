@@ -43,6 +43,12 @@ def ident_table(ast_):
                     ],
                 ),
             ],
+            'allocInt': ast.FuncSignature(
+                return_type=datatype.SimpleDataType(
+                    name='Int',
+                    prefix_list=['R'],
+                ),
+            ),
             'isEqual': std_signature,
             'isLess': std_signature,
             'isGreater': std_signature,

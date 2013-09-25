@@ -164,8 +164,8 @@ class TestTranslator(unittest.TestCase):
 
                   const_0 = 1;
 
-                  testVar = &tmp_0;
                   Int_Int_init(&tmp_0, &const_0);
+                  testVar = &tmp_0;
                   print_Int(testVar);
                   printNewLine();
                 }
@@ -203,8 +203,8 @@ class TestTranslator(unittest.TestCase):
                   MyStruct* t;
                   MyStruct tmp_0;
 
-                  t = &tmp_0;
                   MyStruct_init(&tmp_0);
+                  t = &tmp_0;
                 }
 
             ''',
@@ -251,10 +251,10 @@ class TestTranslator(unittest.TestCase):
                   MyStruct tmp_0;
                   MyStruct tmp_1;
 
-                  t = &tmp_0;
                   MyStruct_init(&tmp_0);
-                  t2 = &tmp_1;
+                  t = &tmp_0;
                   someFunc_MyStruct(&tmp_1, t);
+                  t2 = &tmp_1;
                 }
 
             ''',
@@ -775,8 +775,8 @@ class TestTranslator(unittest.TestCase):
                   const_0 = 1;
                   const_1 = 2;
 
-                  a = &tmp_0;
                   Int_Int_init(&tmp_0, &const_0);
+                  a = &tmp_0;
                   print_Int(a);
                   printNewLine();
                   b = a;
@@ -842,6 +842,46 @@ class TestTranslator(unittest.TestCase):
             expected_stdout=(
                 '1\n'
                 'str\n'
+            ),
+        )
+
+    def test_return_reference_1(self):
+        ''' Return reference to allocated on heap memory. '''
+        check_translation(
+            test_case=self,
+            input_mis_code='''
+                func start () {
+                  a := allocInt()
+                  print(a)
+                  printNewLine()
+                  a = 1
+                  print(a)
+                  printNewLine()
+                }
+            ''',
+            expected_c_code='''
+                void start(void);
+
+                void start(void) {
+                  Int* a;
+                  Int* tmp_0;
+                  Int const_0;
+
+                  const_0 = 1;
+
+                  allocInt(&tmp_0);
+                  a = tmp_0;
+                  print_Int(a);
+                  printNewLine();
+                  *a = const_0;
+                  print_Int(a);
+                  printNewLine();
+                }
+
+            ''',
+            expected_stdout=(
+                '0\n'
+                '1\n'
             ),
         )
 
