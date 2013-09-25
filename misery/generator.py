@@ -2,7 +2,6 @@
 # See LICENSE file for copyright and license details
 
 
-import copy
 import textwrap
 from misery import (
     ast,
