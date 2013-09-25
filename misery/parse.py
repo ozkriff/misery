@@ -205,9 +205,7 @@ def make_parser():
         'type : IDENT COLON IDENT'
         p[0] = datatype.SimpleDataType(
             name=p[3],
-            prefix_list=[
-                p[1],
-            ],
+            prefix_list=list(p[1]),
         )
 
     def p_field_list_1(p):
