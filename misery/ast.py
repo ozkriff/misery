@@ -41,7 +41,7 @@ class ConstDecl(object):
         self.expr = expr
 
 
-class StructDecl(object):
+class ClassDecl(object):
     def __init__(self, name, field_list):
         self.name = name
         self.field_list = field_list

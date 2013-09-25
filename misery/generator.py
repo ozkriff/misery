@@ -433,12 +433,12 @@ class Generator(object):
         out += '}\n'
         return out
 
-    def _generate_struct(self, struct_decl):
-        name = struct_decl.name  # shortcut
+    def _generate_class(self, class_decl):
+        name = class_decl.name  # shortcut
         out = ''
         out += 'struct ' + name + ' {\n'
         self._increnent_indent()
-        for field in struct_decl.field_list:
+        for field in class_decl.field_list:
             out += self._indent()
             out += field.datatype.name + ' ' + field.name + ';\n'
         self._decrenent_indent()
@@ -458,7 +458,7 @@ class Generator(object):
                     signature=decl.signature,
                 )
                 out += ';\n'
-            elif isinstance(decl, ast.StructDecl):
+            elif isinstance(decl, ast.ClassDecl):
                 out += 'typedef struct '
                 out += decl.name
                 out += ' '
@@ -481,8 +481,8 @@ class Generator(object):
         out = ''
         if isinstance(decl, ast.FuncDecl):
             out += self._generate_func(decl)
-        elif isinstance(decl, ast.StructDecl):
-            out += self._generate_struct(decl)
+        elif isinstance(decl, ast.ClassDecl):
+            out += self._generate_class(decl)
         else:
             raise Exception('Bad decl type: ' + str(type(decl)))
         return out

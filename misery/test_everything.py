@@ -174,86 +174,86 @@ class TestTranslator(unittest.TestCase):
             expected_stdout='1\n',
         )
 
-    def test_struct(self):
+    def test_class(self):
         check_translation(
             test_case=self,
             input_mis_code='''
-                struct MyStruct {
+                class MyClass {
                   field1 Int
                   field2 Int
                 }
                 func start () {
-                  t := MyStruct()
+                  t := MyClass()
                 }
             ''',
             expected_c_code='''
-                typedef struct MyStruct MyStruct;
+                typedef struct MyClass MyClass;
                 void start(void);
 
-                struct MyStruct {
+                struct MyClass {
                   Int field1;
                   Int field2;
                 };
 
-                void MyStruct_init(MyStruct* __result) {
+                void MyClass_init(MyClass* __result) {
                   /* todo */
                 }
 
                 void start(void) {
-                  MyStruct* t;
-                  MyStruct tmp_0;
+                  MyClass* t;
+                  MyClass tmp_0;
 
-                  MyStruct_init(&tmp_0);
+                  MyClass_init(&tmp_0);
                   t = &tmp_0;
                 }
 
             ''',
         )
 
-    def test_struct_as_func_arg(self):
+    def test_class_as_func_arg(self):
         check_translation(
             test_case=self,
             input_mis_code='''
-                struct MyStruct {
+                class MyClass {
                   field1 Int
                   field2 Int
                 }
-                func someFunc (x MyStruct) -> MyStruct{
+                func someFunc (x MyClass) -> MyClass{
                   return x
                 }
                 func start () {
-                  t := MyStruct()
+                  t := MyClass()
                   t2 := someFunc(t)
                 }
             ''',
             expected_c_code='''
-                typedef struct MyStruct MyStruct;
-                void someFunc_MyStruct(MyStruct* __result, MyStruct* x);
+                typedef struct MyClass MyClass;
+                void someFunc_MyClass(MyClass* __result, MyClass* x);
                 void start(void);
 
-                struct MyStruct {
+                struct MyClass {
                   Int field1;
                   Int field2;
                 };
 
-                void MyStruct_init(MyStruct* __result) {
+                void MyClass_init(MyClass* __result) {
                   /* todo */
                 }
 
-                void someFunc_MyStruct(MyStruct* __result, MyStruct* x) {
+                void someFunc_MyClass(MyClass* __result, MyClass* x) {
                   *__result = *x;
                   return;
                 }
 
                 void start(void) {
-                  MyStruct* t;
-                  MyStruct* t2;
-                  MyStruct tmp_0;
-                  MyStruct tmp_1;
+                  MyClass* t;
+                  MyClass* t2;
+                  MyClass tmp_0;
+                  MyClass tmp_1;
 
-                  MyStruct_init(&tmp_0);
+                  MyClass_init(&tmp_0);
                   t = &tmp_0;
-                  someFunc_MyStruct(&tmp_1, t);
+                  someFunc_MyClass(&tmp_1, t);
                   t2 = &tmp_1;
                 }
 

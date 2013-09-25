@@ -172,7 +172,7 @@ def _mark_out_datatypes(ast_):
         if isinstance(decl, ast.FuncDecl):
             func_decl = decl
             mark_out_block(decl.body)
-        elif isinstance(decl, ast.StructDecl):
+        elif isinstance(decl, ast.ClassDecl):
             pass
         else:
             raise Exception('Bad type: ' + str(type(decl)))

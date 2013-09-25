@@ -19,7 +19,7 @@ reserved = {
     'else': 'ELSE',
     'import': 'IMPORT',
     'const': 'CONST',
-    'struct': 'STRUCT',
+    'class': 'CLASS',
     'for': 'FOR',
     'return': 'RETURN',
 }
@@ -187,9 +187,9 @@ def make_parser():
             body=p[4],
         )
 
-    def p_struct_decl(p):
-        'decl : STRUCT IDENT LCURLY field_list RCURLY'
-        p[0] = ast.StructDecl(name=p[2], field_list=p[4])
+    def p_class_decl(p):
+        'decl : CLASS IDENT LCURLY field_list RCURLY'
+        p[0] = ast.ClassDecl(name=p[2], field_list=p[4])
 
     def p_const_decl(p):
         'decl : CONST IDENT type COLONASSIGN expr'

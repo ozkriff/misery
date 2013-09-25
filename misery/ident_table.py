@@ -58,9 +58,9 @@ def ident_table(ast_):
         }
         return ident_list
 
-    def create_constructor_func(struct_decl):
+    def create_constructor_func(class_decl):
         return ast.FuncSignature(
-            return_type=datatype.SimpleDataType(struct_decl.name),
+            return_type=datatype.SimpleDataType(class_decl.name),
         )
 
     ident_list = {}
@@ -73,7 +73,7 @@ def ident_table(ast_):
                 ident_list[decl.name] = [
                     decl.signature,
                 ]
-        elif isinstance(decl, ast.StructDecl):
+        elif isinstance(decl, ast.ClassDecl):
             ident_list[decl.name] = create_constructor_func(decl)
     ident_list.update(standart_funcs())
     return ident_list

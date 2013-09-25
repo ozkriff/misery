@@ -72,10 +72,10 @@ class TestParser(unittest.TestCase):
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
-    def test_struct_type_decl(self):
-        ''' Parse struct type decl. '''
+    def test_class_type_decl(self):
+        ''' Parse class decl. '''
         input_string = (
-            'struct MyStruct {\n'
+            'class MyClass {\n'
             '  field1 Int\n'
             '  field2 Float\n'
             '}\n'
@@ -83,8 +83,8 @@ class TestParser(unittest.TestCase):
         real_ast = _parse(input_string)
         expected_ast = ast.Module(
             decl_list=[
-                ast.StructDecl(
-                    name='MyStruct',
+                ast.ClassDecl(
+                    name='MyClass',
                     field_list=[
                         ast.Field(
                             name='field1',
