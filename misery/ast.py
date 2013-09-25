@@ -42,9 +42,10 @@ class ConstDecl(object):
 
 
 class ClassDecl(object):
-    def __init__(self, name, field_list):
+    def __init__(self, name, field_list=None, decl_list=None):
         self.name = name
-        self.field_list = field_list
+        self.field_list = misc.tolist(field_list)
+        self.decl_list = misc.tolist(decl_list)
 
 
 class Number(object):

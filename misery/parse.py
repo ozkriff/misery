@@ -202,12 +202,12 @@ def make_parser():
         p[0] = []
 
     def p_bind_2(p):
-        'bind : BIND LCURLY RCURLY'
-        p[0] = []
+        'bind : BIND LCURLY decl_list RCURLY'
+        p[0] = p[3]
 
     def p_class_decl(p):
         'decl : CLASS IDENT LCURLY store bind RCURLY'
-        p[0] = ast.ClassDecl(name=p[2], field_list=p[4])
+        p[0] = ast.ClassDecl(name=p[2], field_list=p[4], decl_list=p[5])
 
     def p_const_decl(p):
         'decl : CONST IDENT type COLONASSIGN expr'

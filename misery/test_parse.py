@@ -102,6 +102,36 @@ class TestParser(unittest.TestCase):
         )
         misc.assert_equal(self, expected_ast, real_ast)
 
+    def test_class_decl_with_methods(self):
+        ''' Parse class decl with binded func. '''
+        input_string = '''
+            class X {
+              bind {
+                func n1 () {}
+                func n2 () {}
+              }
+            }
+        '''
+        real_ast = _parse(input_string)
+        expected_ast = ast.Module(
+            decl_list=[
+                ast.ClassDecl(
+                    name='X',
+                    decl_list=[
+                        ast.FuncDecl(
+                            name='n1',
+                            signature=ast.FuncSignature(),
+                        ),
+                        ast.FuncDecl(
+                            name='n2',
+                            signature=ast.FuncSignature(),
+                        ),
+                    ],
+                )
+            ]
+        )
+        misc.assert_equal(self, expected_ast, real_ast)
+
     def test_const_decl(self):
         ''' Parse constant decl. '''
         input_string = 'const importantIdent Int := 10'
