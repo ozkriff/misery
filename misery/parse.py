@@ -45,19 +45,11 @@ tokens = [
 ] + list(reserved.values())
 
 
-def find_column(input_string, lexpos):
-    '''Compute column.
-
-    input_string is the input text string
-    lexpos is a lexem position
-    '''
-    last_cr = input_string.rfind('\n', 0, lexpos)
-    if last_cr < 0:
-        last_cr = 0
-    else:
-        last_cr += 1
-    column = (lexpos - last_cr)
-    return column
+def find_column(input_string, lexem_pos):
+    last_cr_pos = input_string.rfind('\n', 0, lexem_pos) + 1
+    if last_cr_pos <= 0:
+        last_cr_pos = 0
+    return lexem_pos - last_cr_pos
 
 
 def make_lexer():
