@@ -20,6 +20,8 @@ reserved = {
     'import': 'IMPORT',
     'const': 'CONST',
     'class': 'CLASS',
+    'store': 'STORE',
+    'bind': 'BIND',
     'for': 'FOR',
     'return': 'RETURN',
 }
@@ -187,8 +189,24 @@ def make_parser():
             body=p[4],
         )
 
+    def p_store_1(p):
+        'store : '
+        p[0] = []
+
+    def p_store_2(p):
+        'store : STORE LCURLY field_list RCURLY'
+        p[0] = p[3]
+
+    def p_bind_1(p):
+        'bind : '
+        p[0] = []
+
+    def p_bind_2(p):
+        'bind : BIND LCURLY RCURLY'
+        p[0] = []
+
     def p_class_decl(p):
-        'decl : CLASS IDENT LCURLY field_list RCURLY'
+        'decl : CLASS IDENT LCURLY store bind RCURLY'
         p[0] = ast.ClassDecl(name=p[2], field_list=p[4])
 
     def p_const_decl(p):

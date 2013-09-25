@@ -76,8 +76,10 @@ class TestParser(unittest.TestCase):
         ''' Parse class decl. '''
         input_string = (
             'class MyClass {\n'
-            '  field1 Int\n'
-            '  field2 Float\n'
+            '  store {\n'
+            '    field1 Int\n'
+            '    field2 Float\n'
+            '  }\n'
             '}\n'
         )
         real_ast = _parse(input_string)

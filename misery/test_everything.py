@@ -179,8 +179,10 @@ class TestTranslator(unittest.TestCase):
             test_case=self,
             input_mis_code='''
                 class MyClass {
-                  field1 Int
-                  field2 Int
+                  store {
+                    field1 Int
+                    field2 Int
+                  }
                 }
                 func start () {
                   t := MyClass()
@@ -215,8 +217,10 @@ class TestTranslator(unittest.TestCase):
             test_case=self,
             input_mis_code='''
                 class MyClass {
-                  field1 Int
-                  field2 Int
+                  store {
+                    field1 Int
+                    field2 Int
+                  }
                 }
                 func someFunc (x MyClass) -> MyClass{
                   return x
