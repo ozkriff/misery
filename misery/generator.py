@@ -409,7 +409,7 @@ class Generator(object):
             elif isinstance(expr, ast.Number):
                 out += str(expr.value)
             else:
-                raise Exception('bad type: ...todo...')
+                raise Exception('bad type: ' + str(type(expr)))
             out += ';' + '\n'
         return out
 
