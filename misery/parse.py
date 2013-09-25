@@ -89,7 +89,7 @@ def make_lexer():
 
     def t_error(t):
         column = find_column(t.lexer.lexdata, t.lexpos)
-        lines =  t.lexer.lexdata.split('\n')
+        lines = t.lexer.lexdata.split('\n')
         line = lines[t.lineno - 1]
         message = (
             '\n' +
