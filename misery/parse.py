@@ -166,18 +166,26 @@ def make_parser():
         'generic : LT IDENT GT'
         p[0] = [p[2]]
 
+    def p_params_1(p):
+        'params : LPAREN param_list RPAREN'
+        p[0] = p[2]
+
+    def p_params_2(p):
+        'params : '
+        p[0] = []
+
     def p_func_signature(p):
-        'func_signature : generic LPAREN param_list RPAREN ARROW type'
+        'func_signature : generic params ARROW type'
         p[0] = ast.FuncSignature(
-            param_list=p[3],
-            return_type=p[6],
+            param_list=p[2],
+            return_type=p[4],
             generic_param_list=p[1],
         )
 
     def p_func_signature_without_return_type(p):
-        'func_signature : generic LPAREN param_list RPAREN'
+        'func_signature : generic params'
         p[0] = ast.FuncSignature(
-            param_list=p[3],
+            param_list=p[2],
             generic_param_list=p[1],
         )
 
