@@ -429,7 +429,7 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                func someString () -> String {
+                func someString -> String {
                   return "hi"
                 }
                 func start {
@@ -471,7 +471,7 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                func someString () -> String {
+                func someString -> String {
                   return "hi"
                 }
                 func start {
@@ -508,7 +508,7 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                func someNumber () -> Int {
+                func someNumber -> Int {
                   return 99
                 }
                 func start {
@@ -574,7 +574,7 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                func someNumber () -> Int {
+                func someNumber -> Int {
                   return 99
                 }
                 func start {
@@ -616,7 +616,7 @@ class TestTranslator(unittest.TestCase):
         check_translation(
             test_case=self,
             input_mis_code='''
-                func someNumber () -> Int {
+                func someNumber -> Int {
                   return minus(100 1)
                 }
                 func start {
@@ -718,7 +718,7 @@ class TestTranslator(unittest.TestCase):
                     printNewLine()
                     fac()
                 }
-                func fac () -> Int {
+                func fac -> Int {
                     return 1
                 }
             ''',

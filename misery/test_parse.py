@@ -163,7 +163,7 @@ class TestParser(unittest.TestCase):
 
     def test_simple_func_with_return_value(self):
         ''' Parse func that returns Int. '''
-        input_string = 'func testfunc2 () -> Int {}'
+        input_string = 'func testfunc2 -> Int {}'
         real_ast = _parse(input_string)
         expected_ast = ast.Module(
             decl_list=[
@@ -433,7 +433,7 @@ class TestParser(unittest.TestCase):
         misc.assert_equal(self, expected_ast, real_ast)
 
     def test_type_prefix_1(self):
-        input_string = 'func testFunc () -> RM:Int {}'
+        input_string = 'func testFunc -> RM:Int {}'
         real_ast = _parse(input_string)
         expected_ast = ast.Module(
             decl_list=[
